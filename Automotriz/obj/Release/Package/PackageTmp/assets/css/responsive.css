@@ -1,0 +1,270 @@
+/* ==== Media querys de login ==== */
+
+@media all and (min-width:1200px) {
+
+   
+
+    .login-page .card-login {
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+        border-radius: 15px;
+        padding-bottom: 20px;
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@media all and (min-width: 960px) and (max-width: 1199px) {
+    .input-group .logo {
+        width: 136px;
+        height: 70px;
+        padding-top: 20px;
+    }
+
+    .login-page .card-login {
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+        border-radius: 15px;
+        padding-bottom: 20px;
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+
+    .container-fluid .bis {
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+@media all and (min-width: 768px) and (max-width: 959px) {
+    .input-group .logo {
+        width: 136px;
+        height: 70px;
+        padding-top: 20px;
+    }
+
+    .login-page .card-login {
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+        border-radius: 15px;
+        padding-bottom: 20px;
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@media all and (min-width: 480px) and (max-width: 767px) {
+
+    .input-group .logo {
+        width: 136px;
+        height: 70px;
+        padding-top: 20px;
+        margin-left: 47px;
+    }
+
+    .login-page .card-login {
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+        border-radius: 15px;
+        padding-bottom: 20px;
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        margin-left: 40px;
+    }
+
+    .card-login .card-content {
+        padding: 0px 30px 0px 45px;
+    }
+
+    .container-fluid .bis {
+        padding-right: 100px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .card .card-title {
+        margin-top: -8px;
+        margin-bottom: 3px;
+    }
+}
+
+@media all and (max-width: 599px) {
+    .login-page .card-login {
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+        border-radius: 15px;
+        padding-bottom: 20px;
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        margin-left: 114px;
+        width: 74%;
+    }
+
+    .card-login .card-content {
+        padding: 0px 30px 0px 45px;
+    }
+
+    input-group {
+        position: relative;
+        display: table;
+        border-collapse: separate;
+        margin-left: 20px;
+    }
+
+    .input-group .logo {
+        width: 171px;
+        height: 70px;
+        padding-top: 20px;
+        margin-left: 47px;
+        padding-left: 37px;
+    }
+}
+
+@media all and (max-width: 479px) {
+    .login-page .card-login {
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+        border-radius: 15px;
+        padding-bottom: 20px;
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        margin-left: 114px;
+        width: 74%;
+    }
+
+    .card-login .card-content {
+        padding: 0px 30px 0px 16px;
+    }
+
+    input-group {
+        position: relative;
+        display: table;
+        border-collapse: separate;
+        margin-left: 20px;
+    }
+
+    .input-group .logo {
+        width: 132px;
+        height: 70px;
+        padding-top: 20px;
+        margin-left: 47px;
+        padding-left: 3px;
+    }
+
+    .container-fluid .bis {
+        padding-right: 100px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+@media all and (max-width: 375px) {
+    .login-page .card-login {
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+        border-radius: 15px;
+        padding-bottom: 20px;
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        margin-left: 46px;
+        width: 100%;
+        height: auto;
+    }
+
+
+    .card-login .card-content {
+        padding: 0px 30px 0px 16px;
+    }
+
+    input-group {
+        position: relative;
+        display: table;
+        border-collapse: separate;
+        margin-left: 20px;
+    }
+
+    .input-group .logo {
+        width: 50%;
+        height: 67px;
+        padding-top: 20px;
+        /* margin-left: 47px; */
+        padding-left: -22%;
+        float: left;
+    }
+
+
+
+
+    .tarjeta {
+        margin-left: 1px;
+        margin-right: -2px;
+    }
+
+    #container {
+        width: 100%;
+    }
+}
+
+@media all and (max-width: 320px) {
+    .login-page .card-login {
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+        border-radius: 15px;
+        padding-bottom: 20px;
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        margin-left: 46px;
+        width: 100%;
+        height: auto;
+    }
+
+    .card-login .card-content {
+        padding: 0px 30px 0px 16px;
+    }
+
+    input-group {
+        position: relative;
+        display: table;
+        border-collapse: separate;
+        margin-left: 20px;
+    }
+
+    .input-group .logo {
+        width: 80px;
+        height: 60px;
+        padding-top: 20px;
+        /* margin-left: 47px; */
+        padding-left: 0%;
+    }
+
+    .cars {
+        width: 146%;
+    }
+
+    #container {
+        height: 400px;
+        min-width: 310px;
+        max-width: 790px;
+        margin: 0 auto;
+    }
+}

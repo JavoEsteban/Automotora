@@ -1,0 +1,874 @@
+﻿
+@{
+    ViewBag.Title = "ListadoVehiculos";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+@*<link href="~/assets/css/style.css" rel="stylesheet" />*@
+@*<link href="~/assets/css/vegas.min - copia.css" rel="stylesheet" />*@
+@*<link href="~/assets/css/gijgo - copia.css" rel="stylesheet" />*@
+@*<link href="~/assets/css/reset.css" rel="stylesheet" />*@
+@*<link href="~/assets/css/material-dashboard.css" rel="stylesheet" />*@
+@*<link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />*@
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="ModalTarifaTransporte" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Eliminar Vehiculo</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card" style="background-color:#EEEEEE;">
+                                <div class="card-header" data-background-color="orange">
+                                    <h4 class="card-title">Eliminación de vehiculo</h4>
+                                    <p class="category"></p>
+                                </div>
+                                <div class="card-content align-center table-responsive">
+                                    <input type="hidden" id="txtModalIDVehiculo" name="txtModalIDVehiculo" value="0">
+                                    <input type="hidden" id="txtModalPatenteVehiculo" name="txtModalPatenteVehiculo" value="0">
+                                    <div class="form-group text-center">
+                                        <label class="control-label">Razon de Eliminación</label>
+                                        <textarea class="form-control rounded-0" id="txtAreaEliminacion" rows="10"></textarea>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="button" onclick="eliminarVehiculo()" class="btn btn-primary align-middle">Eliminar Vehiculo</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>
+<!--FIN MODAL-->
+<!-- Single Popular Car Start -->
+<h5 style="margin-top:-5.5%; margin-left:7%;">Listado Vehiculos</h5>
+
+
+
+@*<input onchange="buscarVehiculo()" id="Txtbusqueda" />*@
+
+<div class="card opcionesPadding" id="cardListadoVehiculo">
+    <div class="card-body pb-5">
+        <div class="col-lg-3 col-sm-12 col-md-6 pb-5 center-block">
+            <div class="form-group">
+                <label class="control-label">Sucursal</label>
+                <select class="form-control" data-style="btn btn-default" data-size="7" id="CmbSucursal">
+                    <option value="0">Todas las sucursales</option>
+                    @foreach (var sucursal in ViewBag.ListadoDeSucursales)
+                    {
+                        <option value="@sucursal.ID_SUCURSAL">@sucursal.NOMBRE_SUCURSAL</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12 col-md-6 pb-5">
+            <div class="form-group">
+                <label class="control-label">Patente</label>
+                <input type="text" class="form-control" id="busquedaPatente" maxlength="7" onclick="limparBuscadores()" placeholder="Busqueda por patente">
+                @*<i class="fa fa-search" id="lupita"></i>*@
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12 col-md-6 pb-5">
+            <div class="form-group">
+                <label class="control-label">Marca</label>
+                <input type="text" class="form-control" id="busquedaMarca" onclick="limparBuscadores()" placeholder="Busqueda por marca">
+                @*<i class="fa fa-search" id="lupita"></i>*@
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12 col-md-6 pb-5">
+            <div class="form-group">
+                <label class="control-label">Precio</label>
+                <input type="text" class="form-control" id="busquedaPrecio" onclick="limparBuscadores()" placeholder="Busqueda por precio">
+                @*<i class="fa fa-search" id="lupita"></i>*@
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="col-md-12" id="contenedorVehiculos">
+    @foreach (var vehiculo in ViewBag.ListadoVehiculos)
+    {
+        <div id="card-@vehiculo.ID_VEHICULO" class="col-lg-4 col-md-6 col-sm-1 con suv mpv d-flex ContenedoresVehiculos">
+            <div class="card" style="border-radius:12px;">
+                <div class="card-content">
+                    <div class="col-lg-12 col-md-10 col-sm-8 col-xs-7">
+                        <div class="single-popular-car" style="margin-bottom:4%;">
+                            <div class="p-car-thumbnails">
+
+                                <center>
+                                    <img src="@vehiculo.IMAGEN_PRINCIPAL" alt="JSOFT" class="img-responsive cardVehiculo" />
+                                </center>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-car-content">
+                        <div class="row">
+
+
+                            <h4 style="margin-bottom:1%;">
+                                @if (vehiculo.MARCA == "" && vehiculo.NOMBRE_MODELO == "")
+                                {
+                                    <br>
+                                    <p>@vehiculo.SUCURSAL</p>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("FormularioDetalleVehiculo","MantenedorVehiculo")?ID=@vehiculo.ID_VEHICULO" class="Marca">@vehiculo.MARCA @vehiculo.NOMBRE_MODELO</a>
+                                    <p>@vehiculo.SUCURSAL</p>
+                                }
+                            </h4>
+                            <hr />
+                            <div class="col-md-9">
+                                <p>Precio: <b style="font-size:14px;" class="Precio" id="txtPrecio-@vehiculo.ID_VEHICULO">$@vehiculo.PRECIO_VENTA.ToString("#,##0")</b></p>
+                                <p>Patente:  <b style="font-size:14px; font-weight:bold" class="Patente" id="txtPatente-@vehiculo.ID_VEHICULO">@vehiculo.PATENTE.ToUpper()</b></p>
+                                <input id="txtSucursal" value="@vehiculo.ID_SUCURSAL" hidden />
+                            </div>
+                            <div class="col-md-3">
+                                @if (vehiculo.ID_TIPO_CONSIGNACION == 4)
+                                {
+                                    <i style="margin-top:10%; font-size:2.1em;" class="fas fa-car-side"></i>
+                                }
+                                else if (vehiculo.ID_TIPO_CONSIGNACION == 5)
+                                {
+                                    <i style="margin-top:10%; font-size:2.1em;" class="fas fa-handshake"></i>
+                                }
+                                else
+                                {
+                                    <i style="font-size:2.1em; color:black" Class="material-icons iconoCardVehiculo">info</i>}
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="card-footer" style="margin:0px; padding-top:0px;border-top:none; ">
+                    <div class="col-md-12 col-sm-12 col-xs-12 colFooter">
+                        <div class="col-md-4 col-sm-4 col-xs-4 btn-secondary btnFooterLeft" onclick="editarVehiculo(@vehiculo.ID_VEHICULO);">
+                            <i Class="material-icons iconoCardVehiculo">create</i>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-4 btn-danger btnFooterCenter" onclick="mostrarModal('@vehiculo.ID_VEHICULO', '@vehiculo.PATENTE')">
+                            <i Class="material-icons iconoCardVehiculo">delete_sweep</i>
+                        </div>
+
+                        @if (vehiculo.PUBLICADO == false)
+                        {
+                            <div class="col-md-4 col-sm-4 col-xs-4 btn-success btnFooterRight" onclick="publicarVehiculo(@vehiculo.PUBLICADO.ToString().ToLower() , '@vehiculo.ID_DISPONIBILIDAD','@vehiculo.ID_VEHICULO','@vehiculo.PATENTE.ToUpper()' )">
+
+                                <i class="material-icons iconoCardVehiculo">
+                                    vertical_align_top
+                                </i>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-4 col-sm-4 col-xs-4 btn-warning btnFooterRight" onclick="publicarVehiculo(@vehiculo.PUBLICADO.ToString().ToLower() , '@vehiculo.ID_DISPONIBILIDAD','@vehiculo.ID_VEHICULO','@vehiculo.PATENTE.ToUpper()' )">
+
+                                <i class="material-icons iconoCardVehiculo">
+                                    vertical_align_bottom
+                                </i>
+                            </div>
+
+                        }
+                        @*<i Class="material-icons iconoCardVehiculo">publish</i>*@
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Single Popular Car End -->
+        </div>
+
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $('#busquedaPrecio').autoNumeric('init', { vMin: '0', vMax: '9999999999', aSep: '.', aDec: ',', aSign: '', mDec: '0' });
+
+    });
+
+
+
+    //Metodo encargado de buscar vehiculos por sucursal
+
+    function limparBuscadores() {
+        if ($('#CmbSucursal').val() == "0") {
+            $('.ContenedoresVehiculos').fadeIn('fast');
+            $('#busquedaPatente').val("");
+            $('#busquedaMarca').val("");
+            $('#busquedaPrecio').val("");
+        } else {
+            $('#busquedaPatente').val("");
+            $('#busquedaMarca').val("");
+            $('#busquedaPrecio').val("");
+            mostrarVehiculosSucursalActual();
+        }
+
+    }
+
+
+    $('#CmbSucursal').change(function () {
+
+        limparBuscadores();
+
+        let idSucursalSeleccionada = $('#CmbSucursal').val();
+
+        let contenedoresVehiculos = $('.ContenedoresVehiculos');
+
+        $(contenedoresVehiculos).each(function () {
+
+            //tomo el contenedor
+            let contenedorActual = $(this);
+
+            $(contenedorActual).each(function (index, item) {
+                let idSucursal = $(item).find('#txtSucursal');
+
+                let sucursalDelVehiculo = $(idSucursal).val();
+                if (idSucursalSeleccionada != 0) {
+
+                    if (sucursalDelVehiculo != idSucursalSeleccionada) {
+
+                        $(item).hide();
+
+                    } else {
+
+                        $(item).show();
+
+                    }
+
+                } else {
+
+                    $(item).show();
+
+                }
+
+            });
+
+        });
+
+    });
+
+    ////////////////////////////////////////////filtro por buscador
+    //toma el inputs de busqueda
+    var busquedaPatente = $('#busquedaPatente');
+    var busquedaMarca = $('#busquedaMarca');
+    var busquedaPrecio = $('#busquedaPrecio');
+    //Toma el contenedor de vehiculos
+    var contenedoresVehiculos = $('.ContenedoresVehiculos');
+    //por cada vehiculo se iterara(por cada vehiculo encontrado dara una vuelta)
+    $(contenedoresVehiculos).each(function () {
+
+        //tomo el contenedor
+        var contenedor = $(this);
+
+
+
+        //tomo todos los filtros de busqueda de patente
+        var filtroPatente = contenedor.find('.Patente');
+
+        var TextoPatente = $(filtroPatente[0]).html();
+
+
+        $(busquedaPatente).keyup(function () {
+
+            this.value = this.value.toLowerCase();
+
+            let idSucursalSeleccionada = $('#CmbSucursal').val();
+            let txtSucursalVehiculo = $(contenedor).find('#txtSucursal');
+            let IDSucursal = $(txtSucursalVehiculo).val();
+
+
+            if ($(busquedaPatente).val() != '') {
+                var txt = TextoPatente.toLowerCase();
+                var bus = $(busquedaPatente).val().toLowerCase();
+
+                if (txt.indexOf(bus) > -1) {
+
+                    if (idSucursalSeleccionada != "0") {
+
+                        if (idSucursalSeleccionada == IDSucursal) {
+                            $(contenedor).fadeIn('fast');
+                        }
+
+                    } else {
+
+                        $(contenedor).fadeIn('fast');
+                    }
+
+                } else {
+                    if (idSucursalSeleccionada != "0") {
+
+                        $(contenedor).fadeOut('fast');
+                    } else {
+
+                        $(contenedor).fadeOut('fast');
+                    }
+
+                }
+            } else {
+                if (idSucursalSeleccionada != "0") {
+                    if (idSucursalSeleccionada == IDSucursal) {
+
+                        $(contenedor).fadeIn('fast');
+                    }
+                } else {
+
+                    $(contenedor).fadeIn('fast');
+                }
+
+            }
+        });
+
+
+        //tomo todos los filtros de busqueda de Marca
+        var filtroMarca = contenedor.find('.Marca');
+
+        var TextoMarca = $(filtroMarca[0]).html();
+        $(busquedaMarca).keyup(function () {
+
+            this.value = this.value.toLowerCase();
+
+            let idSucursalSeleccionada = $('#CmbSucursal').val();
+            let txtSucursalVehiculo = $(contenedor).find('#txtSucursal');
+            let IDSucursal = $(txtSucursalVehiculo).val();
+
+
+            if ($(busquedaMarca).val() != '') {
+                var txt = TextoMarca.toLowerCase();
+                var bus = $(busquedaMarca).val().toLowerCase();
+                if (txt.indexOf(bus) > -1) {
+                    if (idSucursalSeleccionada != "0") {
+
+                        if (idSucursalSeleccionada == IDSucursal) {
+                            $(contenedor).fadeIn('fast');
+                        }
+
+                    } else {
+
+                        $(contenedor).fadeIn('fast');
+                    }
+                } else {
+                    if (idSucursalSeleccionada != "0") {
+
+                        $(contenedor).fadeOut('fast');
+                    } else {
+
+                        $(contenedor).fadeOut('fast');
+                    }
+                }
+            } else {
+                if (idSucursalSeleccionada != "0") {
+                    if (idSucursalSeleccionada == IDSucursal) {
+
+                        $(contenedor).fadeIn('fast');
+                    }
+                } else {
+                    $(contenedor).fadeIn('fast');
+                }
+            }
+        });
+
+
+        //tomo todos los filtros de busqueda de Precio
+        var filtroPrecio = contenedor.find('.Precio');
+
+        var TextoPrecio = $(filtroPrecio[0]).html();
+        TextoPrecio = TextoPrecio.replace('$', '');
+        $(busquedaPrecio).keyup(function () {
+
+            this.value = this.value.toLowerCase();
+
+            let idSucursalSeleccionada = $('#CmbSucursal').val();
+            let txtSucursalVehiculo = $(contenedor).find('#txtSucursal');
+            let IDSucursal = $(txtSucursalVehiculo).val();
+
+
+            if ($(busquedaPrecio).val() != '') {
+                var txt = TextoPrecio.toLowerCase();
+                var bus = $(busquedaPrecio).val().split(",").join(".");;
+
+                if (txt.indexOf(bus) > -1) {
+                    if (idSucursalSeleccionada != "0") {
+
+                        if (idSucursalSeleccionada == IDSucursal) {
+                            $(contenedor).fadeIn('fast');
+                        }
+
+                    } else {
+
+                        $(contenedor).fadeIn('fast');
+                    }
+                } else {
+                    if (idSucursalSeleccionada != "0") {
+
+                        $(contenedor).fadeOut('fast');
+                    } else {
+
+                        $(contenedor).fadeOut('fast');
+                    }
+                }
+            } else {
+                if (idSucursalSeleccionada != "0") {
+                    if (idSucursalSeleccionada == IDSucursal) {
+
+                        $(contenedor).fadeIn('fast');
+                    }
+                } else {
+                    $(contenedor).fadeIn('fast');
+                }
+            }
+        });
+
+    });
+
+    function mostrarVehiculosSucursalActual() {
+        let contenedoresVehiculos = $('.ContenedoresVehiculos');
+        let idSucursalSeleccionada = $('#CmbSucursal').val();
+        $(contenedoresVehiculos).each(function () {
+
+            let contenedor = $(this);
+
+            let txtSucursalVehiculo = $(contenedor).find('#txtSucursal');
+            let IDSucursal = $(txtSucursalVehiculo).val();
+
+            if (idSucursalSeleccionada == IDSucursal) {
+                $(contenedor).fadeIn('fast');
+            }
+        });
+
+
+    }
+
+    //Termina buscador de vehiculos
+
+    function mostrarModal(idVehiculo, patente) {
+        $('#ModalTarifaTransporte').modal();
+        $('#txtModalIDVehiculo').val(idVehiculo);
+        $('#txtModalPatenteVehiculo').val(patente);
+    }
+
+    //Funcion encargado de buscar por nombres
+    function buscarVehiculo() {
+
+        let palabras = $('#Txtbusqueda').val();
+
+
+
+        $('.name').each(function (index, elemt) {
+
+
+            var txt = $(elemt).html().toLocaleLowerCase();
+            var bus = que.toLowerCase().replace('amp;', '&');
+
+            if (bus === '' || bus === String.empty) {
+                $('.lineas').show();
+                return false;
+            } else {
+                if (txt.indexOf(bus) > -1) {
+                    $(elemt).parent().show();
+                } else {
+                    $(elemt).parent().hide();
+                }
+            }
+        });
+
+    }
+
+    function publicarVehiculo(PUBLICADO, ID_DISPONIBILIDAD, ID_VEHICULO, patente) {
+
+        ID_DISPONIBILIDAD = parseInt(ID_DISPONIBILIDAD);
+        if (ID_DISPONIBILIDAD != 6) {
+
+            //Pregunto si el desea editar el vehiculo, ya que no tiene estado disponible
+            swal({
+                title: 'Automotriz Larraín',
+                text: 'El Vehiculo '+patente+' no posee el estado "Disponible". ¿Desea modificar el detalle del Vehículo?',
+                type: 'error',
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                confirmButtonClass: 'btn-danger',
+                confirmButtonText: 'OK',
+                allowEscapeKey: true,
+                allowOutsideClick: true
+            }).then(function () {
+                //Si acepto editara el vehiculo
+                editarVehiculo(ID_VEHICULO);
+
+            }, function (dismiss) { });
+
+        } else {
+            //Casteo valor a boleando
+
+            //verifico si esta publicado
+            if (PUBLICADO == true) {
+                //Pregunto si desea quitar de la pagina web el vehiculo
+                swal({
+                    title: 'Automotriz Larraín',
+                    text: '¿Desea remover la publicación del vehículo ' + patente + ' de la página web?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn-danger',
+                    allowEscapeKey: true,
+                    allowOutsideClick: true
+                }).then(function () {
+                    QuitandoPublicacionVehiculo(ID_VEHICULO,patente);
+
+
+                }, function (dismiss) {
+
+
+                });
+            } else {
+                //
+                swal({
+                    title: 'Automotriz Larraín',
+                    text: '¿Desea publicar el Vehículo '+patente+'?',
+                    type: 'warning',
+                    input: 'checkbox',
+                    inputPlaceholder: ' Publicar Como Oferta',
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn-danger',
+                    allowEscapeKey: true,
+                    allowOutsideClick: true
+                }).then(function (result) {
+                    result = parseInt(result);
+
+                    if (result == 0) {
+                        result = false;
+                    } else {
+                        result = true;
+                    }
+                    //Envio al metodo el id del vehiculo y el resultado de si escogio publicarlo como oferta
+                    PublicandoVehiculo(ID_VEHICULO, result,patente);
+
+
+                }, function (dismiss) { });
+            }
+
+        }
+
+    }
+
+    function PublicandoVehiculo(id_vehiculo, vehiculo_oferta,patente) {
+
+        gfProceso();
+
+        $.ajax({
+            type: "post",
+            url: "/mantenedorvehiculo/publicarvehiculo",
+            content: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { ID_VEHICULO: id_vehiculo, OFERTA: vehiculo_oferta },
+            success: function (response) {
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));
+                    var detalle = jQuery.parseJSON(data);
+
+                    if (detalle.Respuesta == "OK") {
+
+                        swal({
+                            title: 'Automotriz Larraín ',
+                            text: 'El vehículo '+patente+' ha sido publicado exitosamente',
+                            type: 'success',
+                            confirmbuttoncolor: '#4caf50',
+                            confirmbuttontext: 'ok',
+                            allowescapekey: false,
+                            allowoutsideclick: false,
+                            onClose: function () {
+
+                                location.reload();
+                                gfProceso();
+
+                            }
+
+                        });
+
+                        gfProceso();
+
+                    }  // if la respuesta del servicio es nok error controlado......
+                    else {
+                        swal({
+                            title: 'Automotriz Larraín',
+                            text: data.detalle_error + '',
+                            type: 'error',
+                            confirmbuttoncolor: '#fe6a00',
+                            confirmbuttontext: 'ok',
+                            confirmbuttonclass: 'btn btn-info',
+                            allowescapekey: false,
+                            allowoutsideclick: false,
+                        });
+
+                        gfProceso();
+                        return false;
+                    }
+
+                } catch (err) { // acción del error de javascript
+
+                    swal({
+                        title: 'Automotriz Larraín',
+                        text: 'Error al publicar vehículo '+patente+' ' + err + '',
+                        type: 'error',
+                        confirmbuttoncolor: '#fe6a00',
+                        confirmbuttontext: 'ok',
+                        confirmbuttonclass: 'btn btn-info',
+                        allowescapekey: false,
+                        allowoutsideclick: false,
+                    });
+
+                    gfProceso();
+                    return false;
+                }
+
+            },
+            error: function (xhr, textstatus, errorthrown) { // acción del error del servicio ajax.
+
+                swal({
+                    title: 'Automotriz Larraín',
+                    text: 'Error de conexión' + textstatus + '',
+                    type: 'error',
+                    confirmbuttoncolor: '#fe6a00',
+                    confirmbuttontext: 'ok',
+                    confirmbuttonclass: 'btn btn-info',
+                    allowescapekey: false,
+                    allowoutsideclick: false,
+                });
+
+                gfProceso();
+                return false;
+            }
+        });
+    }
+
+    function QuitandoPublicacionVehiculo(idVehiculo,patente) {
+
+        gfProceso();
+
+        $.ajax({
+            type: "post",
+            url: "/MantenedorVehiculo/DespublicarVehiculo",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: { ID_VEHICULO: idVehiculo },
+            success: function (response) {
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));
+
+                    if (data.Respuesta == "OK") {
+
+                        swal({
+                            title: 'Automotriz Larraín ',
+                            text: 'El vehículo '+patente+' se removió exitosamente de la web',
+                            type: 'success',
+                            confirmbuttoncolor: '#4caf50',
+                            confirmbuttontext: 'ok',
+                            allowescapekey: false,
+                            allowoutsideclick: false,
+                            onClose: function () {
+
+                                location.reload();
+                                gfProceso();
+                            }
+
+                        });
+
+                        gfProceso();
+
+                    }  // if la respuesta del servicio es nok error controlado......
+                    else {
+                        swal({
+                            title: 'Automotriz Larraín',
+                            text: data.detalle_error + '',
+                            type: 'error',
+                            confirmbuttoncolor: '#fe6a00',
+                            confirmbuttontext: 'ok',
+                            confirmbuttonclass: 'btn btn-info',
+                            allowescapekey: false,
+                            allowoutsideclick: false,
+                        });
+
+                        gfProceso();
+                        return false;
+                    }
+
+                } catch (err) { // acción del error de javascript
+
+                    swal({
+                        title: 'Automotriz Larraín',
+                        text: 'Error al  publicar vehículo' + err + '',
+                        type: 'error',
+                        confirmbuttoncolor: '#fe6a00',
+                        confirmbuttontext: 'ok',
+                        confirmbuttonclass: 'btn btn-info',
+                        allowescapekey: false,
+                        allowoutsideclick: false,
+                    });
+
+                    gfProceso();
+                    return false;
+                }
+
+            },
+            error: function (xhr, textstatus, errorthrown) { // acción del error del servicio ajax.
+
+                swal({
+                    title: 'Automotriz Larraín',
+                    text: 'Error de conexión' + textstatus + '',
+                    type: 'error',
+                    confirmbuttoncolor: '#fe6a00',
+                    confirmbuttontext: 'ok',
+                    confirmbuttonclass: 'btn btn-info',
+                    allowescapekey: false,
+                    allowoutsideclick: false,
+                });
+
+                // gfproceso();
+                return false;
+            }
+        });
+
+    }
+
+
+
+    function editarVehiculo(idVehiculo) {
+        location.href = '/MantenedorVehiculo/FormularioEditarVehiculo?ID=' + idVehiculo;
+
+    }
+    //Metodo encargado de eliminar el vehiculo
+    function eliminarVehiculo() {
+
+        var ID_Vehiculo = $('#txtModalIDVehiculo').val();
+        var patenteAEliminar = $('#txtModalPatenteVehiculo').val();
+        var razonEliminacion = $('#txtAreaEliminacion').val();
+
+        swal({
+            title: 'Automotriz Larraín ',
+            text: 'Vehiculo <b>' + patenteAEliminar + '</b> se eliminará, ¿Está seguro que desea eliminarlo?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4caf50',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirmar',
+            allowEscapeKey: true,
+            allowOutsideClick: true,
+
+        }).then(function () {
+            gfProceso();
+            let razonEliminacion = $('#txtAreaEliminacion').val();
+
+            $.ajax({
+                type: "POST",
+                url: "/MantenedorVehiculo/EliminarVehiculo",
+                content: "application/json; charset=utf-8",
+                dataType: "json",
+                data: { IdVehiculo: ID_Vehiculo, razonDeElimninacion: razonEliminacion, patente: patenteAEliminar },
+                success: function (response) {
+                    try {
+                        var data = jQuery.parseJSON(JSON.stringify(response));
+
+                        if (data.Respuesta == "OK") {
+
+                            swal({
+                                title: 'Automotriz Larraín ',
+                                text: 'El vehiculo <b>' + patenteAEliminar + '</b> se ha eliminado correctamente',
+                                type: 'success',
+                                confirmButtonColor: '#4caf50',
+                                confirmButtonText: 'OK',
+                                allowEscapeKey: false,
+                                allowOutsideClick: false,
+                                onClose: function () {
+
+                                    location.reload();
+                                    gfProceso();
+
+                                }
+
+                            });
+
+                            gfProceso();
+
+
+                        }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                        else {
+                            swal({
+                                title: 'Automotriz Larraín',
+                                text: data.Detalle_Error + '',
+                                type: 'error',
+                                confirmButtonColor: '#FE6A00',
+                                confirmButtonText: 'OK',
+                                confirmButtonClass: 'btn btn-info',
+                                allowEscapeKey: false,
+                                allowOutsideClick: false,
+                            });
+
+                            gfProceso();
+                            return false;
+                        }
+
+                    } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                        swal({
+                            title: 'Automotriz Larraín',
+                            text: 'Error al eliminar el vehículo <b>' + patenteAEliminar + '</b>',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        gfProceso();
+
+                        return false;
+                    }
+
+                },
+                error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+
+                    swal({
+                        title: 'Automotriz Larraín',
+                        text: 'Error de Conexión' + textStatus + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    gfProceso();
+                    return false;
+                }
+            });
+
+
+        });
+
+
+    }
+
+</script>
+

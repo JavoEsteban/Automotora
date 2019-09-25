@@ -1,0 +1,744 @@
+﻿
+<head>
+    <style>
+        tr {
+            border-right: 1px solid black;
+        }
+
+        td {
+            padding: 5px !important;
+        }
+        table {
+            margin-bottom: 2px !important;
+        }
+    </style>
+</head>
+<div class="container">
+    <form>
+        <table class="table small" style="border:1px solid black !important; font-size:9px;">
+            <tr style="height:50px;">
+                <td style="border-top:0px !important;">
+
+                    <img style="width: 120px; height:50px;" src="~/assets/img/logo_larrain.png" />
+
+                </td>
+                <td colspan="2" style="border-top:0px !important;">
+                    <span> RUT</span><br />
+                    <span> @ViewBag.NotaVenta.RUT_SUCURSAL</span><br />
+                    <span> DIRECCIÓN</span><br />
+                    <span>@ViewBag.NotaVenta.DIRECCION_SUCURSAL</span>
+                </td>
+                <td colspan="2" style="border-top:0px !important;text-align:left;">
+                    <span> <h2><b>NOTA DE VENTA</b></h2></span>
+
+                </td>
+            </tr>
+            <tr>
+
+                <td>
+                    <span> SANTIAGO</span>
+                </td>
+                <td>
+                    <span>
+                        <label>@ViewBag.NotaVenta.FECHA_DOCUMENTO</label>
+                    </span>
+                </td>
+                <td>
+                    <label>NÚMERO</label>
+
+                </td>
+                <td colspan="2">
+                    <span>
+                        @ViewBag.NotaVenta.ID_NOTA_VENTA
+                    </span>
+                </td>
+            </tr>
+
+        </table>
+        <table class="table small" style="border:1px solid black !important; font-size:9px;">
+            <tr style="border-right:1px solid black;">
+                <td colspan="2" style="border-top:0px !important;">
+
+                    <label>FACTURAR A</label>
+
+                </td>
+
+                <td colspan="3" style="border-top:0px !important;">
+                    <span>
+                        @ViewBag.NotaVenta.NOMBRES @ViewBag.NotaVenta.APELLIDOS
+                    </span>
+
+
+                </td>
+
+                <td style="border-top:0px !important;">
+                    <label>
+                        <span> DIRECCION</span>
+                    </label>
+                </td>
+                <td colspan="4" style="border-top:0px !important;">
+                    <span>
+                        @ViewBag.NotaVenta.DIRECCION
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+
+                <td colspan="2">
+
+                    <label>RUT</label>
+
+                </td>
+                <td>
+                    <span> @ViewBag.NotaVenta.RUT</span>
+
+                </td>
+                <td>
+                    <label>TELÉFONO</label>
+
+                </td>
+
+                <td>
+                    <span>@ViewBag.NotaVenta.TELEFONO</span>
+
+                </td>
+                <td>
+                    <label>CELULAR</label>
+                </td>
+
+                <td>
+                    <span>@ViewBag.NotaVenta.TELEFONO</span>
+
+                </td>
+                <td>
+                    <label>COMUNA</label>
+
+                </td>
+                <td colspan="2">
+                    <span>@ViewBag.NotaVenta.COMUNA_CLIENTE</span>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>CIUDAD</label>
+                </td>
+                <td colspan="3">
+                    <span>@ViewBag.NotaVenta.CIUDAD_CLIENTE</span>
+
+                </td>
+                <td colspan="1">
+                    <span></span>
+
+                </td>
+                <td colspan="1">
+                    <label>EMAIL</label>
+                </td>
+                <td colspan="3">
+                    <span>@ViewBag.NotaVenta.EMAIL</span>
+                </td>
+                <td colspan="1">
+                    <span></span>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label>COMPRA:</label>
+                </td>
+                <td colspan="2">
+                    <span>@ViewBag.NotaVenta.NOMBRES @ViewBag.NotaVenta.APELLIDOS</span>
+                </td>
+                <td>
+                    <label>RUT</label>
+                </td>
+                <td>
+                    <span>@ViewBag.NotaVenta.RUT</span>
+                </td>
+                <td>
+                    <label>TELÉFONO</label>
+                </td>
+                <td>
+                    <span>@ViewBag.NotaVenta.TELEFONO</span>
+                </td>
+                <td>
+                    <label>EMAIL</label>
+                </td>
+                <td colspan="2">
+                    <span>@ViewBag.NotaVenta.EMAIL</span>
+                </td>
+            </tr>
+        </table>
+
+
+        <table class="table small" style="border:1px solid black !important; font-size:9px;">
+
+            <tr>
+                <td style="border-top:0px !important;">
+                    <label>MARCA</label>
+                </td>
+                <td colspan="4" style="border-top:0px !important;">
+                    <span>@ViewBag.NotaVenta.MARCA</span>
+                </td>
+                <td style="border-top:0px !important;">
+                    <label>MODELO</label>
+                </td>
+                <td colspan="4" style="border-top:0px !important;">
+                    <span>@ViewBag.NotaVenta.NOMBRE_MODELO</span>
+
+                </td>
+                <td style="border-top:0px !important;">
+                    <label>AÑO</label>
+                </td>
+
+                <td colspan="3" style="border-top:0px !important;">
+                    <span>@ViewBag.NotaVenta.ANO</span>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    <label>COLOR</label>
+                </td>
+                <td colspan="4">
+                    <span>@ViewBag.NotaVenta.COLOR</span>
+                </td>
+                <td>
+                    <label>STOCK</label>
+                </td>
+                <td colspan="2">
+                    <span>@ViewBag.NotaVenta.TIPO_INGRESO</span>
+
+                </td>
+                <td colspan="2">
+                    <span></span>
+
+                </td>
+                <td>
+                    <label>PATENTE</label>
+                </td>
+                <td colspan="3">
+                    <span>@ViewBag.NotaVenta.PATENTE</span>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <label>FACTURA</label>
+                </td>
+                <td colspan="2">
+                    <span>SI</span>
+                </td>
+                <td colspan="1">
+                    <span></span>
+                </td>
+                <td>
+                    <label>SUCURSAL</label>
+                </td>
+                <td colspan="8">
+                    <span>@ViewBag.NotaVenta.SUCURSAL_VEHICULO</span>
+                </td>
+
+
+            </tr>
+
+        </table>
+
+
+
+        <table class="table small" style="border:1px solid black !important; font-size:9px;">
+
+            <tr>
+                <td colspan="3" style="border-top:0px !important;">
+                    <label>DETALLE DE PAGOS:</label>
+                </td>
+                <td colspan="11" style="border-top:0px !important;"></td>
+            </tr>
+            <tr>
+                <td colspan="3" >
+                    <label>DETALLE</label>
+                </td>
+                <td colspan="3" >
+                    <label>FORMA DE PAGO</label>
+                </td>
+                <td colspan="3" >
+                    <label>N° CUOTAS</label>
+
+                </td>
+                <td colspan="3" s>
+                    <label>DIAS DE PAGO</label>
+                </td>
+                <td colspan="2" style="text-align:right !important">
+                    <label>MONTO</label>
+                </td>
+
+            </tr>
+
+            @foreach (var pago in ViewBag.ListaPagos)
+            {
+
+
+                <tr>
+                    <td colspan="3">
+                        <span>@pago.TIPO_DOCUMENTO</span>
+                    </td>
+                    <td colspan="3">
+                        <span> @pago.FORMA_PAGO</span>
+
+                    </td>
+                    <td colspan="3">
+                        <span>@pago.CUOTAS</span>
+                    </td>
+                    <td colspan="3">
+                        <span>@pago.DIAS_PAGO</span>
+                    </td>
+                    <td colspan="2" style=" text-align:right !important;">
+                        <span>$</span><span class="txt_montoPago">@pago.MONTO</span>
+                    </td>
+
+                </tr>
+            }
+            <tr>
+
+                <td colspan="14">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+
+            </tr>
+
+
+
+            <tr>
+                <td colspan="14">
+                    <label>VEHICULOS EN PARTE DE PAGO:</label>
+                </td>
+
+            </tr>
+
+            <tr>
+                <td colspan="3">
+                    <label>PATENTE</label>
+                </td>
+                <td colspan="3">
+                    <label>MARCA</label>
+                </td>
+                <td colspan="3">
+                    <label>AÑO</label>
+                </td>
+                <td colspan="2" >
+                    <label>PRECIO DE TOMA</label>
+                </td>
+                <td colspan="3">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+            </tr>
+            @foreach (var partePago in ViewBag.ListadoVehiculosPartePago)
+
+            {
+
+                <tr>
+                    <td colspan="3">
+                        <span>@partePago.PATENTE</span>
+                    </td>
+                    <td colspan="3">
+                        <span>@partePago.MARCA</span>
+                    </td>
+                    <td colspan="3">
+                        <span>@partePago.ANO</span>
+                    </td>
+                    <td colspan="2" >
+                        <span>$</span><span class="txt_precioCompra">@partePago.PRECIO_COMPRA</span>
+                    </td>
+                    <td colspan="3">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                </tr>
+
+            }
+            <tr>
+                <td colspan="3">
+                    <span></span>
+                </td>
+                <td colspan="3">
+                    <span></span>
+                </td>
+                <td colspan="3">
+                    <label>TOTAL</label>
+                </td>
+                <td colspan="2" >
+                    <span>$</span><span id="txt_totalVehiculosPP">@ViewBag.NotaVenta.TOTAL_VEHICULOS_PP</span>
+                </td>
+                <td colspan="3">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+            </tr>
+            <tr>
+                <td colspan="14">
+                    <label>DESCUENTOS:</label>
+                </td>
+
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <label>MOTIVO</label>
+                </td>
+                <td colspan="3">
+                    <label>MONTO</label>
+                </td>
+                <td colspan="3">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+                <td colspan="2">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+                <td colspan="3">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+            </tr>
+
+
+            @foreach (var descuento in ViewBag.ListaDescuentos)
+            {
+                <tr>
+                    <td colspan="3">
+                        <span>@descuento.DESCRIPCION</span>
+                    </td>
+                    <td colspan="3">
+                        <span>$</span><span class="montoDescuento">@descuento.MONTO</span>
+                    </td>
+                    <td colspan="3">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                    <td colspan="2">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                    <td colspan="3">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="3">
+                    <label>TOTAL DESCUENTOS</label>
+                </td>
+                <td colspan="3" >
+                    <span>$</span><span id="txt_TotalDescuentos">@ViewBag.NotaVenta.TOTAL_DESCUENTOS</span>
+                </td>
+
+                <td colspan="3">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+                <td colspan="2">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+                <td colspan="3">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+            </tr>
+        </table>
+        <table class="table small" style="border:1px solid black !important; font-size:9px;">
+
+            <tr>
+
+                <td colspan="2" style="border-top:0px !important;">
+                    <label>PRECIO DE VENTA</label>
+                </td>
+
+                <td colspan="2" style="border-top:0px !important;text-align:right !important; ">
+                    <span>$</span><span id="txt_PrecioVenta">@ViewBag.NotaVenta.PRECIO_LISTA</span>
+                </td>
+                <td colspan="2" style="border-top:0px !important; ">
+
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+                </td>
+                <td colspan="2" style="border-top:0px !important; ">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+                <td colspan="2" style="border-top:0px !important; ">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+
+
+
+
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <label>TRANSFERENCIA</label>
+                </td>
+                <td colspan="2" style="text-align:right !important; ">
+                    <span>$</span><span id="txt_Transferencia">@ViewBag.NotaVenta.TRANSFERENCIA</span>
+                </td>
+                <td colspan="2">
+
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+                </td>
+                <td colspan="2">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+                <td colspan="2">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <label>TOTAL</label>
+                </td>
+                <td colspan="2" style=" text-align:right !important;">
+                    <span>$</span><span id="Total_SinDescuentos">@ViewBag.NotaVenta.TOTAL_SIN_DESCUENTOS</span>
+                </td>
+                <td colspan="2">
+
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+                </td>
+                <td colspan="2">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+                <td colspan="2">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <label>VEHICULOS PARTE PAGO:</label>
+                </td>
+                <td colspan="2" style=" text-align:right !important;">
+                    <span>$</span><span id="txt_TotalVehiculoPP">@ViewBag.NotaVenta.TOTAL_VEHICULOS_PP</span>
+                </td>
+                <td colspan="2">
+
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+                </td>
+                <td colspan="2">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+                <td colspan="2">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <label>TOTAL DESCUENTOS</label>
+                </td>
+                <td colspan="2" style=" text-align:right !important;">
+                    <span>$</span><span id="txt_totalDescuento">@ViewBag.NotaVenta.TOTAL_DESCUENTOS</span>
+                </td>
+                <td colspan="2">
+
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+                </td>
+                <td colspan="2">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+                <td colspan="2">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <label>TOTAL A PAGAR</label>
+                </td>
+                <td colspan="2" style=" text-align:right !important;">
+                    <span>$</span><span id="txt_totalPagar">@ViewBag.NotaVenta.TOTAL</span>
+                </td>
+                <td colspan="2">
+
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+                </td>
+                <td colspan="2">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+                <td colspan="2">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+
+            </tr>
+
+        </table>
+        <table class="table small" style="border:1px solid black !important; font-size:9px;">
+            <tr>
+                <td colspan="9" style="border-top:0px !important;">
+                    <label>OBSERVACIONES:</label>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="9">
+                    <span>@ViewBag.NotaVenta.OBSERVACIONES</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="9" style="border-top:0px !important; font-size:8px;">
+                    <span>
+                        <p>
+                            El valor de la reserva se abonará al saldo a facturar, y no constituye fijación de precio.
+                            Los precios de venta, serán los que rijan al momento de la entrega y
+                            NO SE GARANTIZA NÚMERO DE TERMINACIÓN DE LA PATENTE
+                        </p>
+                    </span>
+                </td>
+
+            </tr>
+
+
+            <tr>
+                <td style="border-top:0px !important; ">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+                <td colspan="2" style="border-top:0px;">
+                    <span>
+                        @ViewBag.NotaVenta.NOMBRE_USUARIO
+                    </span>
+                    <br />
+                    <span style="border-top:1px solid black !important;">
+
+                        &nbsp; &nbsp;  VENDEDOR&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+                    </span>
+                </td>
+                <td style="border-top:0px !important; ">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+                <td colspan="2" style="border-top:0px;">
+                    <br />
+
+                    <span style="border-top:1px solid black !important;">
+                        &nbsp; &nbsp;  V°B° GERENCIA &nbsp; &nbsp;
+                    </span>
+                </td>
+                <td style="border-top:0px !important; ">
+                    <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                </td>
+                <td colspan="2" style="border-top:0px;">
+                    <br />
+
+                    <span style="border-top:1px solid black !important;">
+                        &nbsp; &nbsp; COMPRADOR &nbsp; &nbsp;
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <div style="text-align:center;" class="btnImprimir">
+        <button onclick="imprimir()">imprimir</button>
+    </div>
+
+</div>
+
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script>
+
+    $(document).ready(function () {
+
+        function formateaNumero(num) {
+            var numFormateado = new Intl.NumberFormat("de-DE").format(num);
+            return numFormateado;
+        }
+
+        let precioVenta = $('#txt_PrecioVenta').text();
+        precioVenta = formateaNumero(precioVenta);
+
+        let transferencia = $('#txt_Transferencia').text();
+        transferencia = formateaNumero(transferencia);
+
+        let totalSinDescuento = $('#Total_SinDescuentos').text();
+        totalSinDescuento = formateaNumero(totalSinDescuento);
+
+        let totalDescuentos = $('#txt_totalDescuento').text();
+        totalDescuentos = formateaNumero(totalDescuentos);
+
+        let totalPagar = $('#txt_totalPagar').text();
+        totalPagar = formateaNumero(totalPagar);
+
+        let totalVehiculosPP = $('#txt_TotalVehiculoPP').text();
+        totalVehiculosPP = formateaNumero(totalVehiculosPP);
+
+        let totalDescontado = $('#txt_TotalDescuentos').text();
+        totalDescontado = formateaNumero(totalDescontado);
+
+        let totalPagado = $('#txt_TotalPagado').text();
+        totalPagado = formateaNumero(totalPagado);
+
+        let PrecioCompra = $('.txt_precioCompra');
+
+
+        $(PrecioCompra).each(function (index, item)
+        {
+            let montoFormateado = formateaNumero($(item).text());
+            $(item).text(montoFormateado);
+        });
+        
+        let montoDescuento = $('.montoDescuento').text();
+        montoDescuento = formateaNumero(montoDescuento);
+        let montos = $('.txt_montoPago');
+
+        $(montos).each(function (index, item)
+        {
+            let montoFormateado = formateaNumero($(item).text());
+            $(item).text(montoFormateado);
+        });
+
+
+
+
+        $('#txt_PrecioVenta').text(precioVenta);
+        $('#txt_Transferencia').text(transferencia);
+        $('#Total_SinDescuentos').text(totalSinDescuento);
+        $('#txt_totalDescuento').text(totalDescuentos);
+        $('#txt_totalPagar').text(totalPagar);
+        $('#txt_TotalVehiculoPP').text(totalVehiculosPP);
+        $('#txt_TotalDescuentos').text(totalDescontado);
+        $('#txt_TotalPagado').text(totalPagado);
+        $('.montoDescuento').text(montoDescuento);
+
+
+    });
+
+
+    function imprimir() {
+
+        $('.btnImprimir').css("display", "none");
+        window.print();
+        $('.btnImprimir').css("display", "block");
+
+    }
+
+
+
+</script>

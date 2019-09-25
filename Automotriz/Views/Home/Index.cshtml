@@ -1,0 +1,305 @@
+﻿
+@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+@*<h2>Index</h2>
+
+    @{
+        ViewBag.Title = "Home Page";
+    }*@
+
+<div class="card">
+    <!-- inicio tarjeta -->
+
+    <div class="card-header card-header-icon" data-background-color="orange">
+        <i class="material-icons">local_shipping</i>
+    </div>
+    <div class="card-content">
+        <h4 class="card-title">Datos de Equipos </h4>
+
+
+        <p class="description">
+            Este módulo permite agregar/editar/Eliminar Equipos de Transporte
+        </p>
+
+    </div>
+
+
+    <div class="row">
+        <!-- inicio fila -->
+        <!-- inicio -->
+        <div class="col-md-12">
+
+
+
+            <!-- inicio fila -->
+
+            <div class="col-sm-8">
+
+                <div class="row">
+
+
+                    <div class="col-md-2">
+
+                        <label class="control-label">PPU</label>
+                        <input type="text" class="form-control text-uppercase " id="patente" />
+                    </div>
+
+
+                    <div class="col-md-2">
+
+                        <label class="control-label">Version</label>
+                        <input type="text" class="form-control text-uppercase" id="version" />
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <label class="control-label">Chasis</label>
+                        <input type="text" class="form-control text-right" id="chasis" />
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <label class="control-label">Motor</label>
+                        <input type="text" class="form-control text-right" id="motor" />
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <label class="control-label">Traccion</label>
+                        <select type="text" class="selectpicker" id="tracc90j">
+                            <option value="">Seleccione Traccion</option>
+                            <option value="1"> 4X2</option>
+                            <option value="2"> 4X4</option>
+                        </select>
+
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+
+                        <label class="control-label">Consignación</label>
+                        <select type="text" class="selectpicker" id="consignacion">
+                            <option value="">Seleccione Consignación</option>
+                            <option value="1"> Propio</option>
+                            <option value="2"> Consignacion</option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="control-label">Marca</label>
+                        <select type="text" class="selectpicker" id="marca">
+                            <option value="">Seleccione Marca</option>
+                            <option value="1"> 1</option>
+                            <option value="2"> 2</option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-2">
+
+                        <label class="control-label">Año</label>
+
+                        <input type="text" class="form-control text-right" id="anio" />
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <label class="control-label">Color</label>
+                        <input type="text" class="form-control text-right" id="color" />
+
+                    </div>
+
+
+
+                    <div class="col-md-2">
+
+                        <label class="control-label">Cilindrada</label>
+
+                        <input type="text" class="form-control text-right" id="cilindrada" />
+                    </div>
+
+
+
+                    <div class="col-md-3">
+
+
+                        <label class="control-label">Transmisión</label>
+
+                        <select class="selectpicker" data-style="btn btn-default" data-size="7" id="transmision">
+                            <option value="">Seleccione Transmisión</option>
+                            <option value="0">Automática</option>
+                            <option value="1">Manual</option>
+                        </select>
+
+
+
+                    </div>
+
+
+
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+
+                        <label class="control-label">Precio</label>
+
+                        <input type="text" class="form-control text-right" id="precio" />
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <label class="control-label">Modelo</label>
+
+                        <input type="text" class="form-control text-right" id="modelo" />
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <label class="control-label">Dueños</label>
+
+                        <input type="number" min="0" class="form-control text-right" id="duenios" />
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <label class="control-label">Kilometraje</label>
+
+                        <input type="number" min="0" class="form-control text-right" id="kilometraje" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="control-label">Combustible</label>
+
+                        <select class="selectpicker" data-style="btn btn-default" data-size="7" id="combustible">
+                            <option value="">Seleccione tipo Combustible</option>
+                            <option value="0">Diesel</option>
+                            <option value="1">Gasolina</option>
+                        </select>
+
+                    </div>
+                    
+
+
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="control-label">Sucursal</label>
+
+                        <select class="selectpicker" data-style="btn btn-default" data-size="7" id="CmbPermiteTransporte">
+                            <option value="1">Cerrillos</option>
+                            <option value="0">Maipú</option>
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="control-label">Reseva</label>
+
+                        <select class="selectpicker" data-style="btn btn-default" data-size="7" id="CmbPermiteTransporte">
+                            <option value="1">Disponible</option>
+                            <option value="0">Reservado</option>
+                        </select>
+
+                    </div>
+                </div>
+
+                    <div class="row">
+
+
+                        <div class="col-md-6">
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <input id="txtID_EquipoTransporte" class="hidden" />
+                            <button type="button" class="btn btn-rose btn-fill" id="Btn_Guardar">GUARDAR</button>
+                            <button type="button" class="btn btn-success btn-fill" id="Btn_Modificar" disabled="disabled">MODIFICAR</button>
+                            <button type="button" class="btn btn-danger" onclick="javascript: Nuevo();">NUEVA </button>
+
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="col-sm-4">
+
+                    <div class="col-sm-12">
+
+                        <input type="file" name="image" id="txtArchivo" class="fileinput-preview" onchange="readURL(this)">
+
+                        <input id="txtBase64" class="hidden" />
+                        <input id="TxtID_Usuario" class="hidden" />
+
+                        <img src="~/img/autito.jpg" class="img-responsive border-gray" id="txtImagen" />
+
+                    </div>
+
+                </div>
+                <div class="row">
+                    <!-- inicio fila -->
+                    <div class="col-sm-12">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <div class="card-header" data-background-color="orange">
+                                    <h4 class="card-title">LISTADO DE EQUIPOS</h4>
+                                    <p class="category">Seleccione Equipo de Transporte, para Editar / Eliminar </p>
+                                </div>
+                                <div class="card-content">
+                                    <table id="TablaEquipoTransporte" class="table table-hover small">
+                                        <thead>
+                                            <tr>
+                                                <th>TIPO TRANSPORTE</th>
+                                                <th>TIPO CLASE</th>
+                                                <th>PATENTE</th>
+                                                <th>MARCA</th>
+                                                <th>MODELO</th>
+                                                <th>AÑO</th>
+                                                <th>NUMERO CHASIS</th>
+                                                <th>LARGO</th>
+                                                <th> COLOR  </th>
+                                                <th>VIGENCIA</th>
+                                                <th>Editar</th>
+                                                <th>Eliminar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+
+                                            <tr>
+                                                <td> Descripcion_TipoTransporte</td>
+                                                <td> TIPO_CLASE</td>
+                                                <td> Patente </td>
+                                                <td> MARCA </td>
+                                                <td> MODELO </td>
+                                                <td> Ano </td>
+                                                <td> NUMEROCHASIS </td>
+                                                <td> LARGO  </td>
+                                                <td> COLOR  </td>
+                                                <td> Vigencia  </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div> <!-- cuadro table -->
+                    </div>
+                </div> <!-- fin fila -->
+            </div>
+    </div> <!-- fin Cuadro -->
+</div> <!-- fin tarjeta tarjeta -->

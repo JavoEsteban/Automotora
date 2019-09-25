@@ -1,0 +1,478 @@
+﻿
+@{
+    ViewBag.Title = "ReportesVehiculoCliente";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+
+<h5 class="tituloPagina">Vehículos Consignados por Cliente | Sucursal <b>@ViewBag.SUCURSAL</b></h5>
+
+
+<div class="card">
+    <div class="card-header card-header-icon" data-background-color="orange">
+        <i Class="material-icons">assignment_turned_in</i>
+    </div>
+    <div class="card-content">
+        <h4 class="card-title">Reportes de Vehiculos por Cliente </h4>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <div class="col-md-3">
+                        <label class="control-label">CLIENTES</label>
+                        <select class="selectpicker" data-live-search="true" data-style="btn btn-default" data-size="7" id="CmbCliente">
+                            <option value="0">TODAS LOS CLIENTES</option>
+                            @foreach (var cliente in ViewBag.ListaClientes)
+                            {
+                                <option value="@cliente.ID_CLIENTE">@cliente.RUT | @cliente.NOMBRES @cliente.APELLIDOS</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="control-label">CONDICION</label>
+                        <select class="form-control" data-style="btn btn-default" data-size="7" id="CmbEstado">
+                            <option value="0">TODAS LAS CONDICIONES</option>
+                            @foreach (var item in ViewBag.ListaEstados)
+                            {
+                                <option value="@item.ID_ESTADO">@item.DESCRIPCION</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="control-label">TIPO DE INGRESO</label>
+                        <select class="form-control" data-style="btn btn-default" data-size="7" id="CmbTipoConsigna">
+                            <option value="0">TODOS LOS INGRESOS</option>
+                            @foreach (var item in ViewBag.ListaTipoConsigna)
+                            {
+                                <option value="@item.ID_TIPO_CONSIGNACION">@item.DESCRIPCION</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="control-label">ESTADO</label>
+                        <select class="form-control" data-style="btn btn-default" data-size="7" id="CmbDisponibilidad">
+                            <option value="0">TODOS LOS ESTADOS</option>
+                            @foreach (var item in ViewBag.ListaDisponibilidad)
+                            {
+                                <option value="@item.ID_DISPONIBILIDAD">@item.DESCRIPCION</option>
+                            }
+                        </select>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header" data-background-color="orange">
+                        <h4 class="card-title">Vehiculos en Stock </h4>
+                        <a href="javascript:TablaToExcel();"><img src="https://img.icons8.com/metro/25/000000/download.png"> Exportar Excel</a>
+                    </div>
+                    <div class="card-content table-responsive ">
+                        <table id="TablaDatos" class="table table-striped small table-hover">
+                            <thead id="listarCampos">
+                                <tr>
+                                    <th>PATENTE</th>
+                                    <th>FECHA INGRESO</th>
+                                    <th> MARCA</th>
+                                    <th>MODELO</th>
+                                    <th>ANO</th>
+                                    <th>TRANSMISION</th>
+                                    <th>COLOR</th>
+                                    <th>COMBUSTIBLE</th>
+                                    <th>DUEÑOS</th>
+                                    <th>TIPO INGRESO</th>
+                                    <th>PRECIO DE COMPRA</th>
+                                    <th>SUCURSAL</th>
+                                    <th>CONDICION</th>
+                                    <th class="Disponibilidad">ESTADO</th>
+                                    <th>CLIENTE</th>
+                                    <th>USUARIO</th>
+
+
+                                </tr>
+                            </thead>
+
+                        </table>
+
+                        <table id="TablaAuxiliar" class="tablaInvisible">
+                            <thead>
+                                <tr>
+                                    <th>PATENTE</th>
+                                    <th>FECHA INGRESO</th>
+                                    <th> MARCA</th>
+                                    <th>MODELO</th>
+                                    <th>ANO</th>
+                                    <th>TRANSMISION</th>
+                                    <th>COLOR</th>
+                                    <th>COMBUSTIBLE</th>
+                                    <th>DUEÑOS</th>
+                                    <th>TIPO INGRESO</th>
+                                    <th>PRECIO DE COMPRA</th>
+                                    <th>SUCURSAL</th>
+                                    <th>CONDICION</th>
+                                    <th class="Disponibilidad">ESTADO</th>
+                                    <th>CLIENTE</th>
+                                    <th>USUARIO</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="TxtID" type="text" class="hidden" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script>
+
+    $(document).ready(function () {
+
+
+        $('#TablaDatos').DataTable({
+            "language": {
+                "url": "../assets/js/Chile.json"
+            },
+            "pageLength": 100
+
+        });
+        listaVehiculosFiltro();
+        $('#CmbCliente').selectpicker();
+
+        $(function () {
+            $('#txtFechaInicio').datetimepicker({
+
+                format: 'DD/MM/YYYY',
+                ////locale: 'es'
+                //format: 'YYYY-MM-DD HH:mm'
+            });
+        });
+
+        $(function () {
+            $('#txtFechaFin').datetimepicker({
+
+                format: 'DD/MM/YYYY',
+                ////locale: 'es'
+                //format: 'YYYY-MM-DD HH:mm'
+            });
+        });
+
+
+    });
+    function focusBootstrapSearch() {
+        $(".bootstrap-select").on("show.bs.dropdown", function (e) {
+            setTimeout(function () {
+                $(e.currentTarget).find('.bs-searchbox').find('.form-control').focus();
+            }, 100);
+        });
+    }
+    function editarVehiculo(idVehiculo) {
+        location.href = '/MantenedorVehiculo/FormularioDetalleVehiculo?ID=' + idVehiculo;
+
+    }
+    ////Funciones para hacer datatables
+
+    function limpiaBodyTablaDestino(tablaObjetivo, nombreBody, idRutaParametro) {
+
+        $('#' + tablaObjetivo).find('tbody').each(function () {
+            var elementoBody = $(this);
+
+            $(elementoBody).remove();
+
+        });
+    }
+
+    function agregaBodyTablaObjetivo(tablaObjetivo, nombreBody, idBody, HTML) {
+        //Funcion que permite agregar body dinamicamente a una tabla de destino
+        //asigna nombre especifico al body que se creará junto con un id
+        var bodyDinamico = '';
+
+        bodyDinamico += '<tbody id="' + nombreBody + '-' + idBody + '">';
+        bodyDinamico += '</tbody>';
+
+        $('#' + tablaObjetivo).append(bodyDinamico);
+
+        //Agrega contenido HTML al nuevo body creado
+        $('#' + nombreBody + '-' + idBody).html(HTML);
+
+        //Transforma tabla especificada en dataTabla dinamica :p
+        $('#' + tablaObjetivo).DataTable({
+            destroy: true,
+            "language": {
+                "url": "../assets/js/Chile.json"
+            },
+            "pageLength": 100
+
+        });
+    }
+    ////FIN FUNCIONES DATATABLES
+    function limpiarCampos() {
+
+
+        $("#CmbEstado").val(0);
+        $("#CmbTipoConsigna").val(0);
+        $("#CmbUsuario").val(0);
+        $("#CmbDisponibilidad").val(0);
+    }
+
+    $("#CmbCliente").change(function () {
+        let idEstado = $("#CmbCliente").val();
+
+        if (CmbCliente == 0 || CmbCliente == "") {
+            gfProceso();
+            Nuevo();
+            return false;
+        } else {
+            listaVehiculosFiltro();
+
+        }
+
+
+    });
+
+    $("#CmbEstado").change(function () {
+        let idEstado = $("#CmbEstado").val();
+
+        if (idEstado == 0 || idEstado == "") {
+            gfProceso();
+            Nuevo();
+            return false;
+        } else {
+            listaVehiculosFiltro();
+
+        }
+
+
+    });
+
+    $("#CmbTipoConsigna").change(function () {
+
+        let idTipoConsigna = $("#CmbTipoConsigna").val();
+
+        if (idTipoConsigna == 0 || idTipoConsigna == "") {
+            gfProceso();
+            Nuevo();
+            return false;
+        } else {
+            listaVehiculosFiltro();
+        }
+
+
+    });
+
+
+    $("#CmbUsuario").change(function () {
+        let idUsuario = $("#CmbUsuario").val();
+
+        if (idUsuario == 0 || idUsuario == "") {
+            gfProceso();
+            Nuevo();
+            return false;
+        } else {
+            listaVehiculosFiltro();
+
+        }
+
+
+    });
+
+    $("#CmbDisponibilidad").change(function () {
+        let IDDisponibilidad = $("#CmbDisponibilidad").val();
+
+        if (IDDisponibilidad == 0 || IDDisponibilidad == "") {
+            gfProceso();
+            Nuevo()
+            return false;
+        } else {
+            listaVehiculosFiltro();
+        }
+
+
+    });
+
+    function diasStock(fechaIngreso) {
+        let today = new Date();
+        let fechaInicial = fechaIngreso;
+        let inicio = new Date(fechaInicial);
+        console.log(today);
+        console.log(inicio);
+
+        let diasdif = today.getTime() - inicio.getTime();
+        let contdias = Math.round(diasdif / (1000 * 60 * 60 * 24));
+        return contdias;
+
+    }
+
+    //oculta las TH de stock y de la disponibilidad cuando el vehiculo esta retirado
+    function ocultarTH() {
+        $(".Dias").css('display', 'none');
+        $(".Disponibilidad").css('display', 'none');
+    }
+
+    function obtenerValorParametro(sParametroNombre) {
+
+        let sPaginaURL = window.location.search.substring(1);
+        let sURLVariables = sPaginaURL.split('&');
+
+        for (let i = 0; i < sURLVariables.length; i++) {
+            let sParametro = sURLVariables[i].split('=');
+            if (sParametro[0] == sParametroNombre) {
+                return sParametro[1];
+            }
+        }
+        return null;
+    }
+
+    function listaVehiculosFiltro() {
+        let cliente = $('#CmbCliente').val();
+        let ingreso = $("#CmbTipoConsigna").val();
+        let estado = $("#CmbEstado").val();
+        let disponibilidad = $("#CmbDisponibilidad").val();
+
+
+        let filtro = {
+            idCliente: cliente,
+            idIngreso: ingreso,
+            idEstado: estado,
+            idDisponibilidad: disponibilidad
+        }
+        limpiaBodyTablaDestino("TablaDatos", "bodyVehiculos", filtro.idCliente);
+
+        $.ajax({
+            type: "POST",
+            url: "/Reportes/obtieneFiltroVehiculoCliente",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: filtro,
+            success: function (response) {
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaVehiculos = jQuery.parseJSON(data.Descripcion);
+                    console.log(listaVehiculos);
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        let strHtml = '';
+
+                        $.each(listaVehiculos, function (index, item) {
+
+                            strHtml += '<tr>';
+                            strHtml += '<td><a href="/MantenedorVehiculo/FormularioDetalleVehiculo?ID=' + item.ID_VEHICULO + '">' + item.PATENTE + '</a></td>';
+                            strHtml += '<td>' + item.FECHA_INGRESO + '</td>';
+                            strHtml += '<td>' + item.MARCA + '</td>';
+                            strHtml += '<td>' + item.NOMBRE_MODELO + '</td>';
+                            strHtml += '<td>' + item.ANO + '</td>';
+                            strHtml += '<td>' + item.NOMBRE_TRANSMISION + '</td>';
+                            strHtml += '<td>' + item.COLOR + '</td>';
+                            strHtml += '<td>' + item.COMBUSTIBLE + '</td>';
+                            strHtml += '<td>' + item.CANTIDAD_DUENIOS + '</td>';
+                            strHtml += '<td>' + item.TIPO_INGRESO + '</td>';
+                            strHtml += '<td>' + item.PRECIO_COMPRA + '</td>';
+                            strHtml += '<td>' + item.SUCURSAL + '</td>';
+                            strHtml += '<td>' + item.ESTADO + '</td>';
+                            strHtml += '<td>' + item.DISPONIBILIDAD + '</td>';
+                            strHtml += '<td>' + item.RUT_CLIENTE + '</td>';
+                            strHtml += '<td>' + item.NOMBRE_USUARIO + '</td>';
+                            strHtml += '</tr">';
+
+
+                        });
+
+                        $('#TablaAuxiliar').html(strHtml);
+
+                        agregaBodyTablaObjetivo("TablaDatos", "bodyVehiculos", filtro.idCliente, strHtml);
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Vehiculos' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar los Vehiculos ' + err + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+    ////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+    function TablaToExcel() {
+
+        $("#TablaAuxiliar").table2excel({
+            exclude: ".noExl",
+            name: "ReportesVehiculosCliente",
+            filename: "ReportesVehiculosCliente.xls",
+            exclude_img: true,
+            exclude_links: true,
+            exclude_inputs: true
+        });
+
+    }
+
+
+</script>
+

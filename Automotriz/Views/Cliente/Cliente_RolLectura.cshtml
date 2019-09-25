@@ -1,0 +1,861 @@
+﻿
+@{
+    ViewBag.Title = "ClienteIndex";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+
+
+<h5 class="tituloPagina">Mantenedor Clientes  | Sucursal <b>@ViewBag.SUCURSAL</b></h5>
+
+<form id="RegisterValidation" action="" method="">
+    <div class="card">
+        <div class="card-header card-header-icon" data-background-color="orange">
+            <i class="material-icons">accessibility</i>
+        </div>
+        <div class="card-content">
+            <h4 class="card-title">Módulo Mantenedor Clientes </h4>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-3">
+                        <input id="ID_CLIENTE" type="hidden" value="">
+                    </div>
+                    <div class="col-sm-12">
+
+                        <div class="col-md-3">
+                            <label class="control-label">Rut</label>
+                            <input id="TxtRut" type="text" maxlength="13" class="form-control text-uppercase" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Nombres</label>
+                            <input id="TxtNombre" type="text" maxlength="30" class="form-control text-uppercase" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Apellidos</label>
+                            <input id="TxtApellido" type="text" maxlength="30" class="form-control text-uppercase" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Direccion</label>
+                            <input id="TxtDireccion" type="text" maxlength="60" class="form-control text-uppercase" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+
+
+                        <div class="col-md-3">
+                            <label class="control-label">Comuna</label>
+                            <input id="TxtComuna" type="text" maxlength="15" class="form-control text-uppercase" />
+
+                            @*<select class="form-control" id="CmbComuna">
+                                    <option value="">Seleccione</option>
+
+
+                                </select>*@
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Ciudad</label>
+                            <input id="TxtCiudad" type="text" maxlength="20" class="form-control text-uppercase" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Email</label>
+                            <input id="TxtEmail" type="email" maxlength="50" placeholder="juan@gmail.com" class="form-control text-uppercase" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Teléfono</label>
+                            <input id="TxtTelefono" type="text" maxlength="12" placeholder="56912345678" class="form-control text-uppercase" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-rose btn-fill" id="Btn_Guardar">GUARDAR</button>
+                            <button type="button" class="btn btn-success btn-fill" id="Btn_Modificar" disabled="disabled">MODIFICAR</button>
+                            <button type="button" class="btn btn-danger" onclick="javascript: Nuevo();">NUEVA </button>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <div class="card-header" data-background-color="orange">
+                                    <h4 class="card-title">Clientes  </h4>
+                                    <p class="category">Seleccione el Cliente que desea Editar </p>
+                                    <a href="javascript:TablaToExcel();"><img src="https://img.icons8.com/metro/25/000000/download.png"> Exportar Excel</a>
+                                </div>
+                                <div class="card-content table-responsive ">
+                                    <table id="TablaDatos" class="table table-striped small table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Rut</th>
+                                                <th>Nombres</th>
+                                                <th>Apellidos</th>
+                                                <th>Direccion</th>
+                                                <th>Comuna</th>
+                                                <th>Ciudad</th>
+                                                <th>Email</th>
+                                                <th>Teléfono</th>
+                                                <th>Editar</th>
+                                            </tr>
+                                        </thead>
+
+                                    </table>
+                                    <table id="TablaAuxiliar" class="tablaInvisible">
+                                        <thead>
+                                            <tr>
+                                                <th>Rut</th>
+                                                <th>Nombres</th>
+                                                <th>Apellidos</th>
+                                                <th>Direccion</th>
+                                                <th>Comuna</th>
+                                                <th>Ciudad</th>
+                                                <th>Email</th>
+                                                <th>Teléfono</th>
+                                                <th>Editar</th>
+                                            </tr>
+                                        </thead>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input id="TxtID" type="text" class="hidden" />
+</form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $('#TxtRut').Rut();
+
+        listarCliente();
+
+        // CARGA UN SELECT CON COMUNAS PERO SOLO SON COMUNAS DE SANTIAGO, Y YA HAY CLIENTES CON COMUNAS DE OTRAS REGIONES
+        // let htmlComunas = '';
+        //let comunas =["Cerrillos", "Cerro Navia", "Conchali", "El Bosque", "Estacion Central", "Huechuraba", "Independencia", "La Cisterna", "La Florida", "La Granja", "La Pintana", "La Reina", "Las Condes", "Lo Barnechea", "Lo Espejo", "Lo Prado", "Macul", "Maipu", "Ñuñoa", "Pedro Aguirre Cerda", "Peñalolen", "Providencia", "Pudahuel", "Quilicura", "Quinta Normal", "Recoleta", "Renca", "San Joaquin", "San Miguel", "San Ramon", "Vitacura", "Puente Alto", "Pirque", "San Jose de Maipo", "Colina", "Lampa", "TilTil", "San Bernardo", "Buin", "Calera de Tango", "Paine", "Melipilla", "Alhué", "Curacaví", "María Pinto", "San Pedro", "Talagante", "El Monte", "Isla de Maipo", "Padre Hurtado", "Peñaflor"]
+
+        // $(comunas).each(function (index, item)
+        // {
+        //     htmlComunas = '<option value="' + item.toUpperCase() + '">' + item + '</option>';
+        //     $('#CmbComuna').append(htmlComunas);
+        // });
+
+
+    });
+
+    ////Funciones para hacer datatables
+    function limpiaBodyTablaDestino(tablaObjetivo, nombreBody, idRutaParametro) {
+
+        $('#' + tablaObjetivo).find('tbody').each(function () {
+            var elementoBody = $(this);
+
+            $(elementoBody).remove();
+
+        });
+    }
+
+    function agregaBodyTablaObjetivo(tablaObjetivo, nombreBody, idBody, HTML) {
+        //Funcion que permite agregar body dinamicamente a una tabla de destino
+        //asigna nombre especifico al body que se creará junto con un id
+        var bodyDinamico = '';
+
+        bodyDinamico += '<tbody id="' + nombreBody + '-' + idBody + '">';
+        bodyDinamico += '</tbody>';
+
+        $('#' + tablaObjetivo).append(bodyDinamico);
+
+        //Agrega contenido HTML al nuevo body creado
+        $('#' + nombreBody + '-' + idBody).html(HTML);
+
+        //Transforma tabla especificada en dataTabla dinamica :p
+        $('#' + tablaObjetivo).DataTable({
+            destroy: true,
+            "language": {
+                "url": "../assets/js/Chile.json"
+            },
+            "pageLength": 100
+
+        });
+    }
+    ////FIN FUNCIONES DATATABLES
+    //Metodo de buscar a todos los clientes
+    function listarCliente() {
+        $.ajax({
+            type: "POST",
+            url: "/Cliente/ObtieneListadoClientes",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaCliente = jQuery.parseJSON(data.Descripcion)
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+
+                        limpiaBodyTablaDestino("TablaDatos", "TablaDatos", "TablaDatos");
+
+                        let strHtml = '';
+
+                        $.each(listaCliente, function (index, item) {
+
+
+
+                            strHtml += '<tr>';
+                            strHtml += '<td>' + item.RUT + '</td>';
+                            strHtml += '<td>' + item.NOMBRES + '</td>';
+                            strHtml += '<td>' + item.APELLIDOS + '</td>';
+                            strHtml += '<td>' + item.DIRECCION + '</td>';
+                            strHtml += '<td>' + item.COMUNA + '</td>';
+                            strHtml += '<td>' + item.CIUDAD + '</td>';
+                            strHtml += '<td>' + item.EMAIL + '</td>';
+                            strHtml += '<td>' + item.TELEFONO + '</td>';
+                            strHtml += '<td> <a href="#" onclick="obtenerDatosCliente(' + item.ID_CLIENTE + ')"><img src="https://img.icons8.com/ultraviolet/25/000000/pencil.png"></a></td>';
+                            strHtml += '</tr">';
+
+                            //$("#listarCliente").append(strHtml);
+
+                        });
+
+
+                        $('#TablaAuxiliar').html(strHtml);
+
+                        agregaBodyTablaObjetivo("TablaDatos", "listado", "listado", strHtml);
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larraín',
+                            text: 'Error al obtener listado de Clientes' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larraín',
+                        text: 'Error al listar Clientes ' + err + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larraín',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+
+    //Metodo encargado de limpiar todos los datos de ingreso
+    function limpiarDatos() {
+        $("#ID_CLIENTE").val(0);
+        $("#TxtRut").val("");
+        $("#TxtNombre").val("");
+        $("#TxtApellido").val("");
+        $("#TxtDireccion").val("");
+        $("#TxtEmail").val("");
+        $("#TxtTelefono").val("");
+        $('#TxtComuna').val("");
+
+    }
+
+
+
+    //Metodo encargado de subir el formulario
+    function subiraFormulario() {
+        let elemento = document.getElementById('minimizeSidebar');
+        elemento.scrollIntoView();
+    }
+
+    function obtenerDatosCliente(id_clte) {
+        gfProceso();
+        let cliente = {
+            ID_CLIENTE: id_clte
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Cliente/ObtieneClientePorId",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: cliente,
+            success: function (response) {
+                gfProceso();
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+                    let detalle = jQuery.parseJSON(data.Descripcion)
+
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+
+
+                        $('#ID_CLIENTE').val(detalle.ID_CLIENTE);
+                        $('#TxtRut').val(detalle.RUT);
+                        $('#TxtNombre').val(detalle.NOMBRES);
+                        $('#TxtApellido').val(detalle.APELLIDOS);
+                        $('#TxtDireccion').val(detalle.DIRECCION);
+                        $('#TxtComuna').val(detalle.COMUNA);
+                        $('#TxtCiudad').val(detalle.CIUDAD);
+                        $('#TxtEmail').val(detalle.EMAIL);
+                        $('#TxtTelefono').val(detalle.TELEFONO);
+
+
+
+
+                        $("#Btn_Modificar").removeAttr("disabled");
+                        $("#Btn_Guardar").attr("disabled", true);
+                        subiraFormulario();
+                        //scrollToDiv("minimizeSidebar");
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larraín',
+                            text: 'Error al obtener los datos del Cliente' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larraín',
+                        text: 'Error al obtener el Cliente ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                gfProceso();
+                swal({
+                    title: 'Automotriz Larraín',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+
+                return false;
+            }
+        });
+    }
+
+    ////////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    $('#TxtRut').keypress(function (tecla) {
+
+        if (tecla.charCode == 107 || tecla.charCode == 75) {
+            return true
+        }
+        if (tecla.charCode < 48 || tecla.charCode > 57) {
+            return false;
+        }
+
+    });
+
+    $('#TxtTelefono').keypress(function (tecla) {
+
+        if (tecla.charCode == 43) {
+            return true
+        }
+
+        if (tecla.charCode < 48 || tecla.charCode > 57) { return false; }
+
+    });
+
+    function validar() {
+        let rut = $("#TxtRut").val();
+        let nombre = $("#TxtNombre").val();
+        let apellido = $("#TxtApellido").val();
+        let direccion = $("#TxtDireccion").val();
+        let email = $("#TxtEmail").val();
+        let validaEmail = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+        let telefono = $("#TxtTelefono").val();
+        let validaTelefono = /^([0-9,+]+)$/;
+        let validaRut = $.Rut.validar(rut);
+        let falta = "";
+
+        //Validacion se ingreso rut
+        if (rut == "" || rut == null) {
+            falta = "Debe ingresar rut";
+            swal({
+                title: 'Larrain automotriz',
+                text: falta,
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        //Validacion  del formato del rut
+        if (validaRut == false) {
+            falta = "Campo Rut incorrecto, favor reingresar";
+
+            swal({
+                title: 'Larrain automotriz',
+                text: falta,
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+
+            return false;
+        }
+
+        //Validacion nombre
+        if (nombre == "" || nombre == null) {
+            falta = "Debe ingresar nombres";
+
+            swal({
+                title: 'Larrain automotriz',
+                text: falta,
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+
+            return false;
+        }
+
+        //validacion apellido
+        if (apellido == "" || apellido == null) {
+            falta = "Debe ingresar apellidos";
+
+            swal({
+                title: 'Larrain automotriz',
+                text: falta,
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+
+            return false;
+        }
+
+        //validacion direccion
+        if (direccion == "" || direccion == null) {
+            falta = "Debe ingresar Direccion";
+
+            swal({
+                title: 'Larrain automotriz',
+                text: falta,
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        //Validacion email
+        if (email == "" || email == null) {
+            falta = "Debe ingresar Email";
+
+            swal({
+                title: 'Larrain automotriz',
+                text: falta,
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+
+            return false;
+        }
+
+        //valida si el correo tiene un formato correcto
+        if (!validaEmail.test(email)) {
+            falta = "Campo Email incorrecto, favor reingresar";
+
+            swal({
+                title: 'Larrain automotriz',
+                text: falta,
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+
+            return false;
+        }
+
+
+        //valida si se ingreso telefono
+        if (telefono == "" || telefono == null) {
+            falta = "Debe ingresar Teléfono";
+
+            swal({
+                title: 'Larrain automotriz',
+                text: falta,
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+
+            return false;
+        }
+
+        //valida si el telefono tiene caracteres validos
+        if (!validaTelefono.test(telefono)) {
+
+            falta = "Campo Teléfono incorrecto, favor reingresar";
+
+            swal({
+                title: 'Larrain automotriz',
+                text: falta,
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+
+            return false;
+        }
+
+        // valida el largo del telefono
+        if (telefono.length > 12) {
+            swal({
+                title: 'Automotriz Larraín',
+                text: 'Largo de Teléfono excedido',
+                type: 'error',
+                confirmButtonColor: '#FE6A00',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+            });
+            return false;
+        }
+
+
+        return true
+
+    }
+
+
+    $('#Btn_Guardar').click(function (e) {
+
+        let valido = false;
+        valido = validar();
+
+        if (valido == false) {
+
+            return false;
+        }
+        gfProceso();
+        //Estructura de la Clase para Guardar Información
+        var rutDelCliente = $("#TxtRut").val();
+
+        var cliente = {
+            RUT: $("#TxtRut").val(),
+            NOMBRES: $("#TxtNombre").val(),
+            APELLIDOS: $("#TxtApellido").val(),
+            DIRECCION: $("#TxtDireccion").val().toUpperCase(),
+            COMUNA: $("#TxtComuna").val(),
+            CIUDAD: $("#TxtCiudad").val().toUpperCase(),
+            EMAIL: $("#TxtEmail").val(),
+            TELEFONO: $("#TxtTelefono").val()
+        }
+
+
+        $.ajax({
+            type: "POST",
+            url: "/Cliente/ValidaRut",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: { Rut: rutDelCliente },
+            success: function (response) {
+                var Data = response;
+
+                if (Data.Respuesta == "OK") {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Cliente/AgregarCliente",
+                        content: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: cliente,
+
+                        success: function (response) {
+
+                            var Data = response;
+
+
+                            if (Data.Respuesta == "OK") {
+
+                                gfProceso();
+                                swal({
+                                    title: 'Automotriz Larraín',
+                                    text: 'Se ha agregado correctamente el  Cliente ' + cliente.NOMBRES + '',
+                                    type: 'success',
+                                    confirmButtonColor: '#FE6A00',
+                                    confirmButtonText: 'Continuar',
+                                    confirmButtonClass: 'btn btn-info',
+                                    allowEscapeKey: false,
+                                    allowOutsideClick: false,
+                                    onClose: function () {
+                                        listarCliente();
+                                        limpiarDatos();
+                                        $("#Btn_Guardar").removeAttr("disabled");
+                                        $("#Btn_Modificar").attr("disabled", true);
+
+                                    }
+                                });
+
+                            }
+                            else {
+                                gfProceso();
+                                swal({
+                                    title: 'Automotriz Larraín',
+                                    text: 'ERROR al Agregar Cliente  ' + Data.Detalle_Error,
+                                    type: 'warning',
+                                    confirmButtonColor: '#FE6A00',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonClass: 'btn btn-info',
+                                    allowEscapeKey: false,
+                                    allowOutsideClick: false,
+                                })
+                            }
+                        },
+
+                        error: function (xhr, textStatus, errorThrown) {
+                            gfProceso();
+                            swal({
+                                title: 'Automotriz Larraín',
+                                text: 'ERROR al Agregar el Cliente ' + textStatus,
+                                type: 'warning',
+                                confirmButtonColor: '#FE6A00',
+                                confirmButtonText: 'OK',
+                                confirmButtonClass: 'btn btn-info',
+                                allowEscapeKey: false,
+                                allowOutsideClick: false,
+                            })
+                        }
+                    });
+
+                }
+                else {
+                    gfProceso();
+                    swal({
+                        title: 'Automotriz Larraín',
+                        text: Data.Detalle_Error,
+                        type: 'warning',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    })
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                gfProceso();
+                swal({
+                    title: 'Automotriz Larraín',
+                    text: 'Error al validar rut cliente: Error,' + textStatus,
+                    type: 'warning',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                })
+            }
+        });
+
+
+
+    });
+
+
+    $('#Btn_Modificar').click(function (e) {
+        let valido = false;
+        valido = validar();
+
+        if (valido == false) {
+            return false;
+        }
+        gfProceso();
+
+
+        //Estructura de la Clase para Guardar Información
+        let cliente = {
+            ID_CLIENTE: $("#ID_CLIENTE").val(),
+            RUT: $("#TxtRut").val(),
+            NOMBRES: $("#TxtNombre").val(),
+            APELLIDOS: $("#TxtApellido").val(),
+            DIRECCION: $("#TxtDireccion").val().toUpperCase(),
+            COMUNA: $("#TxtComuna").val().toUpperCase(),
+            CIUDAD: $("#TxtCiudad").val().toUpperCase(),
+            EMAIL: $("#TxtEmail").val(),
+            TELEFONO: $("#TxtTelefono").val()
+        }
+
+
+        $.ajax({
+            type: "POST",
+            url: "/Cliente/Editar_Cliente",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: cliente,
+
+            success: function (response) {
+                gfProceso();
+                var Data = response;
+
+
+                if (Data.Respuesta == "OK") {
+
+
+                    swal({
+                        title: 'Automotriz Larraín',
+                        text: 'Se ha actualizado correctamente los datos del Cliente ' + cliente.NOMBRES + '',
+                        type: 'success',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'Continuar',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        onClose: function () {
+                            listarCliente();
+                            limpiarDatos();
+                            $("#Btn_Guardar").removeAttr("disabled");
+                            $("#Btn_Modificar").attr("disabled", true);
+
+                        }
+                    });
+
+                }
+                else {
+                    swal({
+                        title: 'Automotriz Larraín',
+                        text: 'ERROR al Modificar Cliente  ' + Data.Detalle_Error,
+                        type: 'warning',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    })
+                }
+            },
+
+            error: function (xhr, textStatus, errorThrown) {
+                gfProceso();
+                swal({
+                    title: 'Automotriz Larraín',
+                    text: 'ERROR al Modificar el Cliente seleccionado' + textStatus,
+                    type: 'warning',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                })
+            }
+        });
+
+
+    });
+
+
+
+
+
+
+
+
+    ////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+    function TablaToExcel() {
+
+        $("#TablaAuxiliar").table2excel({
+            exclude: ".noExl",
+            name: "Clientes",
+            filename: "Clientes.xls",
+            exclude_img: true,
+            exclude_links: true,
+            exclude_inputs: true
+        });
+
+
+    }
+
+
+</script>
+

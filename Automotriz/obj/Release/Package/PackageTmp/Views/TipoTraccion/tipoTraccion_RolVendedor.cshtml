@@ -1,0 +1,356 @@
+﻿
+@{
+    ViewBag.Title = "TipoTraccionIndex";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+<h5 class="tituloPagina">Mantenedor Tipos Tracción  | Sucursal <b>@ViewBag.SUCURSAL</b></h5>
+
+
+<form id="RegisterValidation" action="" method="">
+    <div class="card">
+        <div class="card-header card-header-icon" data-background-color="orange">
+            <i class="material-icons">
+                directions
+            </i>
+        </div>
+        <div class="card-content">
+            <h4 class="card-title">Módulo Mantenedor Tipos de Tracción </h4>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-md-3">
+                            <input id="ID_TIPOTRACCION" type="hidden" value="">
+                            <label class="control-label">TIPO TRACCIÓN</label>
+                            <input id="TxtDescripcion" type="text" class="form-control text-uppercase" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">VIGENCIA</label>
+                            <select class="form-control" data-style="btn btn-default" data-size="7" id="CmbVigencia">
+                                <option value="1">Vigente</option>
+                                <option value="0">No Vigente</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-6">
+                            <input id="txtID_Marca" class="hidden" />
+                            <button type="button" class="btn btn-rose btn-fill" id="Btn_Guardar">GUARDAR</button>
+                            <button type="button" class="btn btn-danger" onclick="javascript: Nuevo();">NUEVA </button>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <div class="card-header" data-background-color="orange">
+                                    <h4 class="card-title">Tipo de Tracción Ingresados </h4>
+                                    <a href="javascript:TablaToExcel();"><img src="https://img.icons8.com/metro/25/000000/download.png"> Exportar Excel</a>
+                                </div>
+                                <div class="card-content table-responsive ">
+                                    <table id="TablaDatos" class="table table-striped small table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Descripción</th>
+                                                <th>Vigencia</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="listarTipoTraccion"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input id="TxtID" type="text" class="hidden" />
+</form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script>
+
+    $(document).ready(function () {
+
+        listarTipoTraccion();
+
+    });
+
+
+    function listarTipoTraccion() {
+
+        $.ajax({
+
+            type: "POST",
+            url: "/TipoTraccion/ObtieneListadoTraccion",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaMarcas = jQuery.parseJSON(data.Descripcion)
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarTipoTraccion").html("");
+
+
+                        $.each(listaMarcas, function (index, item) {
+                            var vigencia = item.VIGENCIA;
+
+                            if (vigencia == 1) {
+                                vigencia = "Vigente";
+                            } else {
+                                vigencia = "No Vigente";
+
+                            }
+                            let strHtml = '';
+
+                            strHtml += '<tr>';
+                            strHtml += '<td>' + item.DESCRIPCION + '</td>';
+                            strHtml += '<td>' + vigencia + '</td>';
+                            strHtml += '</tr">';
+
+                            $("#listarTipoTraccion").append(strHtml);
+
+                        });
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+
+                        swal({
+
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Tracciones' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar Tracciones ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+
+                swal({
+
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+
+    function limpiarDatos() {
+
+        $("#ID_TIPOTRACCION").val(0);
+        $("#CmbVigencia").val(1);
+        $("#TxtDescripcion").val("");
+
+    }
+
+    ////////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    function validar() {
+
+        let vigencia = $("#CmbVigencia").val();
+        let descripcion = $("#TxtDescripcion").val();
+
+
+        if (descripcion == "" || descripcion == null) {
+
+            return false;
+        } else {
+
+            return true
+        }
+
+    }
+
+    $('#Btn_Guardar').click(function (e) {
+
+        let valido = false;
+        valido = validar();
+
+        if (valido == false) {
+
+            swal({
+
+                title: 'Larrain automotriz',
+                text: "Debe rellenar todos los campos",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+        gfProceso();
+        // Estructura de la Clase para Guardar Información
+        let tipoCombustible = {
+
+            DESCRIPCION: $('#TxtDescripcion').val(),
+            VIGENCIA: $('#CmbVigencia').val()
+        }
+
+
+        $.ajax({
+            type: "POST",
+            url: "/TipoTraccion/AgregarTraccion",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: tipoCombustible,
+            success: function (response) {
+                gfProceso();
+                // FUNCION PARA VALIDAR AJAX Y RESPUESTA..
+                var data;
+                var detalle;
+                try {  // AQUI SE CONTROLA EL ERROR DE JAVASCRIPT
+
+
+                    data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+
+                        swal({
+
+                            title: 'Automotriz Larrain',
+                            text: "Se agregó el Tipo de Traccion",
+                            type: 'success',
+                            confirmButtonColor: '#4caf50',
+                            //cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                            onClose: function () {
+                                listarTipoTraccion();
+                                limpiarDatos();
+
+                            }
+
+                        });
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+
+
+
+                        swal({
+
+                            title: 'Automotriz Larrain',
+                            text: 'Error al agregar el tipo de Traccion' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    gfProceso();
+                    swal({
+
+                        title: 'Automotriz Larrain',
+                        text: 'Error al agregar el tipo de Traccion ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                gfProceso();
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+
+
+                return false;
+            }
+        });
+
+
+
+    });
+
+    function TablaToExcel() {
+
+        $("#TablaDatos").table2excel({
+            //exclude: ".noExl",
+            name: "Traccion",
+            filename: "Traccion",
+            fileext: ".xls",
+            exclude_img: true,
+            exclude_links: true,
+            exclude_inputs: true
+        });
+
+
+    }
+
+
+</script>
+
+
+

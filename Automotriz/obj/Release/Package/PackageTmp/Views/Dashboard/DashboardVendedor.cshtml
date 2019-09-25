@@ -1,0 +1,379 @@
+﻿
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>*@
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<style>
+
+    #container {
+        height: 400px;
+        min-width: 310px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+</style>
+<h5 class="tituloPagina">Dashboard | Sucursal <b>@ViewBag.SUCURSAL</b></h5>
+
+<script>
+
+    function listarVehiculos(nombreSucursal) {
+
+
+        let sucursal = {
+            NOMBRE_SUCURSAL: nombreSucursal
+        }
+        $.ajax({
+            type: "POST",
+            url: "/Home/ConsultarStock",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: sucursal,
+
+            success: function (respuesta) {
+
+                let data = jQuery.parseJSON(JSON.stringify(respuesta));
+
+                let listaVehiculo = jQuery.parseJSON(data.Descripcion);
+
+
+
+                $.each(listaVehiculo, function (index, item) {
+                    var strHtml = '<b>' + item.STOCK + '</b>';
+
+                    $("#cerrillos").append(strHtml);
+
+
+                });
+
+
+
+            }
+
+        });
+    }
+</script>
+
+<!---cierre de conatiner-->
+
+<div id="sliderRegular" class="slider" style="display:none"></div>
+<div id="sliderDouble" class="slider slider-info" style="display:none"></div>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header card-header-icon" data-background-color="orange">
+            <img src="https://img.icons8.com/ios/50/000000/details-popup.png">
+        </div>
+        <div class="card-content">
+            <h4 class="card-title">Dashboard <b><span class="txt_NombreUsuario">@ViewBag.NOMBRE_USUARIO</span></b> </h4>
+        </div>
+        <div class="tarjeta">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-content">
+                        <div id="container" style="height: 400px"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="mantencion">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-stats">
+                        <div class="card-header" data-background-color="green">
+                            <i class="material-icons">
+                                attach_money
+                            </i>
+                        </div>
+                        <div class="card-content">
+                            <p class="category">Ventas del mes</p>
+                            <h3 class="card-title">Días más Vendidos(@ViewBag.mesActual)</h3>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Día Mayor Venta</th>
+                                            <th class="text-right">Total Vendido</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var dias in ViewBag.VentasSemana)
+                                        {
+                                            <tr>
+                                                <td class="text-center">@dias.DIA</td>
+                                                <td class="text-right">$@dias.TOTAL.ToString("#,##0")</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--mejores vendedores-->
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="card card-stats">
+                        <div class="card-header" data-background-color="red">
+                            <i class="material-icons">
+                                person
+                            </i>
+                        </div>
+                        <div class="card-content">
+                            <p class="category">Vendedores</p>
+                            <h3 class="card-title">Top 3 Vendedores mes @ViewBag.mesActual</h3>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Vendedor</th>
+                                            <th class="text-right">Total Vendido</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var usuario in ViewBag.MejoresVendedoresDelMes)
+                                        {
+                                            <tr>
+                                                <td class="text-center">@usuario.NOMBRE_USUARIO</td>
+                                                <td class="text-right">$@usuario.TOTAL_VENDIDO.ToString("#,##0")</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @*<div class="card-footer">
+                                <div class="stats">
+                                    <a href="#">Ver detalle</a>
+                                </div>
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header" data-background-color="orange">
+                        <i class="material-icons">
+                            brightness_auto
+                        </i>
+                    </div>
+                    <div class="card-content">
+                        <p class="category">Vehiculos</p>
+                        <h3 class="card-title">Marcas Más Vendidas (Top 5)</h3>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Marca</th>
+                                        <th class="text-center">Cantidad Vendida</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var marca in ViewBag.MarcasMasVendidasTop5)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@marca.DESCRIPCION</td>
+                                            <td class="text-center">@marca.CANTIDAD_VENDIDOS</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @*<div class="card-footer">
+                            <div class="stats">
+                                <a href="#">Ver detalle</a>
+                            </div>
+                        </div>*@
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- inicio -->
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        let nombreUsuario = capitalizarNombre();
+
+            let ID_USuario = obtenerValorParametro();
+
+            $.ajax({
+                type: "POST",
+                url: "/Dashboard/UltimosTresMesesVentasPorVendedor",
+                content: "application/json; charset=utf-8",
+                dataType: "json",
+                data: { idUsuario: ID_USuario },
+                success: function (response) {
+
+                    try {
+                        let data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+
+
+                        if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                        {
+                            let Meses = [];
+                            let TotalDelMes = [];
+
+                            let detalle = jQuery.parseJSON(data.Descripcion)
+
+
+                            $(detalle).each(function (index, element) {
+                                Meses.push(element.MES);
+
+                                TotalDelMes.push(element.TOTAL);
+
+                            });
+
+
+                            //Encargado de dar vuelta los valdores
+                            Meses.reverse();
+                            TotalDelMes.reverse();
+                            ////////////////////////
+
+                            //Primer grafico
+                            let valores = [{
+                                name: 'Total Ventas',
+                                data: TotalDelMes
+                            }];
+
+                            Highcharts.chart('container', {
+                                chart: {
+                                    type: 'column'
+                                },
+                                title: {
+                                    text: 'Total Ventas por Mes'
+                                },
+                                xAxis: {
+                                    categories: Meses
+                                },
+                                yAxis: {
+                                    min: 0,
+                                    title: {
+                                        text: 'Total Ventas '+nombreUsuario+''
+                                    },
+                                    stackLabels: {
+                                        enabled: true,
+                                        style: {
+                                            fontWeight: 'bold',
+                                            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                                        }
+                                    }
+                                },
+                                tooltip: {
+                                    headerFormat: '<b>{point.x}</b><br/>',
+                                    pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                                },
+                                plotOptions: {
+                                    column: {
+                                        stacking: 'normal',
+                                        dataLabels: {
+                                            enabled: false,
+                                            color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                                        }
+                                    }
+                                },
+                                series: valores
+
+                            });
+
+
+                        }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                        else {
+                            swal({
+                                title: 'Automotriz Larrain',
+                                text: data.Detalle_Error,
+                                type: 'error',
+                                confirmButtonColor: '#FE6A00',
+                                confirmButtonText: 'OK',
+                                confirmButtonClass: 'btn btn-info',
+                                allowEscapeKey: false,
+                                allowOutsideClick: false,
+                            });
+
+                            return false;
+                        }
+
+                    } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener totales de los ultimos 3 meses ' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                },
+                error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error de Conexión' + textStatus + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+            });
+
+
+
+
+
+
+
+
+        });
+
+        function obtenerValorParametro() {
+            let parametroUrl = window.location.search.substring(1);
+            let obtenerVariable = parametroUrl.split('=');
+            let idParametro = obtenerVariable[1];
+
+            return idParametro;
+        }
+        function capitalizarNombre() {
+            let nombreMayusculas = $('.txt_NombreUsuario').text();
+            let nombreCompleto = nombreMayusculas.toLowerCase();
+            nombreCompleto = nombreCompleto.split(" ");
+           
+           let nombre = MaysPrimera(nombreCompleto[0]);
+            let apellido = MaysPrimera(nombreCompleto[1]);
+            nombreCompleto = nombre + " " + apellido;
+            $('.txt_NombreUsuario').text(nombreCompleto);
+            return nombreCompleto;
+        }
+
+        function MaysPrimera(string){
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+
+
+</script>

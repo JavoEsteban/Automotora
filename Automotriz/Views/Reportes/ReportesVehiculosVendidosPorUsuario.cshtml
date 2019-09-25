@@ -1,0 +1,347 @@
+﻿
+@{
+    ViewBag.Title = "ReportesVehiculosVendidosPorUsuario";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+<h5 class="tituloPagina">Reportes Vehículos Vendidos | Sucursal <b>@ViewBag.SUCURSAL</b></h5>
+
+<div class="card">
+    <div class="card-header card-header-icon" data-background-color="orange">
+        <i Class="material-icons">assignment_turned_in</i>
+    </div>
+    <div class="card-content">
+        <h4 class="card-title">Reportes de Vehiculos Vendidos</h4>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="control-label">USUARIOS</label>
+                    <select class="selectpicker" onchange="buscarVehiculosUsuario()" data-live-search="true" data-style="btn btn-default" data-size="7" id="CmbUsuario">
+                        <option value="0">TODOS LOS USUARIOS</option>
+                        @foreach (var usuario in ViewBag.ListaUsuarios)
+                        {
+                            <option value="@usuario.ID_USUARIOS">@usuario.RUT | @usuario.NOMBRE_USUARIO - @usuario.DESCRIPCION</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header" data-background-color="orange">
+                        <h4 class="card-title">Vehiculos Vendidos Según Vendedor</h4>
+                        <a href="javascript:TablaToExcel();"><img src="https://img.icons8.com/metro/25/000000/download.png"> Exportar Excel</a>
+                    </div>
+                    <div class="card-content table-responsive ">
+                        <table id="TablaDatos" class="table table-striped small table-hover">
+                            <thead id="listarCampos">
+                                <tr>
+                                    <th class="text-center">PATENTE</th>
+                                    <th class="text-center">FECHA INGRESO</th>
+                                    <th>PRECIO COMPRA</th>
+                                    <th>PRECIO VENTA</th>
+                                    <th class="text-center">PRECIO VENDIDO</th>
+                                    <th class="text-center">SUCURSAL INGRESO</th>
+                                    <th class="text-center">SUCURSAL VENTA</th>
+                                    <th class="text-center">VENDEDOR</th>
+                                    <th class="text-center">COMPRADOR</th>
+                                    <th class="text-center">RE-IMPRIMIR</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody id="listarVehiculos">
+                                @foreach (var vehiculo in ViewBag.ListadoVehiculos)
+                                {
+
+                                    <tr>
+                                        <td class="text-center"><a href="/MantenedorVehiculo/FormularioDetalleVehiculo?ID=@vehiculo.ID_VEHICULO">@vehiculo.PATENTE.ToUpper()</a></td>
+                                        <td class="text-center">@vehiculo.FECHA_INGRESO.ToString("dd/MM/yyyy")</td>
+                                        <td>@vehiculo.PRECIO_COMPRA.ToString("#,##0")</td>
+                                        <td>@vehiculo.PRECIO_VENTA.ToString("#,##0")</td>
+                                        <td class="text-center">@vehiculo.PRECIO_VENDIDO.ToString("#,##0")</td>
+                                        <td class="text-center">@vehiculo.SUCURSAL.ToUpper()</td>
+                                        <td class="text-center">@vehiculo.SUCURSAL_VENTA.ToUpper()</td>
+                                        <td class="text-center">@vehiculo.NOMBRE_USUARIO.ToUpper()</td>
+                                        <td class="text-center">@vehiculo.NOMBRE_CLIENTE.ToUpper()</td>
+                                        <td class="text-center">
+                                            <a href="#" onclick="imprimirNotaVenta('@vehiculo.ID_VEHICULO')">
+                                                <i class="material-icons iconoDinero">
+                                                    book
+                                                </i>
+                                            </a>
+                                        </td>
+                                    </tr>
+
+
+                                }
+                            </tbody>
+                        </table>
+
+                        <table id="TablaAuxiliar" class="tablaInvisible">
+                            <thead id="listarCampos">
+                                <tr>
+                                    <th class="text-center">PATENTE</th>
+                                    <th class="text-center">FECHA INGRESO</th>
+                                    <th>PRECIO COMPRA</th>
+                                    <th>PRECIO VENTA</th>
+                                    <th class="text-center">PRECIO VENDIDO</th>
+                                    <th class="text-center">SUCURSAL INGRESO</th>
+                                    <th class="text-center">SUCURSAL VENTA</th>
+                                    <th class="text-center">VENDEDOR</th>
+                                    <th class="text-center">COMPRADOR</th>
+                                    <th class="text-center">RE-IMPRIMIR</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody id="listarVehiculos">
+                                @foreach (var vehiculo in ViewBag.ListadoVehiculos)
+                                {
+
+                                    <tr>
+                                        <td class="text-center"><a href="/MantenedorVehiculo/FormularioDetalleVehiculo?ID=@vehiculo.ID_VEHICULO">@vehiculo.PATENTE.ToUpper()</a></td>
+                                        <td class="text-center">@vehiculo.FECHA_INGRESO.ToString("dd/MM/yyyy")</td>
+                                        <td>@vehiculo.PRECIO_COMPRA</td>
+                                        <td>@vehiculo.PRECIO_VENTA</td>
+                                        <td class="text-center">@vehiculo.PRECIO_VENDIDO</td>
+                                        <td class="text-center">@vehiculo.SUCURSAL.ToUpper()</td>
+                                        <td class="text-center">@vehiculo.SUCURSAL_VENTA.ToUpper()</td>
+                                        <td class="text-center">@vehiculo.NOMBRE_USUARIO.ToUpper()</td>
+                                        <td class="text-center">@vehiculo.NOMBRE_CLIENTE.ToUpper()</td>
+                                        <td class="text-center">
+                                            <a href="#" onclick="imprimirNotaVenta('@vehiculo.ID_VEHICULO')">
+                                                <i class="material-icons iconoDinero">
+                                                    book
+                                                </i>
+                                            </a>
+                                        </td>
+                                    </tr>
+
+
+                                }
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="TxtID" type="text" class="hidden" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script>
+    function limpiaBodyTablaDestino(tablaObjetivo, nombreBody, idRutaParametro) {
+        //Al agregar bodys dinamicamente a una tabla, estos se almacenan sin limite dentro de la tabla
+        //esta funcion elimina todos los bodys de la table que se alamcenaron dentro de la tabla
+        //excepto el body de datos que se quiere utilizar con la data table dinamica
+
+        //Al haber x cantidad de <body> para x cantidad de clicks en la tarjeta que llama esta función
+        //Se toman todos los elementos body y elimina todos aquellos que no tengan el id de la ruta que queremos visualizar
+        $('#' + tablaObjetivo).find('tbody').each(function () {
+            var elementoBody = $(this);
+
+            $(elementoBody).remove();
+            //var idElemento = elementoBody.attr('id').replace(nombreBody + '-', '');
+
+            //if (parseInt(idElemento) != parseInt(idRutaParametro)) {
+            //    $('#' + nombreBody + '-' + idElemento).remove();
+            //}
+
+        });
+    }
+
+    function agregaBodyTablaObjetivo(tablaObjetivo, nombreBody, HTML) {
+        //Funcion que permite agregar body dinamicamente a una tabla de destino
+        //asigna nombre especifico al body que se creará junto con un id
+        var bodyDinamico = '';
+
+        bodyDinamico += '<tbody id="'+nombreBody+'">';
+        bodyDinamico += '</tbody>';
+
+        $('#' + tablaObjetivo).append(bodyDinamico);
+
+        //Agrega contenido HTML al nuevo body creado
+        $('#' + nombreBody ).html(HTML);
+
+        //Transforma tabla especificada en dataTabla dinamica :p
+        $('#' + tablaObjetivo).DataTable({
+            destroy: true,
+            "language": {
+                "url": "../assets/js/Chile.json"
+            },
+            "pageLength": 100
+
+        });
+    }
+
+    $(document).ready(function () {
+
+        $('#TablaDatos').DataTable({
+            "language": {
+                "url": "../assets/js/Chile.json"
+            },
+            "pageLength": 100
+
+        });
+
+    });
+
+//============================================================================================
+
+       function imprimirNotaVenta(idVehiculo) {
+
+            var html = '@Url.Action("imprimirNotaVentaIdVehiculo","Documentos")?idVehiculo=' + idVehiculo;
+            //window.open(html, 'popup_window2', 'width=/700, height=600, left=0, top=0,scrollbars=1');
+            var win = window.open(html, '_blank');
+            win.focus();
+
+        }
+
+
+ ////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+    function buscarVehiculosUsuario() {
+        IdUsuarioBuscar = $('#CmbUsuario').val();
+
+        limpiaBodyTablaDestino("TablaDatos","bodyVehiculos","");
+
+        $.ajax({
+            type: "POST",
+            url: "/Reportes/consultaVehiculosVendidosPorUsuario",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: {idUsuario: IdUsuarioBuscar},
+            success: function (response) {
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        let listaVehiculos = jQuery.parseJSON(data.Descripcion);
+                        let strHtml = '';
+
+                        $.each(listaVehiculos, function (index, item) {
+
+                            let fechaIngreso = new Date(item.FECHA_INGRESO);
+                            let formateaPrecioCompra = formateaNumero(item.PRECIO_COMPRA);
+                            let formatePrecioVenta = formateaNumero(item.PRECIO_VENTA);
+                            let formateaPrecioVendido = formateaNumero(item.PRECIO_VENDIDO);
+
+                            strHtml += '<tr>';
+
+                            strHtml += '<td class="text-center"><a href="/MantenedorVehiculo/FormularioDetalleVehiculo?ID='+item.ID_VEHICULO+'">'+ item.PATENTE +'</a></td>';
+                            strHtml += '<td class="text-center">' +fechaIngreso.toLocaleDateString() + '</td>';
+                            strHtml += '<td>'+ formateaPrecioCompra+ '</td>';
+                            strHtml += ' <td>' + formatePrecioVenta + '</td>';
+                            strHtml += '<td class="text-center">'+ formateaPrecioVendido+ '</td>';
+                            strHtml += '<td class="text-center">'+ item.SUCURSAL +'</td>';
+                            strHtml += '<td class="text-center">'+ item.SUCURSAL_VENTA +'</td>';
+                            strHtml += '<td class="text-center">'+ item.NOMBRE_USUARIO +'</td>';
+                            strHtml += '<td class="text-center">'+ item.NOMBRE_CLIENTE  +'</td>>';
+                            strHtml += '<td class="text-center">';
+                            strHtml += '<a href="#" onclick="imprimirNotaVenta('+ item.ID_VEHICULO +')">';
+                            strHtml += '<i class="material-icons iconoDinero">book</i>';
+                            strHtml += '</a>';
+                            strHtml += '</td>';
+
+                            strHtml += '</tr">';
+
+
+
+
+
+
+
+                        });
+                        agregaBodyTablaObjetivo("TablaDatos", "listarVehiculos", strHtml);
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Vehiculos' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar los Vehiculos ' + err + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+
+
+    function diasStock(fechaIngreso) {
+        let today = new Date();
+        let fechaInicial = fechaIngreso;
+        let inicio = new Date(fechaInicial);
+
+        let diasdif = today.getTime() - inicio.getTime();
+        let contdias = Math.round(diasdif / (1000 * 60 * 60 * 24));
+        return contdias;
+
+    }
+
+    ////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+    function TablaToExcel() {
+
+        $("#TablaAuxiliar").table2excel({
+            exclude: ".noExl",
+            name: "ReporteVentasUsuario",
+            filename: "ReporteVentasUsuario.xls",
+            exclude_img: true,
+            exclude_links: true,
+            exclude_inputs: true
+        });
+
+
+
+    }
+
+
+</script>
+

@@ -1,0 +1,2488 @@
+﻿
+@{
+    ViewBag.Title = "FormularioNotaVenta";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+<head>
+    <style>
+        tr {
+            border-right: 1px solid black;
+        }
+
+        td {
+            padding: 5px !important;
+        }
+
+        label {
+            font-weight: bold;
+            color: black;
+        }
+
+        span {
+            color: black;
+            font-size: 11px !important;
+        }
+
+        .tamanioLetra_TD {
+            color: black;
+            font-size: 11px !important;
+        }
+
+        .alinearMonto {
+            text-align: left !important;
+        }
+
+        .bordeTabla {
+            border: 1px solid black !important;
+            font-size: 9px;
+        }
+
+        .alinearDerecha {
+            text-align: right !important;
+        }
+    </style>
+</head>
+<input type="hidden" id="txt_Id_Sucursal_Venta" value="@ViewBag.ID_SUCURSAL" />
+<input type="hidden" id="txt_Id_Vehiculo_Venta" value="@ViewBag.VehiculoVendible.ID_VEHICULO" />
+<input type="hidden" id="txt_Id_Usuario" value="@ViewBag.ID_USUARIO" />
+
+<!-- Modal Vehiculos en parte de pago-->
+<div class="modal fade" id="ModalPartePago" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Agregar Vehículo en parte de pago</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card" style="background-color:#EEEEEE;">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="control-label" for="cliente">Vehículo en Parte de Pago</label>
+
+                                                <select class="selectpicker" data-live-search="true" data-style="btn btn-default" data-size="7" id="CmbPartePago">
+                                                    <option value="0">Seleccione</option>
+                                                    @foreach (var vehiculoPartePago in ViewBag.ListaVehiculosPartePago)
+                                                    {
+                                                        <option value="@vehiculoPartePago.ID_VEHICULO"> @vehiculoPartePago.PATENTE.ToUpper() | DUEÑO: @vehiculoPartePago.RUT_CLIENTE</option>
+                                                    }
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="control-label" for="Patente">Patente</label>
+                                                <input type="text" class="form-control text-uppercase" id="txt_Patente2" name="txt_Patente" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="control-label" for="Marca">Marca</label>
+                                                <input type="text" class="form-control text-uppercase" id="txt_Marca2" name="txt_Marca" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label class="control-label" for="Anio">Año</label>
+                                                <input type="number" class="form-control" id="txt_Anio2" name="txt_Anio2" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="control-label" for="precioToma">Precio de toma</label>
+                                                <input type="text" class="form-control" id="txt_PrecioToma" name="txt_PrecioToma" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <br />
+                                            <br />
+                                            <br />
+                                            <a href="#" class="btn btn-success tamanio_btn" onclick="registrarVehiculo()">
+                                                <i class="material-icons">
+                                                    add
+                                                </i>
+                                            </a>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4"></div>
+                                        <div class="col-md-4"><button type="button" class="btn btn-success" data-dismiss="modal">Cerrar</button></div>
+                                        <div class="col-md-4"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>
+<!--FIN MODAL-->
+<!-- Modal Agregar Pago-->
+<div class="modal fade" id="ModalAgregarPago" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Agregar Pago</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card" style="background-color:#EEEEEE;">
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label" for="tipoDocumento">Detalle</label>
+                                            <input type="text" class="form-control text-uppercase" id="txt_tipoDocumento" name="txt_tipoDocumento">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label" for="formaPago">Forma de Pago</label>
+                                            <select class="form-control" id="CmbFormaPago">
+                                                <option value="">Seleccione</option>
+                                                @foreach (var forma in ViewBag.listaFormasPago)
+                                                {
+                                                    <option value="@forma.ID_FORMA_PAGO">@forma.DESCRIPCION </option>
+                                                }
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label" for="cuotas">Cantidad Cuotas</label>
+                                            <input type="text" min="0" class="form-control" id="txt_Cuotas" name="txt_Cuotas">
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="row">
+
+
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label" for="diaPago">Día de Pago</label>
+                                            <input type="text" min="0" class="form-control text-uppercase" id="txt_diaPago" name="txt_diaPago">
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label" for="totalCancelado">Monto</label>
+                                            <input type="text" min="0" class="form-control valoresDerecha" id="txt_Monto" name="txt_Monto" value="0">
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3">
+
+                                        <button type="button" class="btn btn-primary" style="margin-top:43px;" onclick="agregarPago()">Ingresar</button>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>
+<!--FIN MODAL-->
+<!-- Modal Agregar Descuento-->
+<div class="modal fade" id="ModalAgregarDescuento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Registrar Descuento</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card" style="background-color:#EEEEEE;">
+
+                                <div class="card-body">
+
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <span><b>Motivo Descuento</b></span>
+                                                <input type="text" class="form-control text-uppercase" id="txt_MotivoDescuento" name="txt_MotivoDescuento">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <span><b>Monto</b></span>
+                                                <input type="text" class="form-control valoresDerecha" id="txt_MontoDescuento" name="txt_MontoDescuento" value="0">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3 text-center">
+                                            <br />
+
+                                            <button type="button" class="btn btn-primary" onclick="registrarDescuento()">Ingresar</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>
+<!--FIN MODAL-->
+<!-- Modal Agregar Cliente-->
+<div class="modal fade" id="ModalClientes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Ingresar Clientes</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card" style="background-color:#EEEEEE;">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4 ">
+                                            <div class="form-group">
+                                                <label class="control-label" for="cliente">Cliente</label>
+
+                                                <select class="selectpicker" data-live-search="true" data-style="btn btn-default" data-size="7" id="CmbCliente">
+                                                    <option value="0">Seleccione</option>
+                                                    @foreach (var cliente in ViewBag.ListaClientes)
+                                                    {
+                                                        <option value="@cliente.ID_CLIENTE">@cliente.RUT | @cliente.NOMBRES @cliente.APELLIDOS| @cliente.DIRECCION</option>
+                                                    }
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 ">
+                                            <div class="form-group">
+                                                <label class="control-label" for="cliente">Destinatario Vehículo</label>
+
+                                                <select class="selectpicker" data-live-search="true" data-style="btn btn-default" data-size="7" id="CmbDestinatario">
+                                                    <option value="0">Seleccione</option>
+                                                    @foreach (var cliente in ViewBag.ListaClientes)
+                                                    {
+                                                        <option value="@cliente.ID_CLIENTE">@cliente.RUT | @cliente.NOMBRES @cliente.APELLIDOS| @cliente.EMAIL</option>
+                                                    }
+
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <br />
+                                        <br />
+
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>
+<!--FIN MODAL-->
+<!-- Modal Registrar Transferencia-->
+<div class="modal fade" id="ModalTransferencia" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Registrar Precio de  Transferencia</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card" style="background-color:#EEEEEE;">
+                                <div class="card-body">
+                                    <div class="row">
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <span><b>Transferencia</b></span>
+                                                <input type="text" min="1" class="form-control valoresDerecha" id="txt_transferencia">
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <button type="button" class="btn btn-primary" onclick="validarTransferencia()">Ingresar</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>
+<!--FIN MODAL-->
+
+<div class="row" style="display:none;">
+    <div class="col-md-3">
+        <div class="form-group">
+            <span><b>Precio Lista</b></span>
+            <input type="text" min="1" class="form-control" id="txt_PrecioLista" disabled value="@ViewBag.VehiculoVendible.PRECIO_VENTA">
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <span><b>Total</b></span>
+            <input type="number" min="1" class="form-control" id="txt_Total" name="txt_Total" disabled>
+        </div>
+    </div>
+</div>
+
+<div class="card-body ">
+
+
+    <div class="card">
+        <div class="card-body" style="padding:3%;">
+
+
+
+
+            <table class="table small bordeTabla">
+                <tr style="height:50px;">
+                    <td class="sinBordes">
+
+                        <img style="width: 120px; height:50px;" src="~/assets/img/logo_larrain.png" />
+
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <span> RUT</span><br />
+                        <span> @ViewBag.SucursalDocumento.RUT_SUCURSAL</span><br />
+                        <span> DIRECCIÓN</span><br />
+                        <span>@ViewBag.SucursalDocumento.DIRECCION</span>
+                    </td>
+
+                    <td colspan="2" class="sinBordes" style="text-align:left;">
+                        <span> <h2><b>NOTA DE VENTA</b></h2></span>
+
+                    </td>
+                </tr>
+                <tr>
+
+                    <td>
+                        <label> SANTIAGO</label>
+                    </td>
+                    <td>
+                        <span>
+                            <label id="txt_fechaActual"></label>
+                        </span>
+                    </td>
+                    <td>
+                        <label></label>
+
+                    </td>
+                    <td colspan="2">
+                        <span>
+
+                        </span>
+                    </td>
+                </tr>
+
+            </table>
+            <br />
+
+            <table class="table small bordeTabla">
+                <tr style="border-right:1px solid black;">
+                    <td colspan="2" class="sinBordes">
+
+                        <label>FACTURAR A</label>
+                        <a href="#" class="btn btn-warning tamanio_btn" onclick="mostrarModalAgregarCliente()">
+                            <i class="material-icons">
+                                add
+                            </i>
+                        </a>
+                    </td>
+
+                    <td colspan="3" class="sinBordes">
+                        <span id="TxtNombre">
+
+                        </span>
+
+
+                    </td>
+
+                    <td class="sinBordes">
+                        <label>
+                            <label> DIRECCIóN</label>
+                        </label>
+                    </td>
+                    <td colspan="4">
+                        <span id="TxtDireccion">
+
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+
+                    <td colspan="2">
+
+                        <label>RUT</label>
+
+                    </td>
+                    <td>
+                        <span id="TxtRut">
+                        </span>
+
+
+                    </td>
+                    <td>
+                        <label>TELÉFONO</label>
+
+                    </td>
+
+                    <td>
+                        <span class="TxtTelefono"></span>
+
+                    </td>
+                    <td>
+                        <label>CELULAR</label>
+                    </td>
+
+                    <td>
+                        <span class="TxtTelefono"></span>
+
+                    </td>
+                    <td>
+                        <label>COMUNA</label>
+
+                    </td>
+                    <td colspan="2">
+                        <span id="txtComuna"></span>
+
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>CIUDAD</label>
+                    </td>
+                    <td colspan="3">
+                        <span id="txtCiudad"></span>
+
+                    </td>
+                    <td colspan="1">
+                        <span></span>
+
+                    </td>
+                    <td colspan="1">
+                        <label>EMAIL</label>
+                    </td>
+                    <td colspan="3">
+                        <span id="TxtEmail"></span>
+                    </td>
+                    <td colspan="1">
+                        <span></span>
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label>COMPRA:</label>
+                    </td>
+                    <td colspan="2">
+                        <span id="TxtNombre2"></span>
+                    </td>
+                    <td>
+                        <label>RUT</label>
+                    </td>
+                    <td>
+                        <span id="TxtRut2"></span>
+                    </td>
+                    <td>
+                        <label>TELÉFONO</label>
+                    </td>
+                    <td>
+                        <span id="TxtTelefono2"></span>
+                    </td>
+                    <td>
+                        <label>EMAIL</label>
+                    </td>
+                    <td colspan="2">
+                        <span id="TxtEmail2"></span>
+                    </td>
+
+                </tr>
+            </table>
+
+            <br />
+
+            <table class="table small bordeTabla">
+
+                <tr>
+                    <td colspan="1" class="sinBordes">
+                        <label>MARCA</label>
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <span>@ViewBag.VehiculoVendible.MARCA</span>
+                    </td>
+                    <td class="sinBordes">
+                        <label>MODELO</label>
+                    </td>
+                    <td colspan="1" class="sinBordes">
+                        <span>@ViewBag.VehiculoVendible.NOMBRE_MODELO</span>
+
+                    </td>
+                    <td class="sinBordes">
+                        <label>AÑO</label>
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <span>@ViewBag.VehiculoVendible.ANO</span>
+
+                    </td>
+                    <td colspan="4">
+                        <span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;  </span>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <label>COLOR</label>
+                    </td>
+                    <td colspan="2">
+                        <span>@ViewBag.VehiculoVendible.COLOR</span>
+                    </td>
+                    <td>
+                        <label>STOCK</label>
+                    </td>
+                    <td colspan="1">
+                        <span>@ViewBag.VehiculoVendible.TIPO_INGRESO</span>
+
+                    </td>
+                    <td>
+                        <label>PATENTE</label>
+                    </td>
+                    <td colspan="2">
+                        <span>@ViewBag.VehiculoVendible.PATENTE.ToUpper() </span>
+
+                    </td>
+                    <td colspan="4">
+                        <span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;  </span>
+                    </td>
+
+                </tr>
+                <tr>
+
+                    <td colspan="1">
+                        <label>PRECIO DE LISTA</label>
+                    </td>
+                    <td colspan="2">
+                        <span class="formateado">@ViewBag.VehiculoVendible.PRECIO_VENTA</span>
+                    </td>
+                    <td colspan="1">
+                        <label>FACTURA</label>
+                    </td>
+                    <td colspan="1">
+                        <span>SI</span>
+                    </td>
+
+                    <td>
+                        <label>SUCURSAL</label>
+                    </td>
+                    <td colspan="2">
+                        <span>@ViewBag.VehiculoVendible.SUCURSAL</span>
+                    </td>
+                    <td colspan="4">
+                        <span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;  </span>
+                    </td>
+
+
+                </tr>
+
+            </table>
+
+            <br />
+
+            <table class="table small bordeTabla" id="vehiculoFormaPago">
+                <tr>
+                    <td colspan="14" class="sinBordes">
+                        <label>VEH&Iacute;CULOS EN PARTE DE PAGO:</label>
+                        <a href="#" class="btn btn-success tamanio_btn" onclick="mostrarModalPartePago()">
+                            <i class="material-icons">
+                                add
+                            </i>
+                        </a>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <label>PATENTE</label>
+                    </td>
+                    <td colspan="3">
+                        <label>MARCA</label>
+                    </td>
+                    <td colspan="3">
+                        <label>AÑO</label>
+                    </td>
+                    <td colspan="2" class="alinearDerecha">
+                        <label>PRECIO DE TOMA</label>
+                    </td>
+                    <td colspan="3">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                </tr>
+                <tbody id="RegistrarVehiculo"></tbody>
+
+
+                <tr>
+                    <td colspan="3">
+                        <span></span>
+                    </td>
+                    <td colspan="3">
+                        <span></span>
+                    </td>
+                    <td colspan="3">
+                        <label>TOTAL</label>
+                    </td>
+                    <td colspan="2" class="alinearDerecha">
+                        <span id="txt_MontoPagadoenVehiculo">0</span>
+                    </td>
+                    <td colspan="3">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                </tr>
+            </table>
+
+            <br />
+
+            <table class="table small bordeTabla" id="Descuentos">
+                <tr>
+
+                    <td colspan="1" class="sinBordes">
+                        <label>PRECIO DE VENTA</label>
+                    </td>
+
+                    <td colspan="2" class="sinBordes" style="text-align:left !important; ">
+                        <span id="txt_PrecioLista" class="formatea2">@ViewBag.VehiculoVendible.PRECIO_VENTA</span>
+
+                    </td>
+                    <td colspan="2" class="sinBordes">
+
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+
+
+
+
+                </tr>
+
+                <tr>
+
+                    <td colspan="1" class="sinBordes">
+                        <label>TRANSFERENCIA: </label>
+                        <a href="#" class="btn btn-danger tamanio_btn" onclick="mostrarModalTransferencia()">
+                            <i class="material-icons">
+                                add
+                            </i>
+                        </a>
+                    </td>
+                    <td colspan="2" style="text-align:left !important; ">
+                        <span id="txt_trsnferenciaFinal">0</span>
+                    </td>
+                    <td colspan="2" class="sinBordes">
+
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="1">
+                        <label>TOTAL</label>
+                    </td>
+                    <td colspan="2" style=" text-align:left !important;">
+                        <span id="totalFinal">0</span>
+                    </td>
+                    <td colspan="2">
+
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+                    </td>
+                    <td colspan="2">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                    <td colspan="2">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+
+                </tr>
+                <tr>
+
+                    <td colspan="9" class="sinBordes">
+                        <label>DESCUENTOS: </label>
+                        <a href="#" class="btn btn-warning tamanio_btn" onclick="mostrarModalAgregarDescuento()">
+                            <i class="material-icons">
+                                add
+                            </i>
+                        </a>
+                    </td>
+
+
+                </tr>
+
+                <tr>
+
+                    <td colspan="1" class="sinBordes">
+                        <label>MOTIVO</label>
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <label>MONTO</label>
+                    </td>
+                    <td colspan="2" class="sinBordes">
+
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+
+                </tr>
+
+                <tbody id="RegistrarDescuento"></tbody>
+
+                <tr>
+
+                    <td colspan="1">
+                        <label>TOTAL DESCUENTOS</label>
+                    </td>
+                    <td colspan="2" style=" text-align:left !important;">
+                        <span id="txt_totalDescuento">0</span>
+                    </td>
+
+                    <td colspan="2" class="sinBordes">
+
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+
+
+                </tr>
+
+                <tr>
+
+                    <td colspan="1" class="sinBordes">
+                        <label>VEH&Iacute;CULOS PARTE PAGO:</label>
+                    </td>
+
+                    <td colspan="2" class="sinBordes" style="text-align:left !important; ">
+                        <span id="txt_partePago" class="">0</span>
+
+                    </td>
+                    <td colspan="2" class="sinBordes">
+
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+
+
+
+
+                </tr>
+
+                <tr>
+                    <td colspan="1">
+                        <label>TOTAL A PAGAR</label>
+                    </td>
+                    <td colspan="2" style=" text-align:left !important;">
+                        <span id="txt_TotalPagarFinal">0</span>
+                    </td>
+                    <td colspan="2">
+
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+                    </td>
+                    <td colspan="2">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                    <td colspan="2">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+
+                </tr>
+
+
+            </table>
+            <br />
+
+
+
+            <table class="table small bordeTabla" id="pagoAdicional">
+
+                <tr>
+
+                    <td colspan="12" class="sinBordes">
+                        <label>PAGOS:</label>
+                        <a href="#" class="btn btn-primary tamanio_btn" onclick="mostrarModalAgregarPago()">
+                            <i class="material-icons">
+                                add
+                            </i>
+                        </a>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td class="sinBordes">
+                        <span> </span>
+
+                    </td>
+                    <td colspan="2" class="sinBordes">
+                        <label>DETALLE</label>
+                    </td>
+                    <td colspan="3" class="sinBordes">
+                        <label>FORMA DE PAGO</label>
+                    </td>
+                    <td class="sinBordes">
+                        <label>N° CUOTAS &nbsp; &nbsp; &nbsp; &nbsp; </label>
+                    </td>
+                    <td class="sinBordes">
+                        <label>Día de Pago &nbsp; &nbsp; &nbsp; &nbsp; </label>
+                    </td>
+                    <td colspan="2" class="sinBordes alinearDerecha">
+                        <label>MONTO</label>
+                    </td>
+                    <td colspan="2" class="sinBordes alinearDerecha">
+                        <label></label>
+                    </td>
+
+                </tr>
+                <tbody id="RegistraPago"></tbody>
+
+
+
+
+
+            </table>
+
+            <br />
+
+
+
+            <table class="table small bordeTabla">
+                <tr>
+                    <td colspan="9" class="sinBordes">
+                        <label>OBSERVACIONES:</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="9">
+                        <textarea class="form-control" id="txt_Observaciones" rows="3"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="9" class="sinBordes">
+                        <span>
+                            <h6>
+                                El valor de la reserva se abonará al saldo a facturar, y no constituye fijación de precio.
+                                Los precios de venta, serán los que rijan al momento de la entrega y
+                                NO SE GARANTIZA NÚMERO DE TERMINACIÓN DE LA PATENTE
+                            </h6>
+                        </span>
+                    </td>
+
+                </tr>
+
+
+                <tr>
+                    <td class="sinBordes">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                    <td colspan="2" style="border-top:0px;">
+                        <span>
+                            @ViewBag.NOMBRE_USUARIO
+                        </span>
+                        <br />
+                        <span style="border-top:1px solid black !important;">
+
+                            &nbsp; &nbsp;  VENDEDOR&nbsp; &nbsp;
+                        </span>
+                    </td>
+                    <td class="sinBordes">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                    <td colspan="2" style="border-top:0px;">
+                        <br />
+
+                        <span style="border-top:1px solid black !important;">
+                            &nbsp; &nbsp;  V°B° GERENCIA &nbsp; &nbsp;
+                        </span>
+                    </td>
+                    <td class="sinBordes">
+                        <span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+
+                    </td>
+                    <td colspan="2" style="border-top:0px;">
+                        <br />
+
+                        <span style="border-top:1px solid black !important;">
+                            &nbsp; &nbsp; COMPRADOR &nbsp; &nbsp;
+                        </span>
+                    </td>
+                </tr>
+
+            </table>
+            <div class="text-center">
+                <button class="btn btn-primary" id="Btn_Enviar">Enviar</button>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script>
+
+    // modal
+
+    $('#cerrarModalTransferencia').click(function () {
+
+        $('#ModalTransferencia').modal();
+    });
+
+    function mostrarModalPartePago() {
+
+        $('#ModalPartePago').modal();
+
+    }
+
+    function mostrarModalAgregarPago() {
+
+        $('#ModalAgregarPago').modal();
+
+    }
+
+    function mostrarModalAgregarDescuento() {
+
+        $('#ModalAgregarDescuento').modal();
+
+    }
+
+    function mostrarModalAgregarCliente() {
+
+        $('#ModalClientes').modal();
+
+    }
+
+    function mostrarModalTransferencia() {
+
+        $('#ModalTransferencia').modal();
+
+    }
+    // fin modal
+
+
+    $(document).ready(function () {
+        //recarga la pagina si se llega mediante back button
+        if (performance.navigation.type == 2 || performance.navigation.type == 0 || performance.navigation.type == 255) {
+            gfProceso();
+
+            location.reload(true);
+        }
+
+        $('#CmbCliente').selectpicker();
+        $('#CmbDestinatario').selectpicker();
+
+        let currentFecha = obtenerHora();
+        $('#txt_fechaActual').text(currentFecha);
+
+        function formateaNumero(num) {
+            var numFormateado = new Intl.NumberFormat("de-DE").format(num);
+            return numFormateado;
+        }
+
+        let precioVenta = $('.formateado').text();
+        precioVenta = formateaNumero(precioVenta);
+
+        $('.formateado').text('$' + precioVenta);
+        $('.formatea2').text('$' + precioVenta);
+
+
+        $('#txt_transferencia').autoNumeric('init', { vMin: '0', vMax: '9999999999', aSep: '.', aDec: ',', aSign: '', mDec: '0' });
+        $('#txt_MontoDescuento').autoNumeric('init', { vMin: '0', vMax: '9999999999', aSep: '.', aDec: ',', aSign: '', mDec: '0' });
+        $('#txt_Monto').autoNumeric('init', { vMin: '0', vMax: '9999999999', aSep: '.', aDec: ',', aSign: '', mDec: '0' });
+
+        $('#txt_Cuotas').bind('keyup paste', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+
+
+        obtenerMontoFinalVehiculo();
+
+        //new AutoNumeric('#txt_transferencia', {
+        //    digitGroupSeparator: '.',
+        //    decimalCharacter: ',',
+        //    alwaysAllowDecimalCharacter:false
+        //});
+
+    });
+
+    $('#txt_Cuotas').keypress(function (tecla) {
+
+        if (tecla.charCode < 48 || tecla.charCode > 57) {
+            return false;
+        }
+
+    });
+
+
+    $('#CmbPartePago').change(function () {
+        let idVehiculo = $('#CmbPartePago').val();
+        obtenerVehiculoPorID(idVehiculo);
+    });
+
+    $("#txt_transferencia").change(function () {
+
+        let montoTransferencia = $("#txt_transferencia").val();
+
+        montoTransferencia = limpiaNumero(montoTransferencia);
+        if (isNaN(montoTransferencia)) { montoTransferencia = 0 }
+        montoTransferencia = formateaNumero(montoTransferencia);
+
+        $("#txt_trsnferenciaFinal").text('$' + montoTransferencia);
+
+        obtenerMontoFinalVehiculo();
+        obtenerTotalPagar();
+
+    });
+
+
+
+    $("#CmbCliente").change(function () {
+        let idCliente = $('#CmbCliente').val();
+        obtenerDatosCliente(idCliente);
+
+    });
+
+    $("#CmbDestinatario").change(function () {
+        let idDestinatario = $('#CmbDestinatario').val();
+        obtenerDatosDestinatario(idDestinatario);
+
+    });
+
+
+    // inicio de calculos
+    function obtenerMontoFinalVehiculo() {
+
+        let venta = parseInt($('#txt_PrecioLista').val());
+
+        let transferencia = limpiaNumero($('#txt_transferencia').val());
+        let totalSuma = 0;
+
+        if (transferencia == "0" || transferencia == "" || isNaN(transferencia)) {
+
+            totalSuma = venta;
+            $('#txt_Total').val(totalSuma);
+
+            totalSuma = formateaNumero(totalSuma);
+
+            $('#totalFinal').text('$' + totalSuma);
+
+        } else {
+
+            totalSuma = venta + transferencia;
+            $('#txt_Total').val(totalSuma);
+
+            totalSuma = formateaNumero(totalSuma);
+            $('#totalFinal').text('$' + totalSuma);
+        }
+
+
+
+
+
+
+    }
+
+    function obtenerTotalPagar() {
+
+        let montoTotal = limpiaNumero($('#totalFinal').text());
+        let totalDescuentos = limpiaNumero($('#txt_totalDescuento').text());
+        totalDescuentos = parseInt(totalDescuentos);
+
+        totalDescuentos = parseInt(totalDescuentos);
+
+        let vehiculoPartePago = limpiaNumero($('#txt_partePago').text());
+        vehiculoPartePago = parseInt(vehiculoPartePago);
+
+        let montoFinal = 0;
+
+        if ($('#txt_TotalConDescuentos').text() == "0" || isNaN(totalDescuentos)) {
+
+            $('#txt_TotalConDescuentos').val(montoTotal);
+            montoTotal = (montoTotal - vehiculoPartePago);
+            montoTotal = formateaNumero(montoTotal);
+
+            $('#txt_TotalPagarFinal').text('$' + montoTotal);
+
+
+
+        } else {
+            montoFinal = montoTotal - (totalDescuentos + vehiculoPartePago);
+            $('#txt_TotalConDescuentos').val(montoFinal);
+            montoFinal = formateaNumero(montoFinal);
+
+            $('#txt_TotalPagarFinal').text('$' + montoFinal);
+
+
+
+        }
+    }
+
+    function sumarTotalMetodoPago() {
+
+        let sumaTotal = 0;
+
+        $('#RegistraPago >tr').each(function () {
+
+            let valor = $(this).find("td").eq(5).html();
+            let valorLimpio = limpiaNumero(valor);
+            sumaTotal += parseInt(valorLimpio);
+
+        });
+
+        sumaTotal = formateaNumero(sumaTotal);
+
+        return sumaTotal;
+        //$('#txt_totalCancelado').text('$' + sumaTotal);
+        //$('#txt_totalCancelado').change();
+
+    }
+
+    function sumarTotalVehiculoPartePago() {
+
+        let sumaTotal = 0;
+
+        $('#RegistrarVehiculo  >tr').each(function () {
+            let valor = $(this).find("td").eq(3).html();
+            valor = limpiaNumero(valor);
+            sumaTotal += parseInt(valor);
+
+        });
+
+
+        sumaTotal = formateaNumero(sumaTotal);
+
+        $('#txt_MontoPagadoenVehiculo').text('$' + sumaTotal);
+        $('#txt_partePago').text('$' + sumaTotal);
+        $('#txt_MontoPagadoenVehiculo').change();
+
+    }
+
+    function sumarDescuentos() {
+
+        let sumaTotal = 0;
+
+        $('#RegistrarDescuento >tr').each(function () {
+            let valor = $(this).find("td").eq(1).html();
+            valor = limpiaNumero(valor);
+            sumaTotal += parseInt(valor);
+
+        });
+
+
+
+
+        let formatearDescuentos = $('#txt_descuentosFinal').text();
+        formatearDescuentos = formateaNumero(sumaTotal);
+        $('#txt_totalDescuento').text('$' + formatearDescuentos);
+
+        $('#txt_descuentosFinal').text('$' + formatearDescuentos);
+
+
+
+    }
+
+
+
+    function validacionPagoVehiculo() {
+
+        let totalConDescuentos = limpiaNumero($('#txt_TotalPagarFinal').text());
+        totalConDescuentos = parseInt(totalConDescuentos);
+
+        let totalCanceladoDocumentos = limpiaNumero($('#txt_totalCancelado').text());
+        totalCanceladoDocumentos = parseInt(totalCanceladoDocumentos);
+
+        let totalCanceladoVehiculoPartePago = limpiaNumero($('#txt_MontoPagadoenVehiculo').text());
+        totalCanceladoVehiculoPartePago = parseInt(totalCanceladoVehiculoPartePago);
+
+
+        if (totalCanceladoDocumentos == 0) {
+            let montoRestante = totalConDescuentos - totalCanceladoVehiculoPartePago;
+            if (montoRestante == 0) {
+                return true;
+            }
+        }
+
+        if (totalCanceladoVehiculoPartePago == 0) {
+            let montoRestante = totalConDescuentos - totalCanceladoDocumentos;
+            if (montoRestante == 0) {
+                return true;
+            }
+        }
+
+        if (totalCanceladoDocumentos != 0 && totalCanceladoVehiculoPartePago != 0) {
+            let montoRestante = totalConDescuentos - (totalCanceladoDocumentos);
+            console.log(montoRestante);
+            if (montoRestante == 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // fin de calculos
+    function agregarPago() {
+
+        let detalle = $('#txt_tipoDocumento').val();
+        let formaPago = $('#CmbFormaPago option:selected').text();
+        let idFormaPago = $('#CmbFormaPago').val();
+        let cantidadCuotas = $('#txt_Cuotas').val();
+        let diaPago = $('#txt_diaPago').val();
+        let montoPago = limpiaNumero($('#txt_Monto').val());
+
+        if (detalle == "" || detalle == null) {
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: 'Debe ingresar Detalle',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        if (formaPago == "" || formaPago == null) {
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: 'Debe seleccionar Forma De Pago',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+        if (idFormaPago == "" || idFormaPago == null) {
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: 'Debe ingresar Forma De Pago',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        if (cantidadCuotas == "" || cantidadCuotas == null) {
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: 'Debe ingresar Cantidad Cuotas',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        if (diaPago == "" || diaPago == null) {
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: 'Debe ingresar Dia de Pago',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+
+
+        //Parse a int el valor para validar si es valido
+        montoPago = parseInt(montoPago);
+
+        if (isNaN(montoPago) || montoPago == null) {
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: 'Debe ingresar Monto',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        if (montoPago <= 0) {
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: 'Debe ingresar Monto mayor a 0',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        //formateo nuevamente monto
+        montoPago = formateaNumero(montoPago);
+
+
+        detalle = detalle.toUpperCase();
+        diaPago = diaPago.toUpperCase();
+
+
+        let html = '';
+        html += '<tr id="' + idFormaPago + '">';
+        html += '<td colspan="1"></td>';
+        html += '<td colspan="2" class="tamanioLetra_TD">' + detalle + '</span></td>';
+        html += '<td class="tamanioLetra_TD">' + formaPago + '</td>';
+        html += '<td colspan="3" class="tamanioLetra_TD">' + cantidadCuotas + '</td>';
+        html += '<td colspan="2" class="tamanioLetra_TD">' + diaPago + '</td>';
+        html += '<td colspan="2" class="tamanioLetra_TD">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $' + montoPago + '</td>';
+        html += '<td  class="pago"><span><a href="#" onclick="removerPago(this)"><i class="material-icons">remove</i></a></span></td>';
+        html += '</tr>';
+
+        $('#RegistraPago').append(html);
+        limpiarPago();
+        sumarTotalMetodoPago();
+
+
+        swal({
+
+            title: 'Larraín Automotriz',
+            text: 'Se ingreso Pago satisfactoriamente',
+            type: 'success',
+            customClass: 'swalAjustado',
+            confirmButtonColor: '#299BE8',
+            confirmButtonText: 'OK',
+            confirmButtonClass: 'btn btn-info'
+        });
+
+
+    }
+
+    function limpiarPago() {
+
+        $('#txt_tipoDocumento').val("");
+        $('#CmbFormaPago').val("");
+        $('#CmbBanco').val("");
+        $('#txt_Monto').val(0);
+        $('#txt_Cuotas').val(0);
+        $('#txt_diaPago').val("");
+
+    }
+
+    function removerPago(remtr) {
+        while ((remtr.nodeName.toLowerCase()) != 'tr')
+
+            remtr = remtr.parentNode;
+
+        remtr.parentNode.removeChild(remtr);
+        sumarTotalMetodoPago();
+    }
+
+    function validacionVehiculoPartePago() {
+
+        let patente = $('#txt_Patente2').val().toUpperCase();
+        let marca = $('#txt_Marca2').val();
+        let anio = $('#txt_Anio2').val();
+        let precioToma = $('#txt_PrecioToma').val();
+        let validarPatente = validarVehiculoIngresado(patente);
+        let falta = '';
+
+        if (patente == "" || patente == null) {
+
+            falta = 'Debe seleccionar Vehículo en parte de pago';
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: falta + '',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        if (marca == "" || marca == null) {
+
+            falta = 'Debe ingresar Marca';
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: falta + '',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        if (anio == "" || anio == 0) {
+
+            falta = 'Debe ingresar Año de Vehículo';
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: falta + '',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        if (precioToma == "" || precioToma == 0) {
+
+            falta = 'Debe ingresar Precio de Toma';
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: falta + '',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+        if (validarPatente == false) {
+            falta = 'El vehículo ya se ingresó como parte de pago para esta nota de venta';
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: falta + '',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+        return true;
+    }
+
+    function validarVehiculoIngresado(patenteIngresada) {
+
+        let boolean = true;
+        $('#RegistrarVehiculo  >tr').each(function () {
+
+            let patente = $(this).find("td").eq(0).html();
+
+            if (patente == patenteIngresada) {
+
+                boolean = false;
+                return boolean;
+
+            } else {
+                boolean = true;
+                return true;
+            }
+
+
+        });
+        return boolean;
+    }
+
+
+    function registrarVehiculo() {
+
+        let validacionCampos = false;
+        validacionCampos = validacionVehiculoPartePago();
+
+        if (validacionCampos == false) {
+
+            return false;
+        }
+
+        let patente = $('#txt_Patente2').val().toUpperCase();
+        let marca = $('#txt_Marca2').val().toUpperCase();
+        let anio = $('#txt_Anio2').val();
+        let precioToma = limpiaNumero($('#txt_PrecioToma').val());
+        precioToma = formateaNumero(precioToma);
+
+
+        let html = '';
+        html += '<tr >';
+        html += '<td colspan="3" class="tamanioLetra_TD">' + patente + '</td>';
+        html += '<td colspan="3" class="tamanioLetra_TD">' + marca + '</td>';
+        html += '<td colspan="3" class="tamanioLetra_TD">' + anio + '</td>';
+        html += '<td colspan="2" class="alinearDerecha">$' + precioToma + '</td>';
+        html += '<td colspan="2"><span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span></td>';
+        html += '<td class="pago"><a href="#" onclick="removerVehiculo(this)"><i class="material-icons">remove</i></a></td>';
+        html += '</tr>';
+
+        $('#RegistrarVehiculo').append(html);
+        limpiarVehiculo();
+        $('#CmbPartePago').val(0);
+
+
+        sumarTotalVehiculoPartePago();
+        obtenerMontoFinalVehiculo();
+        obtenerTotalPagar();
+        swal({
+
+            title: 'Larraín Automotriz',
+            text: 'Vehiculo Parte Pago registrado exitosamente',
+            type: 'success',
+            customClass: 'swalAjustado',
+            confirmButtonColor: '#299BE8',
+            confirmButtonText: 'OK',
+            confirmButtonClass: 'btn btn-info'
+        });
+    }
+
+
+    function validarDescuento() {
+        let motivo = $('#txt_MotivoDescuento').val();
+        let monto = $('#txt_MontoDescuento').val();
+        let falta = '';
+
+        if (motivo == "" || motivo == null) {
+            falta = 'Debe ingresar Motivo Descuento';
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: falta + '',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        if (monto == "0" || monto == 0 || monto == null) {
+            falta = 'Debe ingresar monto de Descuento';
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: falta + '',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+        return true;
+    }
+
+    function registrarDescuento() {
+
+        let validar = false;
+        validar = validarDescuento();
+
+        if (validar == false) {
+            return false
+        }
+
+        let motivo = $('#txt_MotivoDescuento').val().toUpperCase();
+        let monto = limpiaNumero($('#txt_MontoDescuento').val());
+        monto = formateaNumero(monto);
+
+        let html = '';
+        html += '<tr >';
+        html += '<td colspan="1" class="tamanioLetra_TD">' + motivo + '</td>';
+        html += '<td colspan="3" class="tamanioLetra_TD alinearMonto">$' + monto + '</td>';
+        html += '<td class="pago"><a href="#" onclick="removerDescuento(this)"><i class="material-icons">remove</i></a></td>';
+        html += '<td colspan="4" class="tamanioLetra_TD"></td>';
+        html += '</tr>';
+
+        $('#RegistrarDescuento').append(html);
+        sumarDescuentos();
+        obtenerTotalPagar();
+        limpiarDescuento();
+
+        swal({
+
+            title: 'Larraín Automotriz',
+            text: 'Descuento Ingresado Correctamente',
+            type: 'success',
+            customClass: 'swalAjustado',
+            confirmButtonColor: '#299BE8',
+            confirmButtonText: 'OK',
+            confirmButtonClass: 'btn btn-info'
+        });
+
+
+    }
+
+    function limpiarDescuento() {
+        $('#txt_MotivoDescuento').val("");
+        $('#txt_MontoDescuento').val("0");
+    }
+
+    function removerDescuento(remtr) {
+
+        while ((remtr.nodeName.toLowerCase()) != 'tr')
+
+            remtr = remtr.parentNode;
+
+        remtr.parentNode.removeChild(remtr);
+        sumarDescuentos();
+        obtenerTotalPagar();
+
+    }
+
+
+
+
+    function removerVehiculo(remtr) {
+
+        while ((remtr.nodeName.toLowerCase()) != 'tr')
+
+            remtr = remtr.parentNode;
+
+        remtr.parentNode.removeChild(remtr);
+        sumarTotalVehiculoPartePago();
+        obtenerTotalPagar();
+    }
+
+
+    function limpiarVehiculo() {
+
+        $('#txt_Patente2').val("");
+        $('#txt_Marca2').val("");
+        $('#txt_Anio2').val("");
+        $('#txt_PrecioToma').val(0);
+        $('#CmbPartePago').val(0);
+        $('#CmbPartePago').selectpicker('refresh');
+
+    }
+
+
+
+
+    function obtenerHora() {
+        var diaDeHoy = new Date();
+        var fechaHoy = diaDeHoy.getFullYear() + '-' + (diaDeHoy.getMonth() + 1) + '-' + diaDeHoy.getDate();
+
+        var horaHoy = diaDeHoy.getHours() + ":" + diaDeHoy.getMinutes() + ":" + diaDeHoy.getSeconds();
+
+        var fechaCompleta = fechaHoy + ' ' + horaHoy;
+        return fechaCompleta;
+    }
+
+
+    function validar() {
+
+        let transferencia = $('#txt_transferencia').val();
+        let observaciones = $('#txt_Observaciones').val();
+        let cliente = $('#CmbCliente').val();
+        let destinatario = $('#CmbDestinatario').val();
+        let vehiculoPagado = true;//validacionPagoVehiculo()
+        let falta = '';
+
+        if (cliente == "" || cliente == 0) {
+            falta = 'Debe Seleccionar Cliente';
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: falta + '',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        if (destinatario == "" || destinatario == 0) {
+            falta = 'Debe Seleccionar Destinatario';
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: falta + '',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        if (transferencia == "" || transferencia == 0 || transferencia < 0) {
+            falta = 'Debe ingresar el monto de Transferencia';
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: falta + '',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+
+
+        if (observaciones == "" || observaciones == null) {
+            falta = 'Debe ingresar observaciones';
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: falta + '',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        if (vehiculoPagado == false) {
+            falta = 'Debe ingresar el pago total del vehículo';
+            swal({
+
+                title: 'Larraín Automotriz',
+                text: falta + '',
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        return true;
+    }
+
+    function obtenerDatosCliente(id_clte) {
+        gfProceso();
+        let cliente = {
+            ID_CLIENTE: id_clte
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Cliente/ObtieneClientePorId",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: cliente,
+            success: function (response) {
+                gfProceso();
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+                    let detalle = jQuery.parseJSON(data.Descripcion)
+
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        let nombres = detalle.NOMBRES;
+                        let apellidos = detalle.APELLIDOS
+                        $('#TxtRut').text(detalle.RUT);
+                        $('#TxtNombre').text(nombres + ' ' + apellidos);
+                        $('#TxtDireccion').text(detalle.DIRECCION);
+                        $('#TxtEmail').text(detalle.EMAIL);
+                        $('.TxtTelefono').text(detalle.TELEFONO);
+                        $('#txtComuna').text(detalle.COMUNA);
+                        $('#txtCiudad').text(detalle.CIUDAD);
+
+
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener los datos del Cliente' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al obtener el Cliente ' + err + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                gfProceso();
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+
+                return false;
+            }
+        });
+    }
+
+    function obtenerDatosDestinatario(id_clte) {
+        gfProceso();
+        let cliente = {
+            ID_CLIENTE: id_clte
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Cliente/ObtieneClientePorId",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: cliente,
+            success: function (response) {
+                gfProceso();
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+                    let detalle = jQuery.parseJSON(data.Descripcion)
+
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        let nombres = detalle.NOMBRES;
+                        let apellidos = detalle.APELLIDOS
+                        $('#TxtRut2').text(detalle.RUT);
+                        $('#TxtNombre2').text(nombres + ' ' + apellidos);
+                        $('#TxtDireccion2').text(detalle.DIRECCION);
+                        $('#TxtEmail2').text(detalle.EMAIL);
+                        $('#TxtTelefono2').text(detalle.TELEFONO);
+
+
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener los datos del Cliente' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al obtener el Cliente ' + err + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                gfProceso();
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+
+                return false;
+            }
+        });
+    }
+
+
+    function obtenerFormaPagoId(idFormPago) {
+        let formaPago = 'error';
+
+
+        $.ajax({
+            type: "POST",
+            url: "/FormaPago/ObtieneFormaPagoPorId",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: { ID_FORMA_PAGO: idFormPago },
+            success: function (response) {
+
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+
+
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        let detalle = jQuery.parseJSON(data.Descripcion);
+
+                        formaPago = detalle.DESCRIPCION;
+                        return formaPago;
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener los datos de forma de pago' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al obtener forma de pago' + err + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+
+                return false;
+            }
+        });
+
+    }
+
+    function obtenerVehiculoPorID(idVehiculo) {
+        gfProceso();
+        let ID_Vehiculo = idVehiculo;
+
+        $.ajax({
+            type: "POST",
+            url: "/MantenedorVehiculo/BuscaVehiculoID",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: { idVehiculo: ID_Vehiculo },
+            success: function (response) {
+                gfProceso();
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+                    let detalle = jQuery.parseJSON(data.Descripcion)
+
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $('#txt_Patente2').val(detalle.PATENTE);
+                        $('#txt_Marca2').val(detalle.MARCA);
+                        $('#txt_Anio2').val(detalle.ANO);
+                        $('#txt_PrecioToma').val('$' + formateaNumero(detalle.PRECIO_COMPRA));
+
+
+
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener los datos del vehiculo seleccionado' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al obtener el Vehiculo ' + err + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                gfProceso();
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+
+                return false;
+            }
+        });
+    }
+
+    function validarTransferencia() {
+        let precioTransferencia = $('#txt_transferencia').val();
+        precioTransferencia = parseInt(precioTransferencia);
+        if (precioTransferencia == null || precioTransferencia == "" || isNaN(precioTransferencia)) {
+            swal({
+                title: 'Automotriz Larrain',
+                text: 'Precio de Transferencia no puede estar vacío',
+                type: 'error',
+                confirmButtonColor: '#FE6A00',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+            });
+            return false;
+        }
+        if (precioTransferencia <= 0) {
+            swal({
+                title: 'Automotriz Larrain',
+                text: 'Precio de Transferencia debe ser mayor a 0',
+                type: 'error',
+                confirmButtonColor: '#FE6A00',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+            });
+            return false;
+        }
+        $('#ModalTransferencia').modal('hide');
+    }
+
+    $('#Btn_Enviar').click(function (e) {
+
+
+        // tomo monto pagado y total a pagar
+        let montoPagado = sumarTotalMetodoPago();
+        let totalAPagar = $('#txt_TotalPagarFinal').html();
+        console.log(montoPagado);
+        console.log(totalAPagar);
+        //limpio total a pagar
+        totalAPagar = limpiaNumero(totalAPagar);
+        montoPagado = limpiaNumero(montoPagado);
+        //parseo a int los valores
+        montoPagado = parseInt(montoPagado);
+        totalAPagar = parseInt(totalAPagar);
+
+
+        if (montoPagado != totalAPagar) {
+            if (montoPagado < totalAPagar) {
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'El Monto Pagado no puede ser menor al Monto a Pagar',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+                return false;
+            } else {
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'El Monto Pagado no puede ser mayor al Total a Pagar',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+                return false;
+            }
+        }
+
+
+
+
+        $(this).attr('disabled', true);
+
+        let valido = false;
+        valido = validar();
+
+        if (valido == false) {
+            $(this).removeAttr("disabled");
+
+            return false;
+        }
+        // Estructura para guardar la nota venta
+
+        let currentFecha = obtenerHora();
+        let totalSinDescuentos = limpiaNumero($('#totalFinal').text());
+        let total = limpiaNumero($('#txt_TotalPagarFinal').text());
+        let totalDescuentos = limpiaNumero($('#txt_totalDescuento').text());
+        let totalVehiculosPP = limpiaNumero($('#txt_MontoPagadoenVehiculo').text());
+        let totalPagos = limpiaNumero($('#txt_totalCancelado').text());
+        let transferencia = limpiaNumero($('#txt_transferencia').val());
+        let notaVenta = {
+
+            FECHA_DOCUMENTO: currentFecha,
+            ID_SUCURSAL: $('#txt_Id_Sucursal_Venta').val(),
+            ID_CLIENTE: $('#CmbCliente').val(),
+            CLI_ID_CLIENTE: $('#CmbDestinatario').val(),
+            ID_VEHICULOS: $('#txt_Id_Vehiculo_Venta').val(),
+            ID_USUARIOS: $('#txt_Id_Usuario').val(),
+            PRECIO_LISTA: $('#txt_PrecioLista').val(),
+            TRANSFERENCIA: transferencia,
+            TOTAL: total,
+            TOTAL_SIN_DESCUENTOS: totalSinDescuentos,
+            TOTAL_DESCUENTOS: totalDescuentos,
+            TOTAL_PAGOS: totalPagos,
+            TOTAL_VEHICULOS_PP: totalVehiculosPP,
+            OBSERVACIONES: $('#txt_Observaciones').val()
+
+        }
+        let listaVehiculos = new Array();
+
+        $('#RegistrarVehiculo  >tr').each(function () {
+            let vehiculoPartePago = {
+                PATENTE: $(this).find("td").eq(0).html(),
+                MARCA: $(this).find("td").eq(1).html(),
+                ANO: $(this).find("td").eq(2).html(),
+                PRECIO_COMPRA: limpiaNumero($(this).find("td").eq(3).html())
+
+
+            }
+            listaVehiculos.push(vehiculoPartePago);
+
+        });
+
+        let listaPagos = new Array();
+
+        $('#RegistraPago >tr').each(function () {
+
+            let montoSucio = $(this).find("td").eq(5).html();
+            let montoLimpio = limpiaNumero(montoSucio);
+            let idFormaPago = $(this).attr('id');
+
+            let pago = {
+                ID_FORMA_PAGO: idFormaPago,
+                TIPO_DOCUMENTO: $(this).find("td").eq(1).html(),
+                CUOTAS: $(this).find("td").eq(3).html(),
+                DIAS_PAGO: $(this).find("td").eq(4).html(),
+                MONTO: montoLimpio
+
+
+            }
+            listaPagos.push(pago);
+
+        });
+
+        let listaDescuentos = new Array();
+
+
+        $('#RegistrarDescuento >tr').each(function () {
+            let descuentoLimpio = limpiaNumero($(this).find("td").eq(1).html());
+            let Descuento = {
+                DESCRIPCION: $(this).find("td").eq(0).html(),
+                MONTO: descuentoLimpio
+
+            }
+            listaDescuentos.push(Descuento);
+
+        });
+
+
+        $.ajax({
+            type: "POST",
+            url: "/Documentos/AgregarNotaVenta",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: { NotaVenta: notaVenta, ListaVehiculos: listaVehiculos, ListaPagos: listaPagos, ListaDescuentos: listaDescuentos },
+            success: function (response) {
+
+                // FUNCION PARA VALIDAR AJAX Y RESPUESTA..
+                var data;
+                try {  // AQUI SE CONTROLA EL ERROR DE JAVASCRIPT
+
+
+                    data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        let id_nota_venta = data.Descripcion;
+
+                        var html = "/Documentos/imprimirNotaVenta?id_nota_venta=" + id_nota_venta;
+                        //window.open(html, 'popup_window2', 'width=/700, height=600, left=0, top=0,scrollbars=1');
+                        var win = window.open(html, '_blank');
+                        win.focus();
+
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: "Se agregó la nota correctamente",
+                            type: 'success',
+                            confirmButtonColor: '#4caf50',
+                            //cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                            onClose: function () {
+
+                                window.location.href = "/Reportes/ReportesVehiculosVendidosPorUsuario";
+
+                            }
+
+                        });
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+
+
+
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al agregar la nota' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+                        $(this).removeAttr("disabled");
+
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al agregar la nota ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+                    $(this).removeAttr("disabled");
+
+
+                    return false;
+                }
+
+
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + errorThrown + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+                $(this).removeAttr("disabled");
+
+
+                return false;
+            }
+        });
+    });
+
+</script>
+

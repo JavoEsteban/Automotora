@@ -1,0 +1,181 @@
+﻿
+@{
+    ViewBag.Title = "ReportesVehiculo";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+
+
+
+<div class="card">
+    <div class="card-header card-header-icon" data-background-color="orange">
+        <i Class="material-icons" style="color:black;">assignment_turned_in</i>
+    </div>
+    <div class="card-content">
+        <h4 class="card-title">Reportes de Vehiculos</h4>
+        <p class="description">
+            
+        </p>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header" data-background-color="orange">
+                        <h4 class="card-title">Vehiculos en Stock </h4>
+                        <a href="javascript:TablaToExcel();"><img src="https://img.icons8.com/metro/25/000000/download.png"> Exportar Excel</a>
+                    </div>
+                    <div class="card-content table-responsive ">
+                        <table id="TablaDatos" class="table table-striped small table-hover">
+                            <thead id="listarCampos">
+                                <tr>
+                                    <th class="text-center">PATENTE</th>
+                                    <th class="text-center">FECHA INGRESO</th>
+                                    <th>MARCA</th>
+                                    <th>MODELO</th>
+                                    <th class="text-center">ANO</th>
+                                    <th class="text-center">TRANSMISION</th>
+                                    <th class="text-center">COLOR</th>
+                                    <th class="text-center">COMBUSTIBLE</th>
+                                    <th class="text-center">DUEÑOS</th>
+                                    <th class="text-center">TIPO INGRESO</th>
+                                    <th class="text-center">PRECIO DE COMPRA</th>
+                                    <th class="text-center">SUCURSAL</th>
+                                    <th class="text-center">CONDICION</th>
+                                    <th class="text-center">ESTADO</th>
+                                    <th class="text-center">DIAS</th>
+                                    <th class="text-center">USUARIO</th>
+                                    <th class="text-center">PUBLICAR</th>
+                                    <th class="text-center">VENDER</th>
+                                    <th class="text-center">RETIRAR</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody id="listarVehiculos">
+                                @foreach (var vehiculo in ViewBag.ListadoVehiculos)
+                                {
+
+                                    <tr>
+                                        <td class="text-center"><a href="/MantenedorVehiculo/FormularioDetalleVehiculo?ID=@vehiculo.ID_VEHICULO">@vehiculo.PATENTE.ToUpper()</a></td>
+                                        <td class="text-center">@vehiculo.FECHA_INGRESO.ToString("MM:dd:yyyy")</td>
+                                        <td>@vehiculo.MARCA.ToUpper()</td>
+                                        <td>@vehiculo.NOMBRE_MODELO.ToUpper()</td>
+                                        <td class="text-center">@vehiculo.ANO</td>
+                                        <td class="text-center">@vehiculo.NOMBRE_TRANSMISION.ToUpper()</td>
+                                        <td class="text-center">@vehiculo.COLOR.ToUpper()</td>
+                                        <td class="text-center">@vehiculo.COMBUSTIBLE.ToUpper()</td>
+                                        <td class="text-center">@vehiculo.CANTIDAD_DUENIOS</td>
+                                        <td class="text-center">@vehiculo.TIPO_INGRESO</td>
+                                        <td class="text-right">@vehiculo.PRECIO_COMPRA.ToString("#,##0")</td>
+                                        <td class="text-center">@vehiculo.SUCURSAL.ToUpper()</td>
+                                        <td class="text-center">@vehiculo.ESTADO.ToUpper()</td>
+                                        <td class="text-center">@vehiculo.DISPONIBILIDAD</td>
+                                        <td class="text-center">@vehiculo.DIAS_STOCK</td>
+                                        <td class="text-center">@vehiculo.NOMBRE_USUARIO.ToUpper()</td>
+                                        <td class="text-center">
+                                            <a href="@Url.Action("PublicarVehiculo","Publicar")?idVehiculo=@vehiculo.ID_VEHICULO">
+                                                <i class="material-icons iconoWeb">
+                                                    alternate_email
+                                                </i>
+                                            </a>
+
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="@Url.Action("FormularioNotaVenta","Documentos")?idVehiculo=@vehiculo.ID_VEHICULO">
+                                                <i class="material-icons iconoDinero">
+                                                    attach_money
+                                                </i>
+                                            </a>
+
+                                        </td>
+                                        <td class="text-center">
+                                            <a class="align-items-center" href="@Url.Action("EliminarVehiculo","Eliminar")?idVehiculo=@vehiculo.ID_VEHICULO">
+                                                <i class="material-icons iconoEliminar">
+                                                    clear
+                                                </i>
+                                            </a>
+                                        </td>
+
+                                    </tr>
+
+
+                                }
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="TxtID" type="text" class="hidden" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $('#TablaDatos').DataTable({
+            "language": {
+                "url": "../assets/js/Chile.json"
+            },
+            "pageLength": 100
+
+        });
+
+    });
+    function editarVehiculo(idVehiculo) {
+        location.href = '/MantenedorVehiculo/FormularioDetalleVehiculo?ID=' + idVehiculo;
+    }
+
+
+
+
+
+
+    function diasStock(fechaIngreso) {
+        let today = new Date();
+        let fechaInicial = fechaIngreso;
+        let inicio = new Date(fechaInicial);
+
+        let diasdif = today.getTime() - inicio.getTime();
+        let contdias = Math.round(diasdif / (1000 * 60 * 60 * 24));
+        return contdias;
+
+    }
+
+
+
+
+
+
+
+
+
+    ////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+    function TablaToExcel() {
+
+
+
+        $("#TablaDatos").table2excel({
+            //exclude: ".noExl",
+            name: "Stock de vehiculos",
+            filename: "Stock de vehiculos",
+            fileext: ".xls",
+            exclude_img: true,
+            exclude_links: true,
+            exclude_inputs: true
+        });
+
+
+    }
+
+
+</script>

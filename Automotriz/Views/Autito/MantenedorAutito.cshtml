@@ -1,0 +1,237 @@
+﻿
+@{
+    ViewBag.Title = "MantenedorAutito";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+<h2>MantenedorAutito</h2>
+<form action="#" method="POST">
+    <div class="row">
+
+        <div class="col-md-3">
+
+
+            <label class="control-label">Marca</label>
+            <select type="text" class="selectpicker" id="cmbMarca">
+                <option value="">Seleccione Marca</option>
+
+
+
+
+
+            </select>
+
+        </div>
+        <div class="col-md-3">
+
+            <label class="control-label">SUCURSAL</label>
+            <select type="text" class="selectpicker" id="cmbSucursal">
+                <option value="">Seleccione SUCURSAL</option>
+
+            </select>
+
+        </div>
+
+
+
+        <div class="col-md-3">
+
+
+            <label class="control-label">COMBUSTIBLE</label>
+
+            <select class="selectpicker" data-style="btn btn-default" data-size="7" id="cmbCombustible">
+                <option value="">Seleccione COMBUSTIBLE</option>
+
+            </select>
+
+
+
+        </div>
+
+
+        <div class="col-md-2">
+
+            <label class="control-label">Dueño</label>
+            <input type="text" class="form-control text-uppercase " id="duenio" />
+        </div>
+
+        <div class="col-md-2">
+
+            <label class="control-label">Imagen Vehiculo</label>
+            <input type="file" id="archivo" name="archivo" onchange="visualizaImagen(this)">
+            <img id="imagenAuto" src="" />
+        </div>
+
+    </div>
+    <input class="btn btn-primary" type="submit" onclick="guardarAutito()" value="Guardar" />
+</form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+     $(document).ready(function () {
+         listarMarcas();
+         listarCombustibles();
+         listarSucursales();
+
+     }); 
+
+    function imagen() {
+        let srcImg = $("#imagenAuto").attr('src');
+        return srcImg;
+    }
+    
+
+    function visualizaImagen(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					$('#archivo').attr('src', e.target.result);
+                    nombreImagen=$('#base').val(e.target.result);
+                    $("#imagenAuto").attr('src', e.target.result)
+				};
+                reader.readAsDataURL(input.files[0]);
+
+                
+        }
+    }
+
+    function listarMarcas() {
+        $.ajax({
+            type: "POST",
+            url: "/MantenedorVehiculo/TraerMarcas",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+
+            success: function (respuesta) {
+                let data = jQuery.parseJSON(JSON.stringify(respuesta));
+                let listadoMarcas = jQuery.parseJSON(data.Descripcion);
+                
+
+                $.each (listadoMarcas,function (index, item) {
+                    let opt = '<option value="' + item.ID_MARCA + '">' + item.DESCRIPCION + '</option>';
+                    $("#cmbMarca").append(opt);
+
+                    
+                });
+
+                $("#cmbMarca").selectpicker('refresh');
+
+                
+            }
+
+
+
+
+        });
+
+        
+    }
+
+    function listarCombustibles() {
+        
+            $.ajax({
+            type: "POST",
+            url: "/MantenedorVehiculo/TraerCombustibles",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+
+            success: function (respuesta) {
+                let data = jQuery.parseJSON(JSON.stringify(respuesta));
+                let listaCombustibles = jQuery.parseJSON(data.Descripcion);
+                
+
+                $.each (listaCombustibles,function (index, item) {
+                    let opt = '<option value="' + item.ID_TIPO_COMBUSTIBLE + '">' + item.DESCRIPCION + '</option>';
+                    $("#cmbCombustible").append(opt);
+
+                    
+                });
+
+                $("#cmbCombustible").selectpicker('refresh');
+
+                
+            }
+
+        });
+
+    }
+
+     function listarSucursales() {
+        $.ajax({
+            type: "POST",
+            url: "/Sucursal/TraerSucursal",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+
+            success: function (respuesta) {
+                let data = jQuery.parseJSON(JSON.stringify(respuesta));
+                let listaSucursal = jQuery.parseJSON(data.Descripcion);
+                
+
+                $.each(listaSucursal, function (index, item) {
+                   
+                     let opt = '<option value="' + item.ID_SUCURSAL+ '">' + item.DESCRIPCION + '</option>';
+
+                    $("#cmbSucursal").append(opt);
+
+                });
+                $("#cmbSucursal").selectpicker('refresh');
+                
+            }
+
+
+
+
+        });
+
+        
+    }
+
+    
+    //function valorSelect() {
+    //  //let valorMarca=  $('#cmbMarca').on('change',function(){
+    //  //     var valor = $(this).val();
+    //  //  alert(valor);
+    //  //  return valor;
+    //  //});
+    //  //  return valorMarca;
+    //    return $("#cmbMarca").val();
+    //}
+
+    function guardarAutito() {
+
+        let imgBase64 = imagen();
+        
+        let autito = {
+           
+            ID_MARCA:$("#cmbMarca").val(),
+            ID_SUCURSAL:$("#cmbSucursal").val(),
+            ID_COMBUSTIBLE:$("#cmbCombustible").val(),
+            DUENIO:$("#duenio").val(),
+            IMAGEN:imgBase64
+
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Autito/GuardarAutito",
+            content: "application/json; charset=utf-8",
+            data: autito,
+            
+        dataType: "json",
+       
+            success: function (respuesta) {
+                
+                alert("se fue");
+                
+            }
+
+
+
+
+        });
+
+    }
+
+
+    </script>

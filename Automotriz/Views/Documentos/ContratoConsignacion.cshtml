@@ -1,0 +1,438 @@
+﻿
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <title>ContratoConsignacion</title>
+
+    <style>
+
+        .justificado {
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        td {
+            vertical-align: middle !important;
+        }
+
+        h2 {
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class="container">
+        <table class="table small">
+            <tr style="height:50px;">
+                <td style="border-top:0px !important;">
+
+                    <img style="width: 120px; height:50px;" src="~/assets/img/logo_larrain.png" />
+
+                </td>
+
+                <td colspan="3" style="border-top:0px !important;text-align:left; text-align:center !important;">
+                    <span> <h2><b>CONTRATO DE CONSIGNACIÓN<br /> DE VEHÍCULOS USADOS</b></h2></span>
+
+
+                </td>
+
+                <td colspan="5" style="border-top:0px !important;">
+                    <span><h2><b>N° @ViewBag.ContratoConsignacion.ID_CONTRATO_CONSIGNACION</b></h2></span><br />
+
+                </td>
+            </tr>
+
+
+        </table>
+    </div>
+    <input type="hidden" id="fechaContrato" disabled value="@ViewBag.ContratoConsignacion.FECHA_INGRESO" />
+    <div class=" container justificado">
+
+        <p>
+            En Santiago de Chile, a <b><span id="dia"></span></b> de <b><span id="mes"></span></b> de <b><span id="anio"></span></b>, concurren por una parte <b>@ViewBag.ContratoConsignacion.NOMBRE_CLIENTE @ViewBag.ContratoConsignacion.APELLIDO_CLIENTE</b> cédula de identidad N° <b>@ViewBag.ContratoConsignacion.RUT_CLIENTE</b>
+            mayor de edad, domiciliado en <b>@ViewBag.ContratoConsignacion.DIRECCION_CLIENTE</b>, comuna de <b>@ViewBag.ContratoConsignacion.COMUNA_CLIENTE</b>, ciudad de <b>@ViewBag.ContratoConsignacion.CIUDAD_CLIENTE</b> que en adelante se llamará EL CONSIGNANTE y
+            por la otra parte, <b>AUTOMOTRIZ LARRAIN SpA</b> RUT N° <b>76.894.795-3</b> ,representada por don <b>Mauro Gaston Bulos</b>, ambos con domicilio en <b>@ViewBag.DIRECCION_SUCURSAL</b>,
+            comuna de <b>@ViewBag.SUCURSAL</b>, <b>Santiago</b>, que en adelante se llamará EL CONSIGNATARIO, se ha celebrado este contrato de consignación que se regirá por las siguientes cláusulas:
+        </p>
+        <p>
+            <b>Primera. Objeto.-</b><br /> EL CONSIGNANTE entrega al CONSIGNATARIO, a título de mero tenedor, a efecto de que proceda a su venta atendiendo los parámetros
+            que se señalan en la cláusula segunda, el siguiente automovil de su propiedad; marca:<b>@ViewBag.ContratoConsignacion.MARCA</b>, modelo <b>@ViewBag.ContratoConsignacion.NOMBRE_MODELO</b>,
+            año <b>@ViewBag.ContratoConsignacion.ANO</b>, color <b>@ViewBag.ContratoConsignacion.COLOR</b>, Patente <b>@ViewBag.ContratoConsignacion.PATENTE</b>, motor N° <b>@ViewBag.ContratoConsignacion.MOTOR</b>, carroceria <b>@ViewBag.ContratoConsignacion.TIPO_VEHICULO</b>, Chasis <b>@ViewBag.ContratoConsignacion.CHASIS</b>.
+            
+        </p>
+        <p>
+            <b>Segunda. Precio de venta.-</b> <br />EL CONSIGNANTE entrega la mercancía descrita en el punto anterior para ser vendida por EL CONSIGNATARIO o sus agentes,
+            por la suma de <b><span id="txt_VentaPalabras"></span></b>  ($<b><span id="txt_precioVenta">@ViewBag.ContratoConsignacion.PRECIO_COMPRA</span></b>), cuya forma de pago será de la siguiente manera <b>CHEQUE</b>
+        </p>
+        <p>
+            Por el presente contrato de consignación el CONSIGNATARIO, contrae la obligación de vender el vehiculo del CONSIGNANTE, descrito en la cláusula Primera.
+            El CONSIGNATARIO tendrá derecho a hacer suyo el mayor valor de la venta del vehiculo y deberá pagar al CONSIGNANTE el precio pactado, o en su defecto,
+            del que resultare de común acuerdo de las partes.
+
+        </p>
+        <p>
+            Por el presente contrato de consignación el CONSIGNATARIO, contrae la obligación de vender el vehiculo del CONSIGNANTE, descrito en la cláusula Primera.
+            El CONSIGNATARIO tendrá derecho a hacer suyo el mayor valor de la venta del vehiculo y deberá pagar al CONSIGNANTE el precio pactado, o en su defecto,
+            del que resultare de común acuerdo de las partes.
+
+        </p>
+        <p>
+            El CONSIGNATARIO podrá vender el vehiculo por un precio mayor que el prefijado, a menos que esta facultad le haya sido limitada por el CONSIGNANTE,
+            caso en el cual tendrá derecho el consignatario a una comisión estándar de <b>@ViewBag.ContratoConsignacion.COMISION_VENDEDOR %</b>.
+        </p>
+        <p>
+            Salvo estipulación en contrario, el CONSIGNANTE no podrá disponer del vehiculo ni exigir el precio, ni el consignatario devolver la que haya recibido,
+            mientras esté vigente el plazo de duración del contrato.
+        </p>
+        <p>
+            <b>Tercera. Obligaciones del Consignante.-</b><br />
+            Constituyen obligaciones a cargo del CONSIGNANTE:
+
+        </p>
+        <p>
+            a) Pagar al CONSIGNATARIO, como remuneración por su gestión, el mayor valor de la venta de las mercancías sobre el precio estipulado en la
+            cláusula segunda del presente contrato, suma que el CONSIGNATARIO podrá descontar directamente a su favor, una vez efectuada la venta.
+        </p>
+        <p>
+            b) Abstenerse de disponer durante el término de duración de este contrato, del vehiculo consignado y de exigir el precio de la misma,
+            salvo el normal uso para el caso de demostración de funcionamiento, debiendo estar presente el CONSIGNATARIO o dependiente por el autorizado.
+        </p>
+        <p>
+            c) Garantizar que el vehiculo consignado es de su exclusiva propiedad y posesión, que sobre ellas no pesa ningún gravamen, que no han sido dadas
+            en prenda o arrendamiento ni es objeto de pleitos pendientes.Haciendose responsable por evicción y vicio redhibitorios, en caso que existan. Asimismo
+            se deja constancia de la existencia de un seguro <b>SI</b>, contratado con <b>MAPFRE</b>, comprometiendose el CONSIGNANTE a mantenerlo
+            vigente durante todo el lapso de duración del presente contrato.
+        </p>
+        <p>
+            <b>Cuarta. Obligaciones del Consignatario.-</b><br />
+            Constituyen obligaciones a cargo del CONSIGNATARIO las siguientes:
+
+        </p>
+        <p>
+            a) Vender el vehiculo consignado entregando al CONSIGNANTE, al vencimiento del plazo convenido en la cláusula quinta, la suma fijada como precio de
+            venta en la cláusula segunda del presente contrato.
+        </p>
+        <p>
+            b) Responder hasta por la culpa leve del cuidado del bien consignado. No obstante, el CONSIGNATARIO no responderá por el deterioro o pérdida proveniente
+            de la naturaleza del vehiculo, de vicio propio de la misma o de fuerza mayor.
+        </p>
+        <p>
+            c) Abstenerse de devolver el vehiculo consignado mientras esté pendiente el plazo estipulado en la cláusula quinta.
+        </p>
+        <p>
+            <b>Quinta. Duración.-</b><br />
+            El plazo de la venta delvehiculo objeto de este contrato es de <b>@ViewBag.ContratoConsignacion.PLAZO_CONSIGNACION</b> días, contados a partir de la firma del presente documento, plazo que podrá ser
+            prorrogado a voluntad de las partes, mediante anexos adicionales a este contrato. Al término del contrato el CONSIGNANTEdeberá retirar su vehiculoen un
+            plazo no mayor a 3 días hábiles.
+        </p>
+        <p>
+            <b>Sexta. Causales de terminación del contrato.-</b><br />
+            Constituyen causas de terminación del presente contrato las siguientes:<br />
+            a) El vencimiento del término estipulado en la cláusula Quinta, salvo que se pacte una prórroga del mismo.<br />
+            b) El cumplimiento del objeto del presente contrato, conforme se dispone en la cláusula primera.<br />
+            c) El incumplimiento de las obligaciones a cargo de cualquiera de las partes contratantes, sin perjuicio
+            de las indemnizaciones a que hubiere lugar como consecuencia del mencionado incumplimiento.
+
+        </p>
+        <p>
+            <b>Septimo. Clausula penal.-</b><br />
+            En caso de incumplimiento por cualquier de las partes de cualquiera de las cláusulas del presente contrato,
+            se establece a favor de la parte diligente una multa de <b><span id="txt_MultaPalabras"></span></b> ($<b><span id="txt_Multa">@ViewBag.ContratoConsignacion.MULTA</span></b>)  que serán pagados por la parte incumplidora, dejandose constancia que
+            el incumplimiento de una parte no autoriza una conducta similar por parte de la otra.
+
+        </p>
+        <p>
+            <b>Octavo. Competencia.-</b>
+            Las partes declaran que para todos los efectos legales declaran como domicilio la ciudad y comuna de Santiago y se someten a la competencia y jurisdicción
+            de sus tribunales ordinarios de justicia.<br />
+            <br />
+            Para constancia firman:
+
+        </p>
+        <div class="container">
+            <table class="table small">
+                <tr>
+                    <td style="border-top:0px !important;">
+                        <span>
+                            &nbsp;  Automotriz Larrain
+                        </span>
+                        <br />
+                        <span style="border-top:1px solid black !important;">
+                            &nbsp; &nbsp; CONSIGNATARIO &nbsp; &nbsp;
+                        </span>
+                    </td>
+                    <td colspan="8" style="border-top:0px !important;">
+                        <span>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;</span>
+                    </td>
+                    <td style="border-top:0px !important;">
+                       
+                        <span style="border-top:1px solid black !important;">
+                            &nbsp; &nbsp; CONSIGNANTE &nbsp; &nbsp;
+                        </span>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+    </div>
+    <div style="text-align:center;">
+        <button class="btnImprimir" onclick="imprimir()">imprimir</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            let precioVenta = $('#txt_precioVenta').text();
+
+            let precioVentaPalabras = numeroALetras(precioVenta, {
+                plural: 'PESOS',
+                singular: 'DE PESOS'
+
+            });
+
+            if (parseInt(precioVenta) >= 1000000) {
+               precioVentaPalabras =  precioVentaPalabras.replace("PESOS","DE PESOS");
+            }
+
+            if (parseInt(precioVenta) == 1000) {
+                precioVentaPalabras = precioVentaPalabras.replace("UN", "");
+            }
+
+            let multa = $('#txt_Multa').text();
+            let multaPalabras = numeroALetras(multa, {
+                plural: 'PESOS',
+                singular: 'DE PESOS'
+
+            });
+
+            if (parseInt(multa) >= 1000000) {
+               multaPalabras = multaPalabras.replace("PESOS","DE PESOS");
+            }
+
+            if (parseInt(multa) == 1000) {
+               multaPalabras =  multaPalabras.replace("UN","");
+            }
+
+            $('#txt_VentaPalabras').text(precioVentaPalabras);
+            $('#txt_MultaPalabras').text(multaPalabras);
+
+            let precioVentaFormateado = formateaNumero(precioVenta);
+            $('#txt_precioVenta').text(precioVentaFormateado);
+
+            let multaFormateado = formateaNumero(multa);
+            $('#txt_Multa').text(multaFormateado);
+            generarFecha();
+        });
+
+        function imprimir() {
+            $('.btnImprimir').css("display", "none");
+            window.print();
+            $('.btnImprimir').css("display", "block");
+
+        }
+
+
+        function formateaNumero(num) {
+            var numFormateado = new Intl.NumberFormat("de-DE").format(num);
+            return numFormateado;
+        }
+
+        function limpiaNumero(numString) {
+            var numeroLimpio = numString.replace(/[$.,&nbsp;]/g, '');
+            return parseInt(numeroLimpio);
+        }
+
+        var numeroALetras = (function () {
+
+
+            function Unidades(num) {
+
+                switch (num) {
+                    case 1: return 'UN';
+                    case 2: return 'DOS';
+                    case 3: return 'TRES';
+                    case 4: return 'CUATRO';
+                    case 5: return 'CINCO';
+                    case 6: return 'SEIS';
+                    case 7: return 'SIETE';
+                    case 8: return 'OCHO';
+                    case 9: return 'NUEVE';
+                }
+
+                return '';
+            }//Unidades()
+
+            function Decenas(num) {
+
+                let decena = Math.floor(num / 10);
+                let unidad = num - (decena * 10);
+
+                switch (decena) {
+                    case 1:
+                        switch (unidad) {
+                            case 0: return 'DIEZ';
+                            case 1: return 'ONCE';
+                            case 2: return 'DOCE';
+                            case 3: return 'TRECE';
+                            case 4: return 'CATORCE';
+                            case 5: return 'QUINCE';
+                            default: return 'DIECI' + Unidades(unidad);
+                        }
+                    case 2:
+                        switch (unidad) {
+                            case 0: return 'VEINTE';
+                            default: return 'VEINTI' + Unidades(unidad);
+                        }
+                    case 3: return DecenasY('TREINTA', unidad);
+                    case 4: return DecenasY('CUARENTA', unidad);
+                    case 5: return DecenasY('CINCUENTA', unidad);
+                    case 6: return DecenasY('SESENTA', unidad);
+                    case 7: return DecenasY('SETENTA', unidad);
+                    case 8: return DecenasY('OCHENTA', unidad);
+                    case 9: return DecenasY('NOVENTA', unidad);
+                    case 0: return Unidades(unidad);
+                }
+            }//Unidades()
+
+            function DecenasY(strSin, numUnidades) {
+                if (numUnidades > 0)
+                    return strSin + ' Y ' + Unidades(numUnidades)
+
+                return strSin;
+            }//DecenasY()
+
+            function Centenas(num) {
+                let centenas = Math.floor(num / 100);
+                let decenas = num - (centenas * 100);
+
+                switch (centenas) {
+                    case 1:
+                        if (decenas > 0)
+                            return 'CIENTO ' + Decenas(decenas);
+                        return 'CIEN';
+                    case 2: return 'DOSCIENTOS ' + Decenas(decenas);
+                    case 3: return 'TRESCIENTOS ' + Decenas(decenas);
+                    case 4: return 'CUATROCIENTOS ' + Decenas(decenas);
+                    case 5: return 'QUINIENTOS ' + Decenas(decenas);
+                    case 6: return 'SEISCIENTOS ' + Decenas(decenas);
+                    case 7: return 'SETECIENTOS ' + Decenas(decenas);
+                    case 8: return 'OCHOCIENTOS ' + Decenas(decenas);
+                    case 9: return 'NOVECIENTOS ' + Decenas(decenas);
+                }
+
+                return Decenas(decenas);
+            }//Centenas()
+
+            function Seccion(num, divisor, strSingular, strPlural) {
+                let cientos = Math.floor(num / divisor)
+                let resto = num - (cientos * divisor)
+
+                let letras = '';
+
+                if (cientos > 0)
+                    if (cientos > 1)
+                        letras = Centenas(cientos) + ' ' + strPlural;
+                    else
+                        letras = strSingular;
+
+                if (resto > 0)
+                    letras += '';
+
+                return letras;
+            }//Seccion()
+
+            function Miles(num) {
+                let divisor = 1000;
+                let cientos = Math.floor(num / divisor)
+                let resto = num - (cientos * divisor)
+
+                let strMiles = Seccion(num, divisor, 'UN MIL', 'MIL');
+                let strCentenas = Centenas(resto);
+
+                if (strMiles == '')
+                    return strCentenas;
+
+                return strMiles + ' ' + strCentenas;
+            }//Miles()
+
+            function Millones(num) {
+                let divisor = 1000000;
+                let cientos = Math.floor(num / divisor)
+                let resto = num - (cientos * divisor)
+
+                let strMillones = Seccion(num, divisor, 'UN MILLON', 'MILLONES');
+                let strMiles = Miles(resto);
+
+                if (strMillones == '')
+                    return strMiles;
+
+                return strMillones + ' ' + strMiles;
+            }//Millones()
+
+            return function NumeroALetras(num, currency) {
+                currency = currency || {};
+                let data = {
+                    numero: num,
+                    enteros: Math.floor(num),
+                    centavos: (((Math.round(num * 100)) - (Math.floor(num) * 100))),
+                    letrasCentavos: '',
+                    letrasMonedaPlural: currency.plural || 'PESOS CHILENOS',//'PESOS', 'Dólares', 'Bolívares', 'etcs'
+                    letrasMonedaSingular: currency.singular || 'PESO CHILENO', //'PESO', 'Dólar', 'Bolivar', 'etc'
+                    letrasMonedaCentavoPlural: currency.centPlural || 'CHIQUI PESOS CHILENOS',
+                    letrasMonedaCentavoSingular: currency.centSingular || 'CHIQUI PESO CHILENO'
+                };
+
+                if (data.centavos > 0) {
+                    data.letrasCentavos = 'CON ' + (function () {
+                        if (data.centavos == 1)
+                            return Millones(data.centavos) + ' ' + data.letrasMonedaCentavoSingular;
+                        else
+                            return Millones(data.centavos) + ' ' + data.letrasMonedaCentavoPlural;
+                    })();
+                };
+
+                if (data.enteros == 0)
+                    return 'CERO ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
+                if (data.enteros == 1)
+                    return Millones(data.enteros) + ' ' + data.letrasMonedaSingular + ' ' + data.letrasCentavos;
+                else
+                    return Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
+            };
+
+        })();
+
+    function generarFecha() {
+        let fechaCompleta = $('#fechaContrato').val();
+        let fechaSinHora = fechaCompleta.split(" ");
+        let fechaDescompuesta = fechaSinHora[0].split("/");
+        let meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+        for (let i = 1; i <= meses.length; i++) {
+            if (fechaDescompuesta[1] == i) {
+                fechaDescompuesta[1] = meses[i-1];
+            }
+        }
+
+        $('#dia').text(fechaDescompuesta[0]);
+        $('#mes').text(fechaDescompuesta[1]);
+        $('#anio').text(fechaDescompuesta[2]);
+
+        
+
+        $('#fechaContrato').val(fechaDescompuesta);
+    }
+
+
+
+
+    </script>
+
+</body>
+</html>

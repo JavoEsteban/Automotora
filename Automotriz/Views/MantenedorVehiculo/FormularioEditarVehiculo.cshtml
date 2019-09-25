@@ -1,0 +1,2138 @@
+﻿
+@{
+    ViewBag.Title = "IngresoVehiculo";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+
+<link href="~/assets/css/style.css" rel="stylesheet" />
+<link href="~/assets/css/reset.css" rel="stylesheet" />
+<link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/assets/css/material-dashboard.css" rel="stylesheet" />
+<link href="~/assets/css/responsive.css" rel="stylesheet" />
+<style>
+    .main-panel > .content {
+        margin-top: 0%;
+        padding: 30px 15px;
+        min-height: calc(100vh - 123px);
+    }
+</style>
+<h5 class="tituloPagina">Editar Vehículo | Sucursal <b>@ViewBag.SUCURSAL</b></h5>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="ModalTarifaTransporte" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Guardar cambios</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card" style="background-color:#EEEEEE;">
+                                <div class="card-header" data-background-color="orange">
+                                    <h4 class="card-title">Registro de cambios </h4>
+                                    <p class="category"></p>
+                                </div>
+                                <div class="card-content align-center table-responsive">
+
+                                    <div class="form-group text-center">
+                                        <label class="control-label">Razón de Los cambios</label>
+                                        <textarea class="form-control rounded-0" id="txtAreaCambios" rows="10"></textarea>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="button" id="btnGuardar" class="btn btn-primary align-middle">Acepto Guardar Los Cambios</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>
+<!--FIN MODAL-->
+
+<div class="row">
+    <div class="card">
+        <div class="card-header card-header-icon" data-background-color="orange">
+            <div class="card-icon">
+                <i Class="material-icons" style="color:white; font-size:32px;">directions_car</i>
+            </div>
+        </div>
+        <div class="card-content">
+            <h4 class="card-title" style="margin-bottom:10px">Módulo Editar Vehículo</h4>
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-9 col-sm-12">
+                        <!-- Choose Area Content Start -->
+                        <div class="choose-content-wrap">
+                            <!-- Choose Area Tab Menu -->
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item active">
+                                    <a class="nav-link" id="tabDatosVehiculo" data-toggle="tab" href="#divDatosVehiculo" role="tab" aria-selected="true">Datos Veh&Iacute;culo</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tabEspecificaciones" data-toggle="tab" href="#divEspecificaciones" role="tab" aria-selected="false">Especificaciones Veh&Iacute;culo</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tabImagenesVehiculo" data-toggle="tab" href="#divImagenesVehiculo" role="tab" aria-selected="false">Imágenes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tabImagenesVehiculo" data-toggle="tab" href="#divBitacoraVehiculo" role="tab" aria-selected="false">Bitácora</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-12 ">
+                        <button rel="tooltip"  type="button" class="btn btn-fill colorBTNGuardarVehiculo"  title="GUARDAR VEHÍCULO" onclick=" mostrarModal()">GUARDAR CAMBIOS</button>
+                        <input type="text" class="hidden" id="txtIdVehiculo" value="@ViewBag.Vehiculo.ID_VEHICULO" />
+                        @if (ViewBag.IdContratoConsignacion != 0)
+                        {
+                          <button rel="tooltip" onclick="javascript: ReimprimirContrato('@ViewBag.IdContratoConsignacion');" title="IMPRIMIR CONTRATO CONSIGNACIÓN" type="button" class="btn btn-success"> <i Class="material-icons" >print</i></button>
+                        }
+
+                     </div>
+                </div>
+                <div class="row">
+                    <!-- CONTENIDOS TABS-->
+                    <div class="tab-content" id="myTabContent">
+                        <!--DATOS VEHICULO-->
+                        <div id="divDatosVehiculo" class="tab-pane fade in active">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="row">
+
+                                    <div class="col-lg-4 col-md-4 col-xs-12">
+                                        <div id="divImagenVehiculo">
+                                            <div class="wrap-custom-file" style="margin-top:10%; width:100%; height:25.5em;">
+                                                <input id="txtImagen-0" type="hidden" value="@ViewBag.Vehiculo.IMAGEN_PRINCIPAL" />
+                                                <input id="txtTipoImagen-0" type="hidden" value="@ViewBag.Vehiculo.TIPO_IMAGEN" />
+                                                <input type="file" name="txtArchivo-0" id="txtArchivo-0" class="fileinput-preview" onchange="encodeImagetoBase64(this, 0)" required="required" accept=".jpeg, .jpg, .png" />
+
+                                                <label id="lblImagenArchivo" for="txtArchivo-0">
+                                                    <i id="divIconoImagen-0" Class="material-icons" style="color:#299be8; font-size:46px; margin-top:33%">add_a_photo</i>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <!--  COLUMNA DE DATOS IZQUIERDA  -->
+                                    <div class="col-md-4 col-sm-4">
+                                        <div class="row">
+                                            <label class="control-label">PPU</label>
+                                            <input type="text" class="form-control text-uppercase" id="txtPatente" value="@ViewBag.Vehiculo.PATENTE.ToUpper()" maxlength="6">
+                                        </div>
+
+                                        <div class="row">
+                                            <label class="control-label">Modelo</label>
+
+                                            <select type="text" class="form-control" id="cmbModelo">
+                                                <option value="1">Seleccionar</option>
+
+                                            </select>
+                                            <input class="hidden" type="text" id="idModelo" value="@ViewBag.Vehiculo.ID_MODELO" />
+                                        </div>
+
+                                        <div class="row">
+                                            <label class="control-label">Tipo Vehiculo</label>
+
+                                            <select class="form-control" id="cmbTipoVehiculo">
+                                                <option value="0">Seleccionar</option>
+                                                @foreach (var item in ViewBag.ListaTipoVehiculo)
+                                                {
+                                                    if (item.ID_TIPO_VEHICULO == ViewBag.Vehiculo.ID_TIPO_VEHICULO)
+                                                    {
+                                                        <option selected value="@item.ID_TIPO_VEHICULO">@item.DESCRIPCION</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ID_TIPO_VEHICULO">@item.DESCRIPCION</option>}
+
+
+                                                }
+
+                                            </select>
+                                        </div>
+
+                                        <div id="rowClientes" class="row" style="display:none">
+                                            <label class="control-label">Clientes</label>
+
+                                            <select class="form-control" id="cmbClientes">
+                                                <option value="0">Seleccionar</option>
+                                                @foreach (var item in ViewBag.ListaClientes)
+                                                {
+                                                    if (ViewBag.Vehiculo.ID_CLIENTE == 0)
+                                                    {
+                                                        <option value="@item.ID_CLIENTE">@item.RUT | @item.NOMBRES </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        if (item.ID_CLIENTE == ViewBag.Vehiculo.ID_CLIENTE)
+                                                        {
+                                                            <option selected value="@item.ID_CLIENTE">@item.RUT | @item.NOMBRES </option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.ID_CLIENTE">@item.RUT | @item.NOMBRES </option>
+                                                        }
+                                                    }
+
+                                                }
+
+                                            </select>
+                                        </div>
+
+
+                                    </div>
+                                    <!--  FIN COL IZQUIERDA  -->
+                                    <!--  COLUMNA DE DATOS DERECHA  -->
+                                    <div class="col-md-4 col-sm-4">
+                                        <div class="row">
+                                            <label class="control-label">Marca</label>
+
+                                            <select type="text" class="form-control" id="cmbMarca">
+                                                <option value="0">Seleccionar</option>
+
+                                                @foreach (var item in ViewBag.ListaMarcas)
+                                                {
+                                                    if (item.ID_MARCA == ViewBag.Vehiculo.ID_MARCA)
+                                                    {
+                                                        <option selected value="@item.ID_MARCA">@item.DESCRIPCION</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ID_MARCA">@item.DESCRIPCION</option>}
+
+
+                                                }
+
+                                            </select>
+                                        </div>
+
+                                        <div class="row">
+                                            <label class="control-label">Version</label>
+
+                                            <input type="text" class="form-control text-uppercase" id="txtVersion" value="@ViewBag.Vehiculo.VERSION" />
+                                        </div>
+
+                                        <div class="row">
+                                            <label class="control-label">Tipo de ingreso</label>
+
+                                            <select class="form-control" id="cmbConsignacion">
+                                                <option value="0">Seleccionar</option>
+
+                                                @foreach (var item in ViewBag.ListaConsignacion)
+                                                {
+                                                    if (item.ID_TIPO_CONSIGNACION == ViewBag.Vehiculo.ID_TIPO_CONSIGNACION)
+                                                    {
+                                                        <option selected value="@item.ID_TIPO_CONSIGNACION">@item.DESCRIPCION</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ID_TIPO_CONSIGNACION">@item.DESCRIPCION</option>}
+
+
+                                                }
+
+                                            </select>
+                                        </div>
+
+                                        <div id="rowDuenos" class="row" style="display:none">
+                                            <label class="control-label">Cantidad de Dueños</label>
+                                            <input type="text" min="0" class="form-control text-right" id="txtDuenos" value="@ViewBag.Vehiculo.CANTIDAD_DUENIOS" />
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-header card-header-icon" data-background-color="green">
+                                                <div class="card-icon">
+                                                    <i Class="material-icons" style="color:white; font-size:32px;">event_note</i>
+                                                </div>
+                                            </div>
+                                            <div class="card-content">
+                                                <h4 class="card-title" style="margin-bottom:10px">Datos de Administración</h4>
+
+                                                <div class="row">
+                                                    <div class="col-md-2 col-sm-2">
+                                                        <label class="control-label">Sucursal</label>
+
+                                                        <select class="form-control" id="cmbSucursal">
+                                                            <option value="0">Seleccione</option>
+
+                                                            @foreach (var item in ViewBag.ListaSucursal)
+                                                            {
+                                                                if (item.ID_SUCURSAL == ViewBag.Vehiculo.ID_SUCURSAL)
+                                                                {
+                                                                    <option selected value="@item.ID_SUCURSAL">@item.NOMBRE_SUCURSAL</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@item.ID_SUCURSAL">@item.NOMBRE_SUCURSAL</option>}
+                                                            }
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-md-2 col-sm-2">
+                                                        <label class="control-label">Precio Toma</label>
+
+                                                        <input type="text" class="form-control text-right" id="txtPrecioCompra" value="@ViewBag.Vehiculo.PRECIO_COMPRA" />
+                                                    </div>
+
+                                                    <div class="col-md-2 col-sm-2">
+                                                        <label class="control-label">Precio Venta</label>
+
+                                                        <input type="text" class="form-control text-right" id="txtPrecioVenta" value="@ViewBag.Vehiculo.PRECIO_VENTA" />
+                                                    </div>
+
+                                                    <div class="col-md-2 col-sm-2">
+                                                        <label class="control-label">Disponibilidad</label>
+                                                        @if(ViewBag.Vehiculo.ID_DISPONIBILIDAD != 10 ){
+                                                        <select class="form-control" id="cmbDisponibilidad">
+                                                            <option value="0">Seleccione</option>
+
+                                                            @foreach (var item in ViewBag.ListaDisponibilidad)
+                                                            {
+                                                                if(item.ID_DISPONIBILIDAD != 10) { 
+                                                                    if (item.ID_DISPONIBILIDAD == ViewBag.Vehiculo.ID_DISPONIBILIDAD)
+                                                                    {
+
+                                                                        <option selected value="@item.ID_DISPONIBILIDAD">@item.DESCRIPCION</option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                    
+                                                                        <option value="@item.ID_DISPONIBILIDAD">@item.DESCRIPCION</option>
+                                                                    }
+                                                                }
+                                                            }
+                                                        </select>
+                                                        }else{
+                                                        <select class="form-control" id="cmbDisponibilidad" disabled>
+                                                            <option value="0">Seleccione</option>
+
+                                                            @foreach (var item in ViewBag.ListaDisponibilidad)
+                                                            {
+                                                                if (item.ID_DISPONIBILIDAD == ViewBag.Vehiculo.ID_DISPONIBILIDAD)
+                                                                {
+
+                                                                    <option selected value="@item.ID_DISPONIBILIDAD">@item.DESCRIPCION</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@item.ID_DISPONIBILIDAD">@item.DESCRIPCION</option>
+                                                                }
+                                                            }
+                                                        </select>
+                                                        }
+                                                    </div>
+
+                                                    <div class="col-md-2 col-sm-2">
+                                                        <label class="control-label">Estado Vehículo</label>
+
+                                                        <select class="form-control" id="cmbEstado">
+                                                            <option value="0">Seleccione</option>
+
+                                                            @foreach (var item in ViewBag.ListaEstado)
+                                                            {
+                                                                if (item.ID_ESTADO == ViewBag.Vehiculo.ID_ESTADO)
+                                                                {
+                                                                    <option selected value="@item.ID_ESTADO">@item.DESCRIPCION</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@item.ID_ESTADO">@item.DESCRIPCION</option>}
+
+                                                            }
+                                                        </select>
+                                                    </div>
+
+
+                                                    <div class="col-md-2 col-sm-2">
+                                                        <label class="control-label">USUARIO</label>
+
+                                                        <select class="form-control" id="cmbUsuario" disabled>
+                                                            <option value="0">Usuario</option>
+                                                            f
+                                                            @foreach (var item in ViewBag.ListaUsuarios)
+                                                            {
+                                                                if (item.NOMBRE_USUARIO == ViewBag.NOMBRE_USUARIO)
+                                                                {
+                                                                    <option selected="selected" value="@item.ID_USUARIOS">@item.NOMBRE_USUARIO</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@item.ID_USUARIOS">@item.NOMBRE_USUARIO</option>
+                                                                }
+
+                                                            }
+
+                                                        </select>
+
+                                                        @* Se esconde el input fecha *@
+                                                        <input class="hidden" type="date" id="txtFecha" value="@ViewBag.Vehiculo.FECHA_INGRESO.ToString("yyyy-MM-dd")" />
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!--  COLUMNA DE DATOS DERECHA  -->
+                            </div>
+
+                        </div>
+                        <!--FIN DATOS VEHICULO-->
+                        <!--ESPECIFICACIONES-->
+
+                        <div id="divEspecificaciones" class="tab-pane fade in" style="margin-top:3%;">
+                            <div class="col-md-12">
+                                <div class="row" style="margin-left:-1%; margin-right:1%">
+                                    <div class="card" style="margin-left:1% !important;">
+                                        <div class="card-header card-header-icon" data-background-color="orange">
+                                            <div class="card-icon">
+                                                <i Class="material-icons" style="color:white; font-size:32px;">settings</i>
+                                            </div>
+                                        </div>
+                                        <div class="card-content">
+                                            <h4 class="card-title" style="margin-bottom:10px">Detalles Técnicos</h4>
+
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <label class="control-label">Cilindrada</label>
+
+                                                    <input type="text" class="form-control text-right" id="txtCilindrada" value="@ViewBag.Vehiculo.CILINDRADA" />
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <label class="control-label">Año</label>
+
+                                                    <input type="text" class="form-control text-right" id="txtAno" value="@ViewBag.Vehiculo.ANO" />
+                                                </div>
+
+
+                                                <div class="col-md-2">
+                                                    <label class="control-label">Color</label>
+
+                                                    <select class="form-control" id="cmbColor">
+                                                        <option value="0">Seleccione</option>
+
+                                                        @foreach (var item in ViewBag.ListaColor)
+                                                        {
+                                                            if (item.ID_COLOR == ViewBag.Vehiculo.ID_COLOR)
+                                                            {
+                                                                <option selected value="@item.ID_COLOR">@item.DESCRIPCION</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@item.ID_COLOR">@item.DESCRIPCION</option>
+                                                            }
+
+                                                        }
+
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <label class="control-label">Kilometraje</label>
+
+                                                    <input type="text" min="0" class="form-control text-right" id="txtKilometraje" value="@ViewBag.Vehiculo.KILOMETRAJE" />
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <label class="control-label">Combustible</label>
+
+                                                    <select class="form-control" id="cmbCombustible">
+                                                        <option value="0">Seleccione</option>
+
+                                                        @foreach (var item in ViewBag.ListaCombustible)
+                                                        {
+                                                            if (item.ID_TIPO_COMBUSTIBLE == ViewBag.Vehiculo.ID_TIPO_COMBUSTIBLE)
+                                                            {
+                                                                <option selected value="@item.ID_TIPO_COMBUSTIBLE">@item.DESCRIPCION</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@item.ID_TIPO_COMBUSTIBLE">@item.DESCRIPCION</option>
+                                                            }
+
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-2 col-sm-2">
+                                                    <label class="control-label">Transmisión</label>
+
+                                                    <select class="form-control" id="cmbTipoTransmision">
+                                                        <option value="0">Seleccione</option>
+
+                                                        @foreach (var item in ViewBag.ListaTipoTransmision)
+                                                        {
+                                                            if (item.ID_TIPO_TRANSMICION == ViewBag.Vehiculo.ID_TIPO_TRANSMICION)
+                                                            {
+                                                                <option selected value="@item.ID_TIPO_TRANSMICION">@item.DESCRIPCION</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@item.ID_TIPO_TRANSMICION">@item.DESCRIPCION</option>
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-2 col-sm-2">
+                                                    <label class="control-label">Tracción</label>
+
+                                                    <select type="text" class="form-control" id="cmbTipoTraccion">
+                                                        <option value="0">Seleccione</option>
+
+                                                        @foreach (var item in ViewBag.ListaTipoTraccion)
+                                                        {
+                                                            if (item.ID_TIPOTRACCION == ViewBag.Vehiculo.ID_TIPOTRACCION)
+                                                            {
+                                                                <option selected value="@item.ID_TIPOTRACCION">@item.DESCRIPCION</option>
+
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@item.ID_TIPOTRACCION">@item.DESCRIPCION</option>
+
+                                                            }
+                                                        }
+
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-3 col-sm-3">
+                                                    <label class="control-label">Motor</label>
+
+                                                    <input type="text" class="form-control text-right text-uppercase" id="txtMotor" value="@ViewBag.Vehiculo.MOTOR" />
+                                                </div>
+
+                                                <div class="col-md-3 col-sm-3">
+                                                    <label class="control-label">Chasis</label>
+
+                                                    <input type="text" class="form-control text-right text-uppercase" id="txtChasis" value="@ViewBag.Vehiculo.CHASIS" />
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!---comienza nueva seccion-->
+                            <div class="col-md-12 pb-5">
+                                <div class="card" style="padding-bottom: 20px;">
+                                    <div class="card-content">
+                                        <h4 class="card-title" style="margin-bottom:10px">Equipamientos del vehiculo</h4>
+                                        <div class="col-md-12 col-sm-12">
+                                            <div class="row">
+                                                <div class="col-md-10 col-sm-10">
+                                                    <!-- Choose Area Content Start -->
+                                                    <div class="choose-content-wrap">
+                                                        <!-- Choose Area Tab Menu -->
+                                                        <ul class="nav nav-tabs" id="myTab3" role="tablist">
+                                                            @{
+                                                                int auxiliarIteracion = 0;
+                                                            }
+                                                            @foreach (var cartegoriaEquipamiento in ViewBag.ListaCategoriaEquipamientos)
+                                                            {
+                                                                if (auxiliarIteracion == 0)
+                                                                {
+                                                                    <li class="nav-item active">
+                                                                        <a class="nav-link" id="tabCategoriaEquipamiento-@cartegoriaEquipamiento.ID_CATEGORIA_EQUIPAMIENTO" data-toggle="tab" href="#divCategoriaEquipamiento-@cartegoriaEquipamiento.ID_CATEGORIA_EQUIPAMIENTO" role="tab" aria-selected="true">@cartegoriaEquipamiento.DESCRIPCION</a>
+                                                                    </li>
+                                                                    auxiliarIteracion++;
+                                                                }
+                                                                else
+                                                                {
+                                                                    <li class="nav-item">
+                                                                        <a class="nav-link" id="tabCategoriaEquipamiento-@cartegoriaEquipamiento.ID_CATEGORIA_EQUIPAMIENTO" data-toggle="tab" href="#divCategoriaEquipamiento-@cartegoriaEquipamiento.ID_CATEGORIA_EQUIPAMIENTO" role="tab" aria-selected="false">@cartegoriaEquipamiento.DESCRIPCION</a>
+                                                                    </li>
+                                                                }
+
+                                                            }
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <!-- CONTENIDOS TABS-->
+                                                <div class="tab-content" id="myTabContent3">
+                                                    @{
+                                                        int auxiliarIteracion2 = 0;
+                                                        bool verificarBusqueda = false;
+                                                    }
+
+                                                    @foreach (var cartegoriaEquipamiento in ViewBag.ListaCategoriaEquipamientos)
+                                                    {
+                                                        if (auxiliarIteracion2 == 0)
+                                                        {
+                                                            <div id="divCategoriaEquipamiento-@cartegoriaEquipamiento.ID_CATEGORIA_EQUIPAMIENTO" class="tab-pane fade in active">
+
+                                                                @foreach (var equipamiento in ViewBag.ListaEquipamientos)
+                                                                {
+                                                                    if (cartegoriaEquipamiento.ID_CATEGORIA_EQUIPAMIENTO == equipamiento.ID_CATEGORIA_EQUIPAMIENTO)
+                                                                    {
+                                                                        if (ViewBag.ListaDeEquipamientosDeVehiculo != null && ViewBag.ListaDeEquipamientosDeVehiculo.Count > 0)
+                                                                        {
+                                                                            foreach (var equipamientosSeleccionados in ViewBag.ListaDeEquipamientosDeVehiculo)
+                                                                            {
+                                                                                if (equipamientosSeleccionados.ID_EQUIPAMIENTO == equipamiento.ID_EQUIPAMIENTO)
+                                                                                {
+                                                                                    verificarBusqueda = true;
+                                                                                }
+
+                                                                            }
+                                                                            if (verificarBusqueda)
+                                                                            {
+                                                                                <div class="custom-control custom-checkbox">
+                                                                                    <input type="checkbox" class="custom-control-input CkeckBoxSeleccionados" id="@equipamiento.ID_EQUIPAMIENTO" checked>
+                                                                                    <label class="custom-control-label" for="@equipamiento.ID_EQUIPAMIENTO">@equipamiento.DESCRIPCION</label>
+                                                                                </div>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <div class="custom-control custom-checkbox">
+                                                                                    <input type="checkbox" class="custom-control-input CkeckBoxSeleccionados" id="@equipamiento.ID_EQUIPAMIENTO">
+                                                                                    <label class="custom-control-label" for="@equipamiento.ID_EQUIPAMIENTO">@equipamiento.DESCRIPCION</label>
+                                                                                </div>
+                                                                            }
+
+
+                                                                            verificarBusqueda = false;
+
+                                                                        }
+                                                                        else
+                                                                        {
+
+                                                                            <div class="custom-control custom-checkbox">
+                                                                                <input type="checkbox" class="custom-control-input CkeckBoxSeleccionados" id="@equipamiento.ID_EQUIPAMIENTO">
+                                                                                <label class="custom-control-label" for="@equipamiento.ID_EQUIPAMIENTO">@equipamiento.DESCRIPCION</label>
+                                                                            </div>
+
+                                                                        }
+
+                                                                    }
+                                                                }
+                                                            </div>
+                                                            auxiliarIteracion2++;
+                                                        }
+                                                        else
+                                                        {
+                                                            <div id="divCategoriaEquipamiento-@cartegoriaEquipamiento.ID_CATEGORIA_EQUIPAMIENTO" class="tab-pane fade">
+                                                                @foreach (var equipamiento in ViewBag.ListaEquipamientos)
+                                                                {
+                                                                    if (cartegoriaEquipamiento.ID_CATEGORIA_EQUIPAMIENTO == equipamiento.ID_CATEGORIA_EQUIPAMIENTO)
+                                                                    {
+                                                                        if (ViewBag.ListaDeEquipamientosDeVehiculo != null && ViewBag.ListaDeEquipamientosDeVehiculo.Count > 0)
+                                                                        {
+                                                                            foreach (var equipamientosSeleccionados in ViewBag.ListaDeEquipamientosDeVehiculo)
+                                                                            {
+                                                                                if (equipamientosSeleccionados.ID_EQUIPAMIENTO == equipamiento.ID_EQUIPAMIENTO)
+                                                                                {
+                                                                                    verificarBusqueda = true;
+                                                                                }
+
+                                                                            }
+
+                                                                            if (verificarBusqueda)
+                                                                            {
+                                                                                <div class="custom-control custom-checkbox">
+                                                                                    <input type="checkbox" class="custom-control-input CkeckBoxSeleccionados" checked id="@equipamiento.ID_EQUIPAMIENTO">
+                                                                                    <label class="custom-control-label" for="@equipamiento.ID_EQUIPAMIENTO">@equipamiento.DESCRIPCION</label>
+                                                                                </div>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <div class="custom-control custom-checkbox">
+                                                                                    <input type="checkbox" class="custom-control-input CkeckBoxSeleccionados" id="@equipamiento.ID_EQUIPAMIENTO">
+                                                                                    <label class="custom-control-label" for="@equipamiento.ID_EQUIPAMIENTO">@equipamiento.DESCRIPCION</label>
+                                                                                </div>
+                                                                            }
+
+
+                                                                            verificarBusqueda = false;
+
+                                                                        }
+                                                                        else
+                                                                        {
+
+                                                                            <div class="custom-control custom-checkbox">
+                                                                                <input type="checkbox" class="custom-control-input CkeckBoxSeleccionados" id="@equipamiento.ID_EQUIPAMIENTO">
+                                                                                <label class="custom-control-label" for="@equipamiento.ID_EQUIPAMIENTO">@equipamiento.DESCRIPCION</label>
+                                                                            </div>
+
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        }
+                                                    }
+
+
+
+                                                </div>
+
+                                                <!-- FIN CONTENIDOS TABS-->
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--fin nueva seccion-->
+
+
+                        </div>
+                        <!--FIN ESPECIFICACIONES-->
+                        <!--IMAGENES DEL VEHICULO-->
+
+                        <div id="divImagenesVehiculo" class="tab-pane fade in" style="margin-top:3%;">
+
+
+                            <div id="rowImagenesSuperior" class="col-md-12">
+                                @for (int i = 1; i <= 8; i++)
+                                {
+
+                                    if (ViewBag.ImagenesVehiculo != null)
+                                    {
+                                        bool dibujaIMG = true;
+
+                                        if (dibujaIMG == true)
+                                        {
+                                            foreach (var imagen in ViewBag.ImagenesVehiculo)
+                                            {
+                                                if (imagen.POSICION == i)
+                                                {
+                                                    <div id="render-@imagen.POSICION" class="col-md-3">
+                                                        <div id="@imagen.POSICION" class="wrap-custom-file">
+                                                            <input id="txtImagen-@imagen.POSICION" type="hidden" value="@imagen.IMAGEN" />
+                                                            <input id="txtTipoImagen-@imagen.POSICION" type="hidden" value="@imagen.EXTENSION" />
+                                                            <input type="file" name="txtArchivo-@imagen.POSICION" id="txtArchivo-@imagen.POSICION" class="fileinput-preview" onchange="encodeImagetoBase64(this, @imagen.POSICION)" required="required" accept=".jpeg, .jpg, .png" />
+                                                            <label id="lblImagen-@imagen.POSICION" for="txtArchivo-@imagen.POSICION">
+
+                                                                <i id="divIconoImagen-@imagen.POSICION" Class="material-icons" style="color:green; font-size:46px; margin-top:33%">add_a_photo</i>
+
+                                                            </label>
+
+                                                        </div>
+                                                    </div>
+
+
+                                                    dibujaIMG = false;
+                                                    i++;
+
+                                                }
+
+
+                                            }
+
+                                            if (i <= 8)
+                                            {
+                                                <div id="@i" class="col-md-3">
+                                                    <div class="wrap-custom-file">
+                                                        <input id="txtImagen-@i" type="hidden" />
+                                                        <input id="txtTipoImagen-@i" type="hidden" />
+                                                        <input type="file" name="txtArchivo-@i" id="txtArchivo-@i" class="fileinput-preview" onchange="encodeImagetoBase64(this, @i)" required="required" accept=".jpeg, .jpg, .png" />
+                                                        <label for="txtArchivo-@i">
+
+                                                            <i id="divIconoImagen-@i" Class="material-icons" style="color:#299be8; font-size:46px; margin-top:33%">add_a_photo</i>
+
+                                                        </label>
+
+                                                    </div>
+                                                </div>
+
+                                                dibujaIMG = true;
+                                            }
+
+
+                                        }
+
+
+                                    }
+
+                                }
+                            </div>
+
+                        </div>
+
+                        <!-- IMAGENES VEHICULO-->
+                        <!--EMPIEZA BITACORA-->
+
+                        <div id="divBitacoraVehiculo" class="tab-pane fade in">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">
+                                            <div class="card-header" data-background-color="orange">
+                                                <h4 class="card-title">Bitácora del Vehiculo @ViewBag.Vehiculo.PATENTE.ToUpper()</h4>
+                                            </div>
+                                            <div class="card-content table-responsive ">
+                                                <table id="TablaDatos" class="table table-striped small table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>BITÁCORA</th>
+                                                            <th>ESTADO</th>
+                                                            <th>FECHA</th>
+                                                            <th>DETALLE</th>
+                                                            <th>USUARIO</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var bitacora in ViewBag.Bitacora)
+                                                        {
+
+                                                            <tr>
+                                                                <td>@bitacora.BITACORA_ID</td>
+                                                                <td>@bitacora.ESTADO</td>
+                                                                <td>@bitacora.FECHA</td>
+                                                                <td>
+                                                                    <pre>@bitacora.DETALLE</pre>
+                                                                </td>
+                                                                <td>@bitacora.NOMBRE_USUARIO</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!--FIN BITACORA-->
+
+                    </div>
+
+                    <!-- FIN CONTENIDOS TABS-->
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<script>
+    function ReimprimirContrato(idContratoConsignacion) {
+        var html = "/Documentos/ContratoConsignacion?idContrato=" + idContratoConsignacion;
+        var win = window.open(html, '_blank');
+        win.focus();
+    }
+    //Funcion encargada de tomar los valores de los ckeckbox y retorna una lista con los valores ingresados
+    function TomarValoresCheckBox() {
+
+        let TodosLosCheckBox = $('.CkeckBoxSeleccionados');
+
+        let ListaDeEquipamientosSeleccionados = [];
+
+        $(TodosLosCheckBox).each(function (index, item) {
+
+
+            let id_Equipamiento = $(item).prop('id');
+
+            if ($(item).is(':checked')) {
+
+                ListaDeEquipamientosSeleccionados.push();
+                let equipamiento = {
+                    ID_EQUIPAMIENTO: id_Equipamiento
+                }
+
+                ListaDeEquipamientosSeleccionados.push(equipamiento);
+            }
+
+
+        });
+
+        return ListaDeEquipamientosSeleccionados;
+    }
+
+    function mostrarModal() {
+        $('#ModalTarifaTransporte').modal();
+    }
+
+
+
+    $(document).ready(function () {
+
+
+        $('#txtCilindrada').autoNumeric('init', { vMin: '0', vMax: '9999999999', aDec: '.', aSign: '', mDec: '1' });
+        $('#txtPrecioVenta').autoNumeric('init', { vMin: '0', vMax: '9999999999', aSep: '.', aDec: ',', aSign: '', mDec: '0' });
+        $('#txtPrecioCompra').autoNumeric('init', { vMin: '0', vMax: '9999999999', aSep: '.', aDec: ',', aSign: '', mDec: '0' });
+        $('#txtPrecioConsignacion').autoNumeric('init', { vMin: '0', vMax: '9999999999', aSep: '.', aDec: ',', aSign: '', mDec: '0' });
+        $('#txtMinimoVenta').autoNumeric('init', { vMin: '0', vMax: '9999999999', aSep: '.', aDec: ',', aSign: '', mDec: '0' });
+        $('#txtKilometraje').autoNumeric('init', { vMin: '0', vMax: '9999999999', aSep: '.', aDec: ',', aSign: '', mDec: '0' });
+
+        //agrega listener a input para soo ingresar numeros
+        window.addEventListener("load", function () {
+            var inputAno = document.getElementById("txtAno");
+            inputAno.addEventListener("keypress", soloNumeros, false);
+
+            var inputDuenos = document.getElementById("txtDuenos");
+            inputDuenos.addEventListener("keypress", soloNumeros, false);
+
+            var inputModelos = document.getElementById("cmbModelo");
+            inputModelos.addEventListener("load", listarModelos, false);
+        });
+
+        //El listado de modelos se cargará automaticamente una vez que el combo de marca cargue con el viewbag
+        if ($("#cmbMarca").val() != 0) {
+            listarModelos();
+        }
+
+
+        //Setea la imagen principal del vehiculo en label
+        var imagenVehiculo = $("#txtImagen-0").val();
+
+        $("#lblImagenArchivo").css("background-image", "url('" + imagenVehiculo + "')");
+        $("#lblImagenArchivo").addClass("file-ok");
+        $("#divIconoImagen-0").fadeOut('fast');
+
+        //Setea las imagenes del vehiculo en sus tarjetas
+        renderLabelImagenes(8);
+
+        //Muestra clientes y cantidad de dueños cuando es consignado
+        var tipoIngreso = parseInt($("#cmbConsignacion").val());
+
+        if (tipoIngreso == 5 || tipoIngreso == 6) {
+            $("#rowDuenos").fadeIn();
+            $("#rowClientes").fadeIn();
+        }
+
+
+        //Agrega labels de imagenes para el vehiculo
+        //agregaLabelsImagenes('rowImagenesSuperior', 1, 5);
+        //agregaLabelsImagenes('rowImagenesInferior', 6, 10);
+
+        $('input[type="file"]').each(function () {
+
+            var idInput = $(this).attr('id');
+            var numIdInput = idInput.split('-').pop();
+
+            var $file = $(this),
+                $label = $file.next('label'),
+                $labelText = $label.find('span'),
+                labelDefault = $labelText.text();
+
+            $file.on('change', function (event) {
+                var fileName = $file.val().split('\\').pop(),
+                    tmppath = URL.createObjectURL(event.target.files[0]);
+
+                var extension = Obtiene_Extension(fileName);
+
+                if (extension != ".png" && extension != ".jpeg" && extension != ".jpg") {
+                    swal({
+                        title: 'Larrain Automotriz',
+                        text: 'Solo se pueden subir fotos PNG, JPG y JPEG',
+                        type: 'error',
+                        customClass: 'swalAjustado',
+                        confirmButtonColor: '#299BE8',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+                if (fileName) {
+                    $label
+                        .addClass('file-ok')
+                        .css('background-image', 'url(' + tmppath + ')');
+                    $labelText.text(fileName);
+
+
+                    $('#txtTipoImagen-' + numIdInput).val(extension);
+
+                } else {
+                    $label.removeClass('file-ok');
+                    $labelText.text(labelDefault);
+                }
+            });
+
+        });
+
+    });
+
+    $("#cmbConsignacion").change(function () {
+        var tipoIngreso = parseInt($("#cmbConsignacion").val());
+
+        if (tipoIngreso == 5 || tipoIngreso == 6) {
+            $("#rowDuenos").fadeIn();
+            $("#rowClientes").fadeIn();
+        } else {
+            $("#rowDuenos").fadeOut();
+            $("#rowClientes").fadeOut();
+        }
+    });
+
+
+
+    function renderLabelImagenes(cantidadLabels) {
+        for (var i = 1; i <= cantidadLabels; i++) {
+            var img = $('#txtImagen-' + i).val();
+
+            if (img != "") {
+                $('#lblImagen-' + i).css("background-image", "url('" + img + "')");
+                $('#lblImagen-' + i).addClass("file-ok");
+                $('#divIconoImagen-' + i).fadeOut('fast');
+            }
+
+        }
+    }
+
+
+
+
+
+
+
+    function Obtiene_Extension(filename) {
+        return '.' + filename.split('.').pop().toLowerCase();
+    }
+
+    function obtieneImagenesVehiculo(cantidadImagenes) {
+        var arregloImagenes = new Array();
+
+        for (var i = 1; i <= cantidadImagenes; i++) {
+            var objetoImagen = new Object();
+
+            var imgStr = $('#txtImagen-' + i).val();
+            var extension = imgStr.split(',')[0];
+            var tipoImagen = $("#txtTipoImagen-" + i).val();
+
+            objetoImagen.IMAGEN = imgStr;
+            objetoImagen.EXTENSION = extension;
+            objetoImagen.TIPO_IMAGEN = tipoImagen;
+            objetoImagen.VIGENCIA = 1;
+
+
+            arregloImagenes.push(objetoImagen);
+
+        }
+
+        return arregloImagenes;
+    }
+
+    //Para todos los inputs de tipo "file" crea un label con la imagen seleccionada y verifica su formato
+
+
+
+    //EVENTOS ON CHANGE-------------------------------
+
+    $("#cmbMarca").change(function () {
+        listarModelos();
+    });
+
+    //FIN EVENTOS ON CHANGE
+
+
+    function listarModelos() {
+        gfProceso();
+
+        var idModeloVehiculo = $("#idModelo").val();
+
+        Modelo = {
+            ID_MARCA: $('#cmbMarca').val()
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/ModeloVehiculo/ObtieneListaModeloPorMarca",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: Modelo,
+            success: function (response) {
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        let listaModelos = jQuery.parseJSON(data.Descripcion);
+                        $("#cmbModelo").html("");
+
+                        console.log(listaModelos.length);
+
+                        if (listaModelos.length > 0) {
+                            $.each(listaModelos, function (index, item) {
+                                if (item.ID_MODELO == idModeloVehiculo) {
+                                    var opt = '<option selected value="' + item.ID_MODELO + '">' + item.NOMBRE_MODELO + '</option>';
+                                }
+                                else {
+                                    var opt = '<option value="' + item.ID_MODELO + '">' + item.NOMBRE_MODELO + '</option>';
+                                }
+
+
+                                $("#cmbModelo").append(opt);
+
+                            });
+                        } else {
+                            swal({
+                                title: 'Automotriz Larrain',
+                                text: 'No existen modelos asociados a esta marca',
+                                type: 'error',
+                                confirmButtonColor: '#FE6A00',
+                                confirmButtonText: 'OK',
+                                confirmButtonClass: 'btn btn-info'
+                            });
+
+                            gfProceso();
+                            return false;
+                        }
+
+                        gfProceso();
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'No se pudo obtener el listado de modelos: ' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info'
+                        });
+
+                        gfProceso();
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar los modelos: ' + err,
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+                    gfProceso();
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                gfProceso();
+                return false;
+            }
+        });
+    }
+
+    //Funcion encargado de validar todos los campos
+    function validaIngresoVehiculo() {
+        //validaTodos es un parametro booleano para saber si debe validar todos los campos
+
+        var idSucursal = $("#cmbSucursal").val();
+        var idUsuario = $("#cmbUsuario").val();
+        var idDisponibilidad = $("#cmbDisponibilidad").val();
+        var idMarca = $("#cmbMarca").val();
+        var idTraccion = $("#cmbTipoTraccion").val();
+        var idTipoConsigna = $("#cmbConsignacion").val();
+        var idColor = $("#cmbColor").val();
+        var idTransmision = $("#cmbTipoTransmision").val();
+        var idTipoVehiculo = $("#cmbTipoVehiculo").val();
+        var idCombustible = $("#cmbCombustible").val();
+        var idEstado = $("#cmbEstado").val();
+        var idModelo = $("#cmbModelo").val();
+        var patente = $("#txtPatente").val();
+        var fechaIngreso = $("#txtFecha").val();
+        var version = $("#txtVersion").val();
+        var motor = $("#txtMotor").val();
+        var ano = $("#txtAno").val();
+        var cilindrada = $("#txtCilindrada").val();
+        var precioVenta = $("#txtPrecioVenta").val();
+        var precioCompra = $("#txtPrecioCompra").val();
+        var kilometraje = $("#txtKilometraje").val();
+        var chasis = $("#txtChasis").val();
+        var cantDuenos = parseInt($("#txtDuenos").val());
+        var imagenVehiculo = $("#txtImagen-0").val();
+        var tipoImagen = $("#txtTipoImagen-0").val();
+
+        var razonDeCambios = $('#txtAreaCambios').val();
+
+
+        var disponibilidad = $("#cmbDisponibilidad").val();
+
+        if (parseInt(disponibilidad) == 0 || disponibilidad == "0") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe seleccionar una Disponibilidad para ingresar el vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+        if (razonDeCambios == "" || razonDeCambios.length == 0) {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Se debe ingresar Razón de cambios",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+        if (imagenVehiculo == "" || tipoImagen == "" || imagenVehiculo.length == 0 || tipoImagen.length == 0) {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe ingresar Imagen del Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+        if (patente == "" || patente.length == 0) {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe ingresar Patente del Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+        if (idMarca == 0 || idMarca == "" || idMarca == "0") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe seleccionar una Marca para el Vehiculo para ingresarlo como disponible",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+        if (idModelo == 0 || idModelo == "" || idModelo == "0") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe seleccionar Modelo del Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+
+        if (version == "" || version.length == 0) {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe ingresar Versión del Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+
+
+
+        if (idTipoVehiculo == 0 || idTipoVehiculo == "" || idTipoVehiculo == "0") {
+            swal({
+                title: 'larrain automotriz',
+                text: "Debe seleccionar tipo del vehiculo",
+                type: 'error',
+                customclass: 'swalajustado',
+                confirmbuttoncolor: '#299be8',
+                confirmbuttontext: 'ok',
+                confirmbuttonclass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+
+        if (idTipoConsigna == 0 || idTipoConsigna == "" || idTipoConsigna == "0") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe seleccionar Tipo Ingreso para el Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+
+        if (cantDuenos.toString == "" || cantDuenos.toString.length == 0 || cantDuenos < 0) {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe especificar Cantidad Dueños del Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+        if (idSucursal == 0 || idSucursal == "" || idSucursal == "0") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe seleccionar una Sucursal",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+        if (precioCompra == "") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe ingresar Precio de Toma para ingresar este vehiculo como Disponible",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        } else {
+            if (limpiaNumero(precioCompra) <= 0 || isNaN(limpiaNumero(precioCompra))) {
+                swal({
+                    title: 'Larrain Automotriz',
+                    text: "Debe ingresar Precio de Toma válido",
+                    type: 'error',
+                    customClass: 'swalAjustado',
+                    confirmButtonColor: '#299BE8',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+                gfProceso();
+                return false;
+            }
+        }
+
+
+        if (precioVenta == "") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe ingresar Precio de Venta para ingresar este vehiculo como Disponible",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        } else {
+            if (limpiaNumero(precioVenta) <= 0 || isNaN(limpiaNumero(precioVenta))) {
+                swal({
+                    title: 'Larrain Automotriz',
+                    text: "Debe ingresar Precio de Venta válido",
+                    type: 'error',
+                    customClass: 'swalAjustado',
+                    confirmButtonColor: '#299BE8',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+                gfProceso();
+                return false;
+            }
+        }
+
+
+        if (idDisponibilidad == 0 || idDisponibilidad == "" || idDisponibilidad == "0") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe seleccionar Disponibilidad del Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+        if (idEstado == 0 || idEstado == "" || idEstado == "0") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe seleccionar Estado del Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+
+        if (cilindrada == "" || cilindrada.toString.length < 0) {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe ingresar Cilindrada válida para el Vehiculo si quiere ingresar como Disponible",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        } else {
+            if (parseFloat(cilindrada) <= 0) {
+                swal({
+                    title: 'Larrain Automotriz',
+                    text: "Debe ingresar Cilindrada válida para el Vehiculo",
+                    type: 'error',
+                    customClass: 'swalAjustado',
+                    confirmButtonColor: '#299BE8',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+                gfProceso();
+                return false;
+            }
+        }
+
+
+
+
+
+
+        if (ano.toString.length < 0 || ano == "") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe ingresar Año del Vehiculo para ingresarlo como Disponible",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        } else {
+            if (ano.toString.length > 0 || ano != "") {
+                if (parseInt(ano) <= 0) {
+                    swal({
+                        title: 'Larrain Automotriz',
+                        text: "Debe ingresar Año del Vehiculo válido",
+                        type: 'error',
+                        customClass: 'swalAjustado',
+                        confirmButtonColor: '#299BE8',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+                    gfProceso();
+                    return false;
+                }
+            }
+        }
+
+
+
+
+
+
+
+        if (idColor == 0 || idColor == "" || idColor == "0") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe seleccionar Color para el Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+
+        if (kilometraje != "") {
+            if (parseInt(kilometraje) < 0) {
+                swal({
+                    title: 'Larrain Automotriz',
+                    text: "Debe ingresar Kilometraje del Vehiculo válido",
+                    type: 'error',
+                    customClass: 'swalAjustado',
+                    confirmButtonColor: '#299BE8',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+                gfProceso();
+                return false;
+            }
+        } else {
+            if (kilometraje == "") {
+                swal({
+                    title: 'Larrain Automotriz',
+                    text: "Debe ingresar Kilometraje del Vehiculo para ingresar el vehiculo como Disponible",
+                    type: 'error',
+                    customClass: 'swalAjustado',
+                    confirmButtonColor: '#299BE8',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+                gfProceso();
+                return false;
+            }
+
+        }
+
+
+
+
+
+
+        if (idCombustible == 0 || idCombustible == "" || idCombustible == "0") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe seleccionar Tipo Combustible del Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+
+        if (idTransmision == 0 || idTransmision == "" || idTransmision == "0") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe seleccionar Transmisión del Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+
+
+
+        if (idTraccion == 0 || idTraccion == "" || idTraccion == "0") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe seleccionar Tracción para el Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+
+        if (motor == "" || motor.length == 0) {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe ingresar Motor del Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+
+        if (chasis == "" || chasis.length == 0) {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe ingresar Chasis del Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+
+        if (fechaIngreso == "" || fechaIngreso.length == 0) {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe ingresar una Fecha para registrar el Vehiculo",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+
+        if (idUsuario == 0 || idUsuario == "" || idUsuario == "0") {
+            swal({
+                title: 'Larrain Automotriz',
+                text: "Debe seleccionar un Usuario",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            gfProceso();
+            return false;
+        }
+
+        return true;
+
+    }
+
+
+
+    //Funcion encargado de guardar
+    $('#btnGuardar').click(function (e) {
+        gfProceso();
+
+        //----------------------------------------------------------------
+
+        //Si la disponibilidad con la que se quiere ingresar el vehiculo es "DISPONIBLE"
+        //entonces el formulario recibe el parametro true para validar todos los campos
+
+        var validaForm = validaIngresoVehiculo();
+
+        if (!validaForm) {
+            return false;
+        }
+
+        //Valida campos si el ingreso es consignado
+        var tipoIngreso = $("#cmbConsignacion").val();
+
+        if (tipoIngreso == 5 || tipoIngreso == 6) {
+            var cliente = $("#cmbClientes").val();
+            var duenos = $("#txtDuenos").val();
+
+            if (parseInt(cliente) == 0 || cliente == "") {
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: "Debe seleccionar un cliente para la consignación",
+                    type: 'error',
+                    confirmButtonColor: '#4caf50',
+                    confirmButtonText: 'OK',
+                });
+
+                gfProceso();
+                return false;
+            }
+
+            if (parseInt(duenos) <= 0 || duenos == "") {
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: "Debe ingresar la cantidad de dueños para la consignación",
+                    type: 'error',
+                    confirmButtonColor: '#4caf50',
+                    confirmButtonText: 'OK',
+                });
+
+                gfProceso();
+                return false;
+            }
+
+        }
+        //-----------------------------------------
+
+        var idSucursal = $("#cmbSucursal").val();
+        var idUsuario = $("#cmbUsuario").val();
+        var idDisponibilidad = $("#cmbDisponibilidad").val();
+        var idMarca = $("#cmbMarca").val();
+        var idTraccion = $("#cmbTipoTraccion").val();
+        var idTipoConsigna = $("#cmbConsignacion").val();
+        var idColor = $("#cmbColor").val();
+        var idTransmision = $("#cmbTipoTransmision").val();
+        var idTipoVehiculo = $("#cmbTipoVehiculo").val();
+        var idCombustible = $("#cmbCombustible").val();
+        var idEstado = $("#cmbEstado").val();
+        var idModelo = $("#cmbModelo").val();
+        var patente = $("#txtPatente").val();
+        var fechaIngreso = $("#txtFecha").val();
+        var version = $("#txtVersion").val();
+        var motor = $("#txtMotor").val();
+        var ano = $("#txtAno").val();
+        var chasis = $("#txtChasis").val();
+        var cantDuenos = $("#txtDuenos").val();
+        var imagenVehiculo = $("#txtImagen-0").val();
+        var idCliente = $("#cmbClientes").val();
+
+        var kilometraje = $("#txtKilometraje").val();
+        if (kilometraje != "") {
+            kilometraje = limpiaNumero(kilometraje);
+            kilometraje = parseInt(kilometraje);
+        }
+
+        var cilindrada = $("#txtCilindrada").val();
+
+        if (cilindrada.toString.length > 0) {
+            cilindrada = parseFloat(cilindrada);
+        }
+
+        var precioVenta = $("#txtPrecioVenta").val();
+        if (precioVenta != "") {
+            precioVenta = limpiaNumero(precioVenta);
+            precioVenta = parseInt(precioVenta);
+        }
+
+        var precioCompra = $("#txtPrecioCompra").val();
+        if (precioCompra != "") {
+            precioCompra = limpiaNumero(precioCompra);
+            precioCompra = parseInt(precioCompra);
+        }
+
+        var precioConsigna = $("#txtPrecioVenta").val();
+        if (precioConsigna != "") {
+            precioConsigna = limpiaNumero(precioConsigna);
+            precioConsigna = parseInt(precioConsigna);
+        }
+
+        var minimoVenta = $("#txtPrecioCompra").val();
+        if (minimoVenta != "") {
+            minimoVenta = limpiaNumero(minimoVenta);
+            minimoVenta = parseInt(minimoVenta);
+        }
+
+
+        //Se tomara el texto de la consigancion
+        var cmbNombreConsignacion = $('#cmbConsignacion option:selected').text();
+
+        //Se tomara el texto de disponibilidad
+        var cmbNombreDisponibilidad = $('#cmbDisponibilidad option:selected').text();
+
+        //obtiene extension del archivo codificado en base64
+        var extension64 = imagenVehiculo.split(',')[0];
+
+
+        //Razon del cambio
+        var razonDeCambios = $('#txtAreaCambios').val();
+
+
+
+        Vehiculo = new Object();
+
+        Vehiculo.ID_VEHICULO = $("#txtIdVehiculo").val();
+        Vehiculo.ID_SUCURSAL = idSucursal;
+        Vehiculo.ID_USUARIOS = idUsuario;
+        Vehiculo.ID_DISPONIBILIDAD = idDisponibilidad;
+        Vehiculo.ID_MARCA = idMarca;
+        Vehiculo.ID_TIPOTRACCION = idTraccion;
+        Vehiculo.ID_TIPO_CONSIGNACION = idTipoConsigna;
+        Vehiculo.ID_COLOR = idColor;
+        Vehiculo.ID_TIPO_TRANSMICION = idTransmision;
+        Vehiculo.ID_TIPO_VEHICULO = idTipoVehiculo;
+        Vehiculo.ID_TIPO_COMBUSTIBLE = idCombustible;
+        Vehiculo.ID_ESTADO = idEstado;
+        Vehiculo.ID_MODELO = idModelo;
+        Vehiculo.ID_CLIENTE = idCliente;
+        Vehiculo.PATENTE = patente;
+        Vehiculo.FECHA_INGRESO = fechaIngreso;
+        Vehiculo.VERSION = version;
+        Vehiculo.MOTOR = motor;
+        Vehiculo.ANO = ano;
+        Vehiculo.CILINDRADA = cilindrada;
+        Vehiculo.PRECIO_VENTA = precioVenta;
+        Vehiculo.PRECIO_COMPRA = precioCompra;
+        Vehiculo.PRECIO_CONSIGNACION = precioConsigna;
+        Vehiculo.PRECIO_MINIMO_VENTA = minimoVenta;
+        Vehiculo.KILOMETRAJE = kilometraje;
+        Vehiculo.CHASIS = chasis;
+        Vehiculo.CANTIDAD_DUENIOS = cantDuenos;
+        Vehiculo.IMAGEN_PRINCIPAL = imagenVehiculo;
+        Vehiculo.TIPO_IMAGEN = extension64;
+        Vehiculo.TIPO_INGRESO = cmbNombreConsignacion;
+        Vehiculo.DISPONIBILIDAD = cmbNombreDisponibilidad;
+
+        var imagenesArray = obtieneImagenesVehiculo(8);
+
+        var valoresDeLosCkeckBox = TomarValoresCheckBox();
+
+        $.ajax({
+            type: "POST",
+            url: "/MantenedorVehiculo/EditarVehiculo",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: { vehiculo: Vehiculo, imagenes: imagenesArray, razonCambios: razonDeCambios, ListaDeEquipamientosDeVehiculo: valoresDeLosCkeckBox },
+            success: function (response) {
+
+
+                var data;
+                try {
+
+                    data = jQuery.parseJSON(JSON.stringify(response));
+
+                    if (data.Respuesta == "OK") {
+
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: "Vehiculo Actualizado Correctamente",
+                            type: 'success',
+                            confirmButtonColor: '#4caf50',
+                            confirmButtonText: 'OK',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                            onClose: function () {
+                                gfProceso();
+                                location.href = '/MantenedorVehiculo/ListadoVehiculos';
+                            }
+
+                        });
+
+                        gfProceso();
+                        return true;
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al actualizar el Vehiculo: ' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+                        gfProceso();
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al actualizar el Vehiculo: ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+                    gfProceso();
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión ' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+                gfProceso();
+
+                return false;
+            }
+        });
+
+    });
+
+
+
+    function encodeImagetoBase64(element, numDiv) {
+        var extension;
+        var file = element.files[0];
+        var nombreArchivo = file.name;
+        var extension = Obtiene_Extension(file.name);
+        var tamano = parseInt(file.size / 1024);
+        var url;
+        var urlBtoa;
+
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+
+            url = reader.result;
+            extension = extension.toUpperCase();
+
+            if (extension == '.PNG' || extension == '.JPG' || extension == '.JPEG') {
+                loadImage(
+                    url,
+                    function (img) {
+
+                        var canvas = document.createElement('canvas'),
+                            ctx = canvas.getContext('2d');
+
+                        var w = parseFloat($(img).prop('width'));
+                        var h = parseFloat($(img).prop('height'));
+
+                        var resizeW = w / 800.0;
+                        var resizeH = h / 800.0;
+
+                        var resize = 0.0;
+
+                        if (resizeW > resizeH) {
+                            resize = resizeW
+                        }
+                        else {
+                            resize = resizeH
+                        }
+
+                        var finalW = (w / resize).toFixed(0);
+                        var finalH = (h / resize).toFixed(0);
+
+                        // set its dimension to target size
+                        canvas.width = finalW
+                        canvas.height = finalH
+
+                        // draw source image into the off-screen canvas:
+                        ctx.drawImage(img, 0, 0, finalW, finalH);
+
+                        // encode image to data-uri with base64 version of compressed image
+                        imagenStr = canvas.toDataURL();
+
+
+                        $('#txtImagen-' + numDiv).val(imagenStr);
+                        $('#divIconoImagen-' + numDiv).fadeOut('fast');
+
+                    },
+                    {
+                        maxWidth: 600,
+                        maxHeight: 1065,
+                        minWidth: 100,
+                        minHeight: 50
+                    }
+                );
+
+            } else {
+                $(element).val("");
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Debe ingresar una imagen correcta ',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+            }
+
+        }
+
+        reader.readAsDataURL(file);
+
+    }
+
+    function listarCliente() {
+        $.ajax({
+            type: "POST",
+            url: "/Cliente/ObtieneListadoClientes",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaCliente = jQuery.parseJSON(data.Descripcion)
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarCliente").html("");
+
+
+                        $.each(listaCliente, function (index, item) {
+
+                            let strHtml = '';
+
+                            strHtml += '<tr>';
+                            strHtml += '<td>' + item.RUT + '</td>';
+                            strHtml += '<td>' + item.NOMBRES + '</td>';
+                            strHtml += '<td>' + item.APELLIDOS + '</td>';
+                            strHtml += '<td>' + item.DIRECCION + '</td>';
+                            strHtml += '<td>' + item.EMAIL + '</td>';
+                            strHtml += '<td>' + item.TELEFONO + '</td>';
+                            strHtml += '<td> <a href="#" onclick="obtenerDatosCliente(' + item.ID_CLIENTE + ')"><img src="https://img.icons8.com/ultraviolet/25/000000/pencil.png"></a></td>';
+                            strHtml += '<td> <a href="#" onclick="EliminarCliente(' + item.ID_CLIENTE + ')"><img src="https://img.icons8.com/ultraviolet/25/000000/delete-sign.png"></a></td>'
+                            strHtml += '</tr">';
+
+                            $("#listarCliente").append(strHtml);
+
+                        });
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Clientes' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar Clientes ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+    function agregaLabelsImagenes(nombreDiv, numInicio, numFin) {
+
+        for (var contadorCantidad = numInicio; contadorCantidad <= numFin; contadorCantidad++) {
+            var labelImagen = '';
+
+            labelImagen += '<div class="wrap-custom-file">';
+            labelImagen += '<input id="txtImagen-' + contadorCantidad + '" type="hidden" />';
+            labelImagen += '<input id="txtTipoImagen-' + contadorCantidad + '" type="hidden" />';
+            labelImagen += '<input type="file" name="txtArchivo-' + contadorCantidad + '" id="txtArchivo-' + contadorCantidad + '" class="fileinput-preview" onchange="encodeImagetoBase64(this, ' + contadorCantidad + ')" required="required" accept=".jpeg, .jpg, .png" />';
+            labelImagen += '<label for="txtArchivo-' + contadorCantidad + '">';
+            labelImagen += '<i id="divIconoImagen-' + contadorCantidad + '" Class="material-icons" style="color:#299be8; font-size:46px; margin-top:33%">add_a_photo</i>';
+            labelImagen += '</label>';
+            labelImagen += '</div>';
+
+            $('#' + nombreDiv).append(labelImagen);
+
+        }
+
+    }
+</script>
+
+
+
+

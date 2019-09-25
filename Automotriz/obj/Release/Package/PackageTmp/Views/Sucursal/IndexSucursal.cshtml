@@ -1,0 +1,883 @@
+﻿
+@{
+    ViewBag.Title = "IndexSucursal";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+<h5 class="tituloPagina">Mantenedor Sucursales  | Sucursal <b>@ViewBag.SUCURSAL</b></h5>
+
+
+<form id="RegisterValidation" action="" method="">
+    <div class="card" id="formulario">
+        <div class="card-header card-header-icon" data-background-color="orange">
+            <i Class="material-icons">business</i>
+        </div>
+        <div class="card-content">
+            <h4 class="card-title">Módulo Mantenedor Sucursales </h4>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+
+                    <div class="col-sm-12">
+                        <div class="col-md-3">
+                            <label class="control-label">Nombre de Sucursal</label>
+                            <input id="TxtNombre_Sucursal" type="text" maxlength="20" class="form-control text-uppercase" />
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="control-label">Dirección </label>
+                            <input id="TxtDireccion" type="text" maxlength="50" class="form-control text-uppercase" />
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="control-label">Teléfono</label>
+                            <input id="TxtTelefono" type="number" maxlength="12" class="form-control text-uppercase" />
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="control-label">Vigencia</label>
+                            <select class="form-control" data-style="btn btn-default" data-size="7" id="CmbVigencia">
+                                <option value="1">Vigente</option>
+                                <option value="0">No Vigente</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-6">
+                            <input id="txtID_SUCURSAL" class="hidden" />
+                            <button type="button" class="btn btn-rose btn-fill" id="Btn_Guardar">GUARDAR</button>
+                            <button type="button" class="btn btn-success btn-fill" id="Btn_Modificar" disabled="disabled">MODIFICAR</button>
+                            <button type="button" class="btn btn-danger" onclick="javascript: Nuevo();">NUEVO</button>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="control-label">Imagen Sucursal</label>
+                            <input type="file" name="archivo" id="archivo" class="fileinput-preview" accept="image/x-png,image/gif,image/jpeg" onchange="visualizaImagen(this)">
+                            @*<input type="file" id="fileCargadorImagenes" class="fileinput-preview" accept="image/x-png,image/gif,image/jpeg" multiple onchange="mostrarImagenes()">*@
+                            <img id="imgSucursal" style="width: 300px;" src="" />
+                        </div>
+                        <div class="col-md-12">
+
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <div class="card-header" data-background-color="orange">
+                                    <h4 class="card-title">Sucursales disponibles</h4>
+                                    <p class="category">Seleccione la sucursal que desea Editar / Eliminar </p>
+                                    <a href="javascript:TablaToExcel();"><img src="https://img.icons8.com/metro/25/000000/download.png"> Exportar Excel</a>
+                                </div>
+                                <div class="card-content table-responsive ">
+                                    <table id="TablaDatos" class="table table-striped small table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Sucursal</th>
+                                                <th>Dirección</th>
+                                                <th>Teléfono</th>
+                                                <th>Vigencia</th>
+                                                <th>Editar</th>
+                                                <th>Eliminar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="listarSucursales"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script src="~/assets/js/jquery.Rut.js" type="text/javascript"></script>
+<script>
+
+    $(document).ready(function () {
+
+        listarSucursales();
+
+        
+
+    });
+
+
+    //funcion encargada de listar todas las sucursales actuales
+    function listarSucursales() {
+
+        $.ajax({
+            type: "POST",
+            url: "/Sucursal/ObtieneListaSucursales",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaUsuarios = jQuery.parseJSON(data.Descripcion)
+                    console.log(listaUsuarios);
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarSucursales").html("");
+                        $.each(listaUsuarios, function (index, item) {
+                            var vigencia = item.VIGENCIA;
+
+                            if (vigencia == 1) {
+
+                                vigencia = "Vigente";
+
+                            } else {
+
+                                vigencia = "No Vigente";
+
+                            }
+                            let strHtml = '<tr>';
+                            strHtml += '<td>' + item.NOMBRE_SUCURSAL + '</td>';
+                            strHtml += '<td>' + item.DIRECCION + '</td>';
+                            strHtml += '<td>' + item.TELEFONO + '</td>';
+                            strHtml += '<td>' + vigencia + '</td>';
+                            strHtml += ' <td> <a href="#" onclick="obtenerDatosSucursal(' + item.ID_SUCURSAL + ')"><img src="https://img.icons8.com/ultraviolet/25/000000/pencil.png"></a></td>';
+                            strHtml += '<td> <a href="#" onclick="EliminarSucursal(' + item.ID_SUCURSAL + ')"><img src="https://img.icons8.com/ultraviolet/25/000000/delete-sign.png"></a></td>'
+                            strHtml += '</tr">';
+
+                            $("#listarSucursales").append(strHtml);
+
+
+                        });
+
+                        console.log(data);
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Usuarios' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar los Usuarios ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+
+                return false;
+            }
+        });
+    }
+
+
+
+
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    function imagen() {
+        let srcImg = $("#imgSucursal").attr('src');
+        return srcImg;
+    }
+
+
+
+
+    function visualizaImagen(input) {
+        try {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    let extension = $('#archivo').val();
+                    extension = (extension.substring(extension.lastIndexOf(".")));
+                    extension = extension.toUpperCase();
+
+                    if (extension == '.PNG' || extension == '.JPG' || extension == '.JPEG') {
+
+                        $('#archivo').attr('src', e.target.result);
+                        nombreImagen = $('#base').val(e.target.result);
+                        $("#imgSucursal").attr('src', e.target.result);
+                        $("#imgSucursal").show();
+
+                    } else {
+                        $('#archivo').val("");
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Debe ingresar una imagen correcta ',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                    }
+                };
+                reader.readAsDataURL(input.files[0]);
+
+
+            }
+        } catch (Excepcion) {
+            swal({
+                title: 'Automotriz Larrain',
+                text: 'No se logro cargar la imagen ,Error' + Excepcion,
+                type: 'error',
+                confirmButtonColor: '#FE6A00',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+            });
+        }
+    }
+
+
+    /////+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    function limpiarDatos() {
+
+        $("#txtID_SUCURSAL").val(0);
+
+        $("#TxtNombre_Sucursal").val("");
+
+        $("#TxtDireccion").val("");
+
+        $("#TxtTelefono").val("");
+
+        $('#imgSucursal').attr('src', "");
+        $('#archivo').val('');
+
+
+        $('#imgSucursal').hide();
+
+        $("#CmbVigencia").val(0);
+
+    }
+
+    //Metodo encargado de subir al inicio de la pagina
+    function subiraFormulario() {
+        let elemento = document.getElementById('formulario');
+        elemento.scrollIntoView();
+    }
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+    function obtenerDatosSucursal(idSucursal) {
+        gfProceso();
+        let ID_SUCURSAL = idSucursal;
+
+        $.ajax({
+            type: "POST",
+            url: "/Sucursal/ObtieneSucursalPorID",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: { idSucursal: ID_SUCURSAL },
+            success: function (response) {
+                gfProceso();
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+                    let detalle = jQuery.parseJSON(data.Descripcion)
+
+                    console.log(detalle);
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+
+                        $("#txtID_SUCURSAL").val(detalle.ID_SUCURSAL);
+
+                        $("#TxtNombre_Sucursal").val(detalle.NOMBRE_SUCURSAL);
+                        $("#TxtDireccion").val(detalle.DIRECCION);
+                        $("#TxtTelefono").val(detalle.TELEFONO);
+
+
+                        $("#CmbVigencia").val(detalle.VIGENCIA);
+
+
+                        $("#imgSucursal").attr('src', detalle.IMAGEN);
+                        $("#imgSucursal").show();
+
+                        $("#Btn_Modificar").removeAttr("disabled");
+                        $("#Btn_Guardar").attr("disabled", true);
+
+                        subiraFormulario();
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener los datos de la sucursal' + detalle.NOMBRE_SUCURSAL + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+                    gfProceso();
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al obtener Sucursal' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                gfProceso();
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+
+                return false;
+            }
+        });
+    }
+
+    ////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+    //Metodo encargado de validar los campos
+    function validar() {
+
+
+        let sucursal = $('#TxtNombre_Sucursal').val();
+        let direccion = $('#TxtDireccion').val();
+        let telefono = $('#TxtTelefono').val();
+        let validaTelefono = /^([0-9,+]+)$/;
+
+        let archivo = $('#archivo').val();
+        srcImg = $("#imgSucursal").attr('src');
+
+        if (sucursal == "") {
+            swal({
+                title: 'Larrain automotriz',
+                text: "Debe Ingresar Nombre de sucursal",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+        if (direccion == "") {
+            swal({
+                title: 'Larrain automotriz',
+                text: "Debe Ingresar Dirección",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+        if (telefono == "") {
+            swal({
+                title: 'Larrain automotriz',
+                text: "Debe Ingresar Teléfono",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        //valida si el telefono tiene caracteres validos
+        if (!validaTelefono.test(telefono)) {
+
+            falta = "Teléfono incorrecto, Porfavor Ingrese un teléfono correcto";
+
+            swal({
+                title: 'Larrain automotriz',
+                text: falta,
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+
+            return false;
+        }
+
+
+        if (archivo == "" && srcImg == "") {
+            swal({
+                title: 'Larrain automotriz',
+                text: "Debe Ingresar Imagen Sucursal",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+
+        return true
+
+
+    }
+
+
+    //Metodo encargado de Guardar los datos de la sucursal
+    $('#Btn_Guardar').click(function (e) {
+
+        let valido = false;
+        valido = validar();
+
+        if (valido == false) {
+
+            return false;
+        }
+
+        gfProceso();
+
+
+        let imgBase64 = imagen();
+        let extension = $('#archivo').val();
+        extension = (extension.substring(extension.lastIndexOf(".")));
+        var sucursal = {
+            NOMBRE_SUCURSAL: $('#TxtNombre_Sucursal').val().toUpperCase(),
+            DIRECCION: $('#TxtDireccion').val().toUpperCase(),
+            TELEFONO: $('#TxtTelefono').val(),
+            IMAGEN: imgBase64,
+            EXTENSION: extension,
+            VIGENCIA: $('#CmbVigencia').val()
+        }
+
+
+        $.ajax({
+            type: "POST",
+            url: "/Sucursal/AgregarSucursal",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: sucursal,
+            success: function (response) {
+                gfProceso();
+                try {
+
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    console.log(data);
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: "Se agregó la sucursal correctamente",
+                            type: 'success',
+                            confirmButtonColor: '#4caf50',
+                            //cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                            onClose: function () {
+                                listarSucursales()
+                                limpiarDatos();
+
+                            }
+                        });
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al agregar Sucursal' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al agregar  Sucursal ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                gfProceso();
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+
+                return false;
+            }
+        });
+
+
+
+    });
+
+    //Modificica la sucursal
+    $('#Btn_Modificar').click(function (e) {// modifica un modelo
+        let valido = false;
+        valido = validar();
+
+        if (valido == false) {
+
+            return false;
+        }
+        gfProceso();
+
+
+        let extension = $('#archivo').val();
+        let imgBase64 = imagen();
+        if (extension != "") {
+            extension = (extension.substring(extension.lastIndexOf(".")));
+        } else {
+            extension = "";
+        }
+        var sucursal = {
+            ID_SUCURSAL: $('#txtID_SUCURSAL').val(),
+            NOMBRE_SUCURSAL: $('#TxtNombre_Sucursal').val().toUpperCase(),
+            DIRECCION: $('#TxtDireccion').val().toUpperCase(),
+            TELEFONO: $('#TxtTelefono').val(),
+            IMAGEN: imgBase64,
+            EXTENSION: extension,
+            VIGENCIA: $('#CmbVigencia').val()
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Sucursal/Editar_Sucursal",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: sucursal,
+
+            success: function (response) {
+                gfProceso();
+                var Data = response;
+
+
+                if (Data.Respuesta == "OK") {
+
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Se ha hactualizado correctamente los datos de la sucursal ' + sucursal.NOMBRE_SUCURSAL + '',
+                        type: 'success',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'Continuar',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        onClose: function () {
+                            listarSucursales();
+                            limpiarDatos();
+                            $("#Btn_Guardar").removeAttr("disabled");
+                            $("#Btn_Modificar").attr("disabled", true);
+
+                        }
+                    });
+
+
+
+                }
+                else {
+
+
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'ERROR al Modificar la Sucursal seleccionada' + Data.Detalle_Error,
+                        type: 'warning',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    })
+                }
+
+            },
+
+            error: function (xhr, textStatus, errorThrown) {
+                gfProceso();
+
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'ERROR al Modificar la sucursal' + textStatus,
+                    type: 'warning',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                })
+
+            }
+        });
+
+
+
+
+    });
+
+
+
+
+
+
+
+    function EliminarSucursal(Id_sucursal) {
+
+        let sucursal = {
+            ID_SUCURSAL: Id_sucursal
+        }
+
+
+        swal({
+            title: 'Automotriz Larrain ',
+            text: "Se eliminara La sucursal Seleccionada",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4caf50',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirmar',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+
+
+        }).then(function () {
+            gfProceso();
+            // AJAX
+
+            $.ajax({
+                type: "POST",
+                url: "/Sucursal/EliminarSucursal",
+                content: "application/json; charset=utf-8",
+                dataType: "json",
+                data: sucursal,
+
+
+                success: function (response) {
+                    gfProceso();
+                    // FUNCION PARA VALIDAR AJAX Y RESPUESTA..
+                    var data;
+                    var detalle;
+                    try {  // AQUI SE CONTROLA EL ERROR DE JAVASCRIPT
+
+
+
+
+                        data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+                        //   alert(JSON.stringify(detalle));
+
+
+                        if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                        {
+
+
+
+                            swal({
+                                title: 'Automotriz Larrain ',
+                                text: "Sucursal eliminada con éxito",
+                                type: 'success',
+                                confirmButtonColor: '#4caf50',
+                                //cancelButtonColor: '#d33',
+                                confirmButtonText: 'OK',
+                                allowEscapeKey: false,
+                                allowOutsideClick: false,
+                                onClose: function () {
+                                    listarSucursales();
+
+
+                                }
+
+                            });
+
+
+
+
+                        }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                        else {
+
+
+
+                            swal({
+                                title: 'Automotriz Larrain',
+                                text: 'Error al eliminar la Sucursal' + data.Detalle_Error + '',
+                                type: 'error',
+                                confirmButtonColor: '#FE6A00',
+                                confirmButtonText: 'OK',
+                                confirmButtonClass: 'btn btn-info',
+                                allowEscapeKey: false,
+                                allowOutsideClick: false,
+                            });
+
+
+
+
+                            return false;
+                        }
+
+                    } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al eliminar la Sucursal :(' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+
+
+                        return false;
+                    }
+
+
+
+                },
+                error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error de Conexión' + textStatus + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    gfProceso();
+                    return false;
+                }
+            });
+
+            //FIN
+
+
+
+        }).catch(function (reason) {
+            //  alert("The alert was dismissed by the user: " + reason);
+        });
+
+
+
+
+
+    }
+
+
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+    function TablaToExcel() {
+
+
+
+        $("#TablaDatos").table2excel({
+            //exclude: ".noExl",
+            name: "Sucursales",
+            filename: "Sucursales",
+            fileext: ".xls",
+            exclude_img: true,
+            exclude_links: true,
+            exclude_inputs: true
+        });
+
+
+        }
+
+
+
+</script>
+
+

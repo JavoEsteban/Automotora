@@ -1,0 +1,724 @@
+﻿
+@{
+    ViewBag.Title = "DocumentosIndex";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+
+
+
+<form id="RegisterValidation" action="" method="">
+    <div class="card" id="formulario">
+        <div class="card-header card-header-icon" data-background-color="orange">
+            <i class="far fa-user 3x"></i>
+        </div>
+        <div class="card-content">
+            <h4 class="card-title">Documentos </h4>
+            <p class="description">
+                Este módulo permite agregar/editar/Eliminar Documentos del sistema
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+
+                    <div class="col-sm-12">
+                        <div class="col-md-3">
+                            <label class="control-label">Nombre de Documento</label>
+                            <input id="TxtNombre_Documento" type="text" class="form-control text-uppercase" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-6">
+                            <input id="txtID_DOCUMENTO" class="hidden" />
+                            <button type="button" class="btn btn-rose btn-fill" id="Btn_Guardar">GUARDAR</button>
+                            <button type="button" class="btn btn-success btn-fill" id="Btn_Modificar" disabled="disabled">MODIFICAR</button>
+                            <button type="button" class="btn btn-danger" onclick="javascript: Nuevo();">NUEVO</button>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="control-label">Documento</label>
+                            <input type="file" name="archivo" id="archivo" class="fileinput-preview" onchange="visualizaDocumento(this)">
+                            @*<input type="file" id="fileCargadorImagenes" class="fileinput-preview" accept="image/x-png,image/gif,image/jpeg" multiple onchange="mostrarImagenes()">*@
+                            
+                            <embed id="document" src="" type="application/pdf" width="800" height="600"></embed>
+                        </div>
+                        <div class="col-md-12">
+
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <div class="card-header" data-background-color="orange">
+                                    <h4 class="card-title">Sucursales disponibles</h4>
+                                    <p class="category">Seleccione la sucursal que desea Editar / Eliminar </p>
+                                    <a href="javascript:TablaToExcel();"><img src="https://img.icons8.com/metro/25/000000/download.png"> Exportar Excel</a>
+                                </div>
+                                <div class="card-content table-responsive ">
+                                    <table id="TablaDatos" class="table table-striped small table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre Documento</th>
+                                                <th>EDITAR</th>
+                                                <th>ELIMINAR</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="listaDocumento"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script src="~/assets/js/jquery.Rut.js" type="text/javascript"></script>
+<script>
+
+    $(document).ready(function () {
+
+
+        //$('#TablaDatos').DataTable({
+        //                       "language": {
+        //                           "url": "../assets/js/Chile.json"
+        //                       },
+        //                       "pageLength": 100
+
+        //});
+        listarDocumentos();
+
+
+    });
+
+
+    function listarDocumentos() {
+
+        $.ajax({
+            type: "POST",
+            url: "/Documentos/ObtieneListaDocumentos",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaDocumentos = jQuery.parseJSON(data.Descripcion)
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarSucursales").html("");
+                        $.each(listaDocumentos, function (index, item) {
+
+                            let strHtml = '<tr>';
+                            strHtml += '<td>' + item.DESCRIPCION + '</td>';
+                            strHtml += '<td>' + item.EXTENSION + '</td>';
+                            strHtml += ' <td> <a href="#" onclick="obtenerDatosSucursal('+item.ID_SUCURSAL+')"><img src="https://img.icons8.com/ultraviolet/25/000000/pencil.png"></a></td>';
+                            strHtml += '<td> <a href="#" onclick="EliminarSucursal('+item.ID_SUCURSAL+')"><img src="https://img.icons8.com/ultraviolet/25/000000/delete-sign.png"></a></td>'
+                            strHtml += '</tr">';
+
+                            $("#listarSucursales").append(strHtml);
+
+
+                        });
+
+                        console.log(data);
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Documentos' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar los Documentos ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+
+                return false;
+            }
+        });
+    }
+    ////++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    function Documento() {
+        let srcDocument = $("#document").attr('src');
+        return srcDocument;
+    }
+
+    function visualizaDocumento(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#archivo').attr('src', e.target.result);
+                $("#document").attr('src', e.target.result);
+                //$("#imgSucursal").css('width', '150px');
+                //$("#imgSucursal").css('height', '150px');
+
+            };
+            reader.readAsDataURL(input.files[0]);
+
+        }
+    }
+
+
+    ///////+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    function limpiarDatos() {
+
+
+        $("#txtID_DOCUMENTO").val(0);
+        $("#TxtNombre_Documento").val("");
+        $('#document').attr('src', "");
+
+    }
+    //function subiraFormulario() {
+    //    let elemento = document.getElementById('formulario');
+    //    elemento.scrollIntoView();
+    //}
+    ////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    //function obtenerDatosSucursal(idSucursal) {
+    //    gfProceso();
+    //    let ID_SUCURSAL = idSucursal;
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Sucursal/ObtieneSucursalPorID",
+    //        content: "application/json; charset=utf-8",
+    //        dataType: "json",
+    //        data: { idSucursal: ID_SUCURSAL },
+    //        success: function (response) {
+    //            gfProceso();
+    //            try {
+    //                var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+    //                let detalle = jQuery.parseJSON(data.Descripcion)
+
+    //                console.log(detalle);
+
+    //                if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+    //                {
+
+    //                    $("#txtID_SUCURSAL").val(detalle.ID_SUCURSAL);
+
+    //                    $("#TxtNombre_Sucursal").val(detalle.NOMBRE_SUCURSAL);
+    //                    $("#TxtDireccion").val(detalle.DIRECCION);
+    //                    $("#TxtTelefono").val(detalle.TELEFONO);
+
+
+    //                    $("#CmbVigencia").val(detalle.VIGENCIA);
+
+
+    //                    $("#imgSucursal").attr('src', detalle.IMAGEN)
+
+    //                    $("#Btn_Modificar").removeAttr("disabled");
+    //                    $("#Btn_Guardar").attr("disabled", true);
+
+    //                    subiraFormulario();
+
+    //                }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+    //                else {
+    //                    swal({
+    //                        title: 'Automotriz Larrain',
+    //                        text: 'Error al obtener los datos de la sucursal'+detalle.NOMBRE_SUCURSAL + data.Detalle_Error + '',
+    //                        type: 'error',
+    //                        confirmButtonColor: '#FE6A00',
+    //                        confirmButtonText: 'OK',
+    //                        confirmButtonClass: 'btn btn-info',
+    //                        allowEscapeKey: false,
+    //                        allowOutsideClick: false,
+    //                    });
+
+    //                    return false;
+    //                }
+
+    //            } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+    //              gfProceso();
+    //                swal({
+    //                    title: 'Automotriz Larrain',
+    //                    text: 'Error al obtener Sucursal' + data.Detalle_Error + '',
+    //                    type: 'error',
+    //                    confirmButtonColor: '#FE6A00',
+    //                    confirmButtonText: 'OK',
+    //                    confirmButtonClass: 'btn btn-info',
+    //                    allowEscapeKey: false,
+    //                    allowOutsideClick: false,
+    //                });
+
+    //                return false;
+    //            }
+
+    //        },
+    //        error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+    //            gfProceso();
+    //            swal({
+    //                title: 'Automotriz Larrain',
+    //                text: 'Error de Conexión' + textStatus + '',
+    //                type: 'error',
+    //                confirmButtonColor: '#FE6A00',
+    //                confirmButtonText: 'OK',
+    //                confirmButtonClass: 'btn btn-info',
+    //                allowEscapeKey: false,
+    //                allowOutsideClick: false,
+    //            });
+
+    //            return false;
+    //        }
+    //    });
+    //}
+
+    //////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    function validar() {
+        let nombreDocumento = $("#TxtNombre_Documento").val();
+
+        let archivo = $('#archivo').val();
+
+
+        if (nombreDocumento == "" || nombreDocumento == null || archivo == "" || archivo == null) {
+            return false;
+        } else {
+            return true
+        }
+
+    }
+
+    $('#Btn_Guardar').click(function (e) {
+        let valido = false;
+        valido = validar();
+        let faltaCampo = "";
+        if (valido == false) {
+            let nombreDocumento = $("#TxtNombre_Documento").val();
+            if (nombreDocumento == "" || nombreDocumento == null) {
+                faltaCampo = "Debe ingresar nombre de Documento";
+            }
+            swal({
+                title: 'Larrain automotriz',
+                text: "Atencion : "+faltaCampo+"",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+
+        gfProceso();
+        let documentBase64 = Documento();
+        let extension = $('#archivo').val();
+        extension = (extension.substring(extension.lastIndexOf(".")));
+
+        var documento = {
+            DESCRIPCION: $('#TxtNombre_Documento').val(),
+            DOCUMENTO: documentBase64,
+            EXTENSION: extension,
+        }
+
+
+        $.ajax({
+            type: "POST",
+            url: "/Documentos/AgregarDocumento",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: documento,
+            success: function (response) {
+                gfProceso();
+                try {
+
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    console.log(data);
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: "Se agregó el Documento correctamente",
+                            type: 'success',
+                            confirmButtonColor: '#4caf50',
+                            //cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                            onClose: function () {
+                                //listarSucursales()
+                                limpiarDatos();
+
+                            }
+                        });
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al agregar el Documento' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al agregar  Documento ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                gfProceso();
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+
+                return false;
+            }
+        });
+
+
+
+    });
+
+
+    //$('#Btn_Modificar').click(function (e) {// modifica un modelo
+
+    //    gfProceso();
+
+
+    //    let extension = $('#archivo').val();
+    //    let imgBase64 = imagen();
+    //    if (extension != "") {
+    //        extension = (extension.substring(extension.lastIndexOf(".")));
+    //    } else {
+    //        extension = "";
+    //    }
+    //    var sucursal = {
+    //        ID_SUCURSAL: $('#txtID_SUCURSAL').val(),
+    //        NOMBRE_SUCURSAL: $('#TxtNombre_Sucursal').val(),
+    //        DIRECCION: $('#TxtDireccion').val(),
+    //        TELEFONO: $('#TxtTelefono').val(),
+    //        IMAGEN: imgBase64,
+    //        EXTENSION: extension,
+    //        VIGENCIA: $('#CmbVigencia').val()
+    //    }
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Sucursal/Editar_Sucursal",
+    //        content: "application/json; charset=utf-8",
+    //        dataType: "json",
+    //        data: sucursal,
+
+    //        success: function (response) {
+    //            gfProceso();
+    //            var Data = response;
+
+
+    //            if (Data.Respuesta == "OK") {
+
+
+    //                swal({
+    //                    title: 'Automotriz Larrain',
+    //                    text: 'Se ha hactualizado correctamente los datos de la sucursal ' + sucursal.NOMBRE_SUCURSAL+'',
+    //                    type: 'success',
+    //                    confirmButtonColor: '#FE6A00',
+    //                    confirmButtonText: 'Continuar',
+    //                    confirmButtonClass: 'btn btn-info',
+    //                    allowEscapeKey: false,
+    //                    allowOutsideClick: false,
+    //                    onClose: function () {
+    //                        listarSucursales();
+    //                        limpiarDatos();
+    //                        $("#Btn_Guardar").removeAttr("disabled");
+    //                        $("#Btn_Modificar").attr("disabled", true);
+
+    //                    }
+    //                });
+
+
+
+    //            }
+    //            else {
+
+
+
+    //                swal({
+    //                    title: 'Automotriz Larrain',
+    //                    text: 'ERROR al Modificar la Sucursal seleccionada' + Data.Detalle_Error,
+    //                    type: 'warning',
+    //                    confirmButtonColor: '#FE6A00',
+    //                    confirmButtonText: 'OK',
+    //                    confirmButtonClass: 'btn btn-info',
+    //                    allowEscapeKey: false,
+    //                    allowOutsideClick: false,
+    //                })
+    //            }
+
+    //        },
+
+    //        error: function (xhr, textStatus, errorThrown) {
+    //            gfProceso();
+
+    //            swal({
+    //                title: 'Automotriz Larrain',
+    //                text: 'ERROR al Modificar la sucursal' + textStatus,
+    //                type: 'warning',
+    //                confirmButtonColor: '#FE6A00',
+    //                confirmButtonText: 'OK',
+    //                confirmButtonClass: 'btn btn-info',
+    //                allowEscapeKey: false,
+    //                allowOutsideClick: false,
+    //            })
+
+    //        }
+    //    });
+
+
+
+
+    //});
+
+
+
+
+
+
+
+    //function EliminarSucursal(Id_sucursal) {
+
+    //    let sucursal = {
+    //        ID_SUCURSAL:Id_sucursal
+    //    }
+
+
+    //    swal({
+    //        title: 'Automotriz Larrain ',
+    //        text: "Se eliminara La sucursal Seleccionada",
+    //        type: 'warning',
+    //        showCancelButton: true,
+    //        confirmButtonColor: '#4caf50',
+    //        cancelButtonColor: '#d33',
+    //        confirmButtonText: 'Confirmar',
+    //        allowEscapeKey: false,
+    //        allowOutsideClick: false,
+
+
+    //    }).then(function () {
+    //        gfProceso();
+    //        // AJAX
+
+    //        $.ajax({
+    //            type: "POST",
+    //            url: "/Sucursal/EliminarSucursal",
+    //            content: "application/json; charset=utf-8",
+    //            dataType: "json",
+    //            data: sucursal,
+
+
+    //            success: function (response) {
+    //                gfProceso();
+    //                // FUNCION PARA VALIDAR AJAX Y RESPUESTA..
+    //                var data;
+    //                var detalle;
+    //                try {  // AQUI SE CONTROLA EL ERROR DE JAVASCRIPT
+
+
+
+
+    //                    data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+    //                    //   alert(JSON.stringify(detalle));
+
+
+    //                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+    //                    {
+
+
+
+    //                        swal({
+    //                            title: 'Automotriz Larrain ',
+    //                            text: "Sucursal eliminada con éxito",
+    //                            type: 'success',
+    //                            confirmButtonColor: '#4caf50',
+    //                            //cancelButtonColor: '#d33',
+    //                            confirmButtonText: 'OK',
+    //                            allowEscapeKey: false,
+    //                            allowOutsideClick: false,
+    //                            onClose: function () {
+    //                                listarSucursales();
+
+
+    //                            }
+
+    //                        });
+
+
+
+
+    //                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+    //                    else {
+
+
+
+    //                        swal({
+    //                            title: 'Automotriz Larrain',
+    //                            text: 'Error al eliminar la Sucursal' + data.Detalle_Error + '',
+    //                            type: 'error',
+    //                            confirmButtonColor: '#FE6A00',
+    //                            confirmButtonText: 'OK',
+    //                            confirmButtonClass: 'btn btn-info',
+    //                            allowEscapeKey: false,
+    //                            allowOutsideClick: false,
+    //                        });
+
+
+
+
+    //                        return false;
+    //                    }
+
+    //                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+
+    //                    swal({
+    //                        title: 'Automotriz Larrain',
+    //                        text: 'Error al eliminar la Sucursal :(' + data.Detalle_Error + '',
+    //                        type: 'error',
+    //                        confirmButtonColor: '#FE6A00',
+    //                        confirmButtonText: 'OK',
+    //                        confirmButtonClass: 'btn btn-info',
+    //                        allowEscapeKey: false,
+    //                        allowOutsideClick: false,
+    //                    });
+
+
+
+    //                    return false;
+    //                }
+
+
+
+    //            },
+    //            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+    //                swal({
+    //                    title: 'Automotriz Larrain',
+    //                    text: 'Error de Conexión' + textStatus + '',
+    //                    type: 'error',
+    //                    confirmButtonColor: '#FE6A00',
+    //                    confirmButtonText: 'OK',
+    //                    confirmButtonClass: 'btn btn-info',
+    //                    allowEscapeKey: false,
+    //                    allowOutsideClick: false,
+    //                });
+
+    //                gfProceso();
+    //                return false;
+    //            }
+    //        });
+
+    //        //FIN
+
+
+
+    //    }).catch(function (reason) {
+    //        //  alert("The alert was dismissed by the user: " + reason);
+    //    });
+
+
+
+
+
+    //}
+
+
+    ////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+    //function TablaToExcel() {
+
+
+
+    //    $("#TablaDatos").table2excel({
+    //        //exclude: ".noExl",
+    //        name: "Tipo de Carga",
+    //        filename: "Tipo de Carga",
+    //        fileext: ".xls",
+    //        exclude_img: true,
+    //        exclude_links: true,
+    //        exclude_inputs: true
+    //    });
+
+
+    //}
+
+
+</script>
+
+

@@ -1,0 +1,796 @@
+﻿
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>*@
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<style>
+
+    #container {
+        height: 400px;
+        min-width: 310px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+</style>
+<h5 class="tituloPagina">Dashboard | Sucursal <b>@ViewBag.SUCURSAL</b></h5>
+
+<script>
+
+    function listarVehiculos(nombreSucursal) {
+
+
+        let sucursal = {
+            NOMBRE_SUCURSAL: nombreSucursal
+        }
+        $.ajax({
+            type: "POST",
+            url: "/Home/ConsultarStock",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: sucursal,
+
+            success: function (respuesta) {
+
+                let data = jQuery.parseJSON(JSON.stringify(respuesta));
+
+                let listaVehiculo = jQuery.parseJSON(data.Descripcion);
+
+
+
+                $.each(listaVehiculo, function (index, item) {
+                    var strHtml = '<b>' + item.STOCK + '</b>';
+
+                    $("#cerrillos").append(strHtml);
+
+
+                });
+
+
+
+            }
+
+        });
+    }
+</script>
+<div class="container-fluid bis">
+    <div class="cars">
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <div id="cardDashboard" class="card" onclick="scrollToDiv('totalStock');">
+                <div class="card-header card-header-icon" data-background-color="orange">
+                    <div class="card-icon">
+                        <img style="width: 50px;" src="~/assets/img/auto.svg" alt="icon-box" />
+
+                    </div>
+                </div>
+                <div class="card-content text-right" style="padding-bottom:0px">
+                    <h5 class="card-title" style="font-size:24px;"><b>@ViewBag.STOCK_TOTAL</b></h5>
+
+                    <a href="/Reportes/ReportesVehiculo"><p class="card-category" style="line-height: 18px; margin-top:18px; font-weight:500; color:dimgray; text-align:center; font-size: 15px;">Total Stock Vehiculos</p></a>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <div id="cardDashboard" class="card" onclick="scrollToDiv('stockMaipu');">
+                <div class="card-header card-header-icon" data-background-color="rose">
+                    <div class="card-icon">
+                        <img style="width: 50px;" src="~/assets/img/auto.svg" alt="icon-box" />
+                    </div>
+                </div>
+                <div class="card-content text-right" style="padding-bottom:0px">
+                    <h5 class="card-title" style="font-size:24px;"><b>@ViewBag.STOCK_MAIPU</b></h5>
+                    <a href="@Url.Action("ReportesVehiculoPorSucursal","Reportes")?idSucursal=@ViewBag.ID_MAIPU"><p class="card-category" style="line-height: 18px; margin-top:18px; font-weight:500; color:dimgray; text-align:center; font-size: 15px;">Vehiculos Disponibles Maipú</p></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <div id="cardDashboard" class="card" onclick="scrollToDiv('stockCerrillos');">
+                <div class="card-header card-header-icon" data-background-color="green">
+                    <div class="card-icon">
+                        <img style="width: 50px;" src="~/assets/img/auto.svg" alt="icon-box" />
+                    </div>
+                </div>
+                <div class="card-content text-right" style="padding-bottom:0px">
+                    <h5 class="card-title" style="font-size:24px;"><b>@ViewBag.STOCK_CERRILLOS</b></h5>
+                    <a href="@Url.Action("ReportesVehiculoPorSucursal","Reportes")?idSucursal=@ViewBag.ID_CERRILLOS"><p class="card-category" style="line-height: 18px; margin-top:18px; font-weight:500; color:dimgray; text-align:center; font-size: 15px;">Vehiculos Disponibles Cerrillos</p></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <div id="cardDashboard" class="card" onclick="scrollToDiv('stockCerrillos');">
+                <div class="card-header card-header-icon" data-background-color="#DCDCDC">
+                    <div class="card-icon">
+                        <img style="width: 50px;" src="~/assets/img/auto.svg" alt="icon-box" />
+                    </div>
+                </div>
+                <div class="card-content text-right" style="padding-bottom:0px">
+                    <h5 class="card-title" style="font-size:24px;"><b>@ViewBag.Consignados</b></h5>
+                    <a href="@Url.Action("ReportesVehiculosPorTipoConsignacion","Reportes")?idConsignacion=@ViewBag.IDConsignados"><p class="card-category" style="line-height: 18px; margin-top:18px; font-weight:500; color:dimgray; text-align:center; font-size: 15px;">Vehiculos Consignados</p></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <div id="cardDashboard" class="card" onclick="scrollToDiv('stockCerrillos');">
+                <div class="card-header card-header-icon" data-background-color="blue">
+                    <div class="card-icon">
+                        <img style="width: 50px;" src="~/assets/img/auto.svg" alt="icon-box" />
+                    </div>
+                </div>
+                <div class="card-content text-right" style="padding-bottom:0px">
+                    <h5 class="card-title" style="font-size:24px;"><b>@ViewBag.Propios</b></h5>
+                    <a href="@Url.Action("ReportesVehiculosPropiosYPorParteDePago","Reportes")"><p class="card-category" style="line-height: 18px; margin-top:18px; font-weight:500; color:dimgray; text-align:center; font-size: 15px;">Vehiculos Propios</p></a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!--cierre de row de tarjetas de autos-->
+</div>
+<!---cierre de conatiner-->
+
+<div id="sliderRegular" class="slider" style="display:none"></div>
+<div id="sliderDouble" class="slider slider-info" style="display:none"></div>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header card-header-icon" data-background-color="orange">
+            <img src="https://img.icons8.com/ios/50/000000/details-popup.png">
+        </div>
+        <div class="card-content">
+            <h4 class="card-title">Dashboard Gerente General</h4>
+        </div>
+        <div class="tarjeta">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-content">
+                        <div id="container" style="height: 400px"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-content">
+                        <div id="container2" style="height: 400px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-content">
+                        <div id="container3">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="mantencion">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-stats">
+                        <div class="card-header" data-background-color="green">
+                            <i class="material-icons">
+                                attach_money
+                            </i>
+                        </div>
+                        <div class="card-content">
+                            <p class="category">Ventas del mes</p>
+                            <h3 class="card-title">Días más Vendidos(@ViewBag.mesActual)</h3>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Día Mayor Venta</th>
+                                            <th class="text-right">Total Vendido</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var dias in ViewBag.VentasSemana)
+                                        {
+                                            <tr>
+                                                <td class="text-center">@dias.DIA</td>
+                                                <td class="text-right">$@dias.TOTAL.ToString("#,##0")</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--mejores vendedores-->
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="card card-stats">
+                        <div class="card-header" data-background-color="red">
+                            <i class="material-icons">
+                                person
+                            </i>
+                        </div>
+                        <div class="card-content">
+                            <p class="category">Vendedores</p>
+                            <h3 class="card-title">Top 3 Vendedores mes @ViewBag.mesActual</h3>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Vendedor</th>
+                                            <th class="text-right">Total Vendido</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var usuario in ViewBag.MejoresVendedoresDelMes)
+                                        {
+                                            <tr>
+                                                <td class="text-center">@usuario.NOMBRE_USUARIO</td>
+                                                <td class="text-right">$@usuario.TOTAL_VENDIDO.ToString("#,##0")</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @*<div class="card-footer">
+                    <div class="stats">
+                        <a href="#">Ver detalle</a>
+                    </div>
+                </div>*@
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header" data-background-color="orange">
+                        <i class="material-icons">
+                            brightness_auto
+                        </i>
+                    </div>
+                    <div class="card-content">
+                        <p class="category">Vehiculos</p>
+                        <h3 class="card-title">Marcas más vendidas (Top 5)</h3>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Marca</th>
+                                        <th class="text-center">Cantidad Vendida</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var marca in ViewBag.MarcasMasVendidasTop5)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@marca.DESCRIPCION</td>
+                                            <td class="text-center">@marca.CANTIDAD_VENDIDOS</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @*<div class="card-footer">
+                            <div class="stats">
+                                <a href="#">Ver detalle</a>
+                            </div>
+                        </div>*@
+                </div>
+            </div>
+        </div>
+
+        <!-- inicio -->
+    </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header" style="height: 48px;">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">close</i></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+
+
+                <div class="modal-body">
+
+
+                    <div class="col-md-12">
+                        <div class="card">
+                            <form method="get" class="form-horizontal">
+
+                                <div class="card-header card-header-icon" data-background-color="orange">
+                                    <i class="material-icons">contacts</i>
+                                </div>
+                                <div class="card-content">
+                                    <h4 class="card-title">Búsqueda de Clientes  </h4>
+
+
+                                </div>
+
+                                <div class="row">
+                                    <!-- inicio fila -->
+
+                                    <div class="col-sm-12">
+
+
+                                        <div class="col-md-3">
+
+
+
+                                            <label class="control-label">TIPO CLIENTE</label>
+
+                                            <select class="selectpicker" data-style="btn btn-default" data-size="7" id="CmbTipoCliente"></select>
+
+
+                                        </div>
+
+                                        <div class="col-md-5">
+
+                                            <label class="control-label">CLIENTE / RAZON SOCIAL</label>
+
+                                            <select class="selectpicker" data-style="btn btn-default" data-size="7" id="CmbClientes"></select>
+                                        </div>
+
+                                        <div class="col-md-4">
+
+
+
+
+                                            <br>
+                                            <button type="button" class="btn btn-success" onclick="SeleccionCliente();">Seleccionar</button>
+
+                                            <button type="button" class="btn btn-danger">Agregar</button>
+
+                                        </div>
+
+
+                                    </div> <!-- fin fila -->
+
+                                </div>
+                            </form>
+                        </div> <!-- fin Cuadro -->
+
+
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="myModal2" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style="height: 48px;">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">close</i></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <p>Some text in the modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+
+            $.ajax({
+                type: "POST",
+                url: "/Dashboard/UltimosTresMesesVentas",
+                content: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    try {
+                        let data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+
+
+                        if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                        {
+                            let Meses = [];
+                            let TotalDelMes = [];
+
+                            let detalle = jQuery.parseJSON(data.Descripcion)
+
+
+                            $(detalle).each(function (index, element) {
+                                Meses.push(element.MES);
+
+                                TotalDelMes.push(element.TOTAL);
+
+                            });
+
+
+                            //Encargado de dar vuelta los valdores
+                            Meses.reverse();
+                            TotalDelMes.reverse();
+                            ////////////////////////
+
+                            //Primer grafico
+                            let valores = [{
+                                name: 'Total Ventas',
+                                data: TotalDelMes
+                            }];
+
+                            Highcharts.chart('container', {
+                                chart: {
+                                    type: 'column'
+                                },
+                                title: {
+                                    text: 'Total Ventas por Mes'
+                                },
+                                xAxis: {
+                                    categories: Meses
+                                },
+                                yAxis: {
+                                    min: 0,
+                                    title: {
+                                        text: 'Total Ventas Larrain'
+                                    },
+                                    stackLabels: {
+                                        enabled: true,
+                                        style: {
+                                            fontWeight: 'bold',
+                                            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                                        }
+                                    }
+                                },
+                                tooltip: {
+                                    headerFormat: '<b>{point.x}</b><br/>',
+                                    pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                                },
+                                plotOptions: {
+                                    column: {
+                                        stacking: 'normal',
+                                        dataLabels: {
+                                            enabled: false,
+                                            color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                                        }
+                                    }
+                                },
+                                series: valores
+
+                            });
+
+
+                        }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                        else {
+                            swal({
+                                title: 'Automotriz Larrain',
+                                text: data.Detalle_Error,
+                                type: 'error',
+                                confirmButtonColor: '#FE6A00',
+                                confirmButtonText: 'OK',
+                                confirmButtonClass: 'btn btn-info',
+                                allowEscapeKey: false,
+                                allowOutsideClick: false,
+                            });
+
+                            return false;
+                        }
+
+                    } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener totales de los ultimos 3 meses ' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                },
+                error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error de Conexión' + textStatus + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+            });
+
+
+
+            $.ajax({
+                type: "POST",
+                url: "/Dashboard/UltimosTresMesesVentasPorSucursal",
+                content: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    try {
+                        var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+
+
+                        if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                        {
+
+
+                            let listaSucursales = jQuery.parseJSON(data.Descripcion)
+
+
+
+                            let ArraySucursales = [];
+                            let ArrayMesesVentas = [];
+                            let saberSiRellenarMes = 0;
+
+                            $(listaSucursales).each(function (index, sucursales) {
+
+                                let ventas = sucursales.MesesDeVenta;
+                                let VentasSucursal = [];
+                                $(ventas).each(function (index, mesDeVenta) {
+
+                                    if (saberSiRellenarMes == 0) {
+                                        ArrayMesesVentas.push(mesDeVenta.MES);
+                                    }
+                                    VentasSucursal.push(mesDeVenta.TOTAL);
+
+                                });
+
+                                VentasSucursal.reverse();
+
+                                ArraySucursales.push({
+                                    name: sucursales.NOMBRE_SUCURSAL,
+                                    data: VentasSucursal
+                                });
+
+                                saberSiRellenarMes = 1;
+                            });
+
+
+                            //Encargado de dar vuelta los valdores
+                            ArraySucursales.reverse();
+                            ArrayMesesVentas.reverse();
+                            ////////////////////////
+
+
+                            Highcharts.chart('container2', {
+                                chart: {
+                                    type: 'line'
+                                },
+                                title: {
+                                    text: 'Ventas por Sucursal y Mes'
+                                },
+                                subtitle: {
+                                    text: 'Larrain'
+                                },
+                                xAxis: {
+                                    categories: ArrayMesesVentas
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: 'Total Ventas Larrain'
+                                    }
+                                },
+                                plotOptions: {
+                                    line: {
+                                        dataLabels: {
+                                            enabled: true
+                                        },
+                                        enableMouseTracking: false
+                                    }
+                                },
+                                series: ArraySucursales
+                            });
+
+                        }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                        else {
+                            swal({
+                                title: 'Automotriz Larrain',
+                                text: data.Detalle_Error,
+                                type: 'error',
+                                confirmButtonColor: '#FE6A00',
+                                confirmButtonText: 'OK',
+                                confirmButtonClass: 'btn btn-info',
+                                allowEscapeKey: false,
+                                allowOutsideClick: false,
+                            });
+
+                            return false;
+                        }
+
+                    } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener totales de los ultimos 3 meses ' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                },
+                error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error de Conexión' + textStatus + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+            });
+
+
+
+
+            $.ajax({
+                type: "POST",
+                url: "/Dashboard/VentasDelMesPorEmpleado",
+                content: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    try {
+                        let data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+
+
+                        if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                        {
+
+
+                            let listaUsuarios = jQuery.parseJSON(data.Descripcion);
+                            let primeraVuelta = 0;
+                            let mesDeVenta = [];
+                            let VentasUsuario = [];
+
+
+                            $(listaUsuarios).each(function (index, usuario) {
+
+                                if (primeraVuelta == 0) {
+                                    mesDeVenta.push(usuario.MES_VENTA);
+                                }
+
+                                let ventas = [];
+
+                                ventas.push(usuario.TOTAL_VENDIDO);
+                                VentasUsuario.push({
+                                    name: usuario.NOMBRE_USUARIO,
+                                    data: ventas
+                                });
+
+                                primeraVuelta++;
+                            });
+
+
+                            Highcharts.chart('container3', {
+                                chart: {
+                                    type: 'column'
+                                },
+                                title: {
+                                    text: 'Total de ventas por Vendedores'
+                                },
+                                subtitle: {
+                                    text: 'Todos los Vendedores'
+                                },
+                                xAxis: {
+                                    categories: mesDeVenta,
+                                    crosshair: true
+                                },
+                                yAxis: {
+                                    min: 0,
+                                    title: {
+                                        text: 'Total Ventas Larrain'
+                                    }
+                                },
+                                tooltip: {
+                                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                                        '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                                    footerFormat: '</table>',
+                                    shared: true,
+                                    useHTML: true
+                                },
+                                plotOptions: {
+                                    column: {
+                                        pointPadding: 0.2,
+                                        borderWidth: 0
+                                    }
+                                },
+                                series: VentasUsuario
+                            });
+
+
+                        }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                        else {
+                            swal({
+                                title: 'Automotriz Larrain',
+                                text: data.Detalle_Error,
+                                type: 'error',
+                                confirmButtonColor: '#FE6A00',
+                                confirmButtonText: 'OK',
+                                confirmButtonClass: 'btn btn-info',
+                                allowEscapeKey: false,
+                                allowOutsideClick: false,
+                            });
+
+                            return false;
+                        }
+
+                    } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener totales de los ultimos 3 meses ' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                },
+                error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error de Conexión' + textStatus + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+            });
+
+
+        });
+
+
+    </script>

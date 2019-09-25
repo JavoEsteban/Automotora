@@ -1,0 +1,415 @@
+﻿
+@{
+    ViewBag.Title = "ListadoVehiculos";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+
+<!-- Modal -->
+<!--FIN MODAL-->
+<!-- Single Popular Car Start -->
+<h5 style="margin-top:-5.5%; margin-left:7%;">Listado Vehiculos</h5>
+
+
+
+@*<input onchange="buscarVehiculo()" id="Txtbusqueda" />*@
+
+<div class="card opcionesPadding" id="cardListadoVehiculo">
+    <div class="card-body pb-5">
+        <div class="col-lg-3 col-sm-12 col-md-6 pb-5 center-block">
+            <div class="form-group">
+                <label class="control-label">Sucursal</label>
+                <select class="form-control" data-style="btn btn-default" data-size="7" id="CmbSucursal">
+                    <option value="0">Todas las sucursales</option>
+                    @foreach (var sucursal in ViewBag.ListadoDeSucursales)
+                    {
+                        <option value="@sucursal.ID_SUCURSAL">@sucursal.NOMBRE_SUCURSAL</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12 col-md-6 pb-5">
+            <div class="form-group">
+                <label class="control-label">Patente</label>
+                <input type="text" class="form-control" id="busquedaPatente" maxlength="7" onclick="limparBuscadores()" placeholder="Busqueda por patente">
+                @*<i class="fa fa-search" id="lupita"></i>*@
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12 col-md-6 pb-5">
+            <div class="form-group">
+                <label class="control-label">Marca</label>
+                <input type="text" class="form-control" id="busquedaMarca" onclick="limparBuscadores()" placeholder="Busqueda por marca">
+                @*<i class="fa fa-search" id="lupita"></i>*@
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12 col-md-6 pb-5">
+            <div class="form-group">
+                <label class="control-label">Precio</label>
+                <input type="text" class="form-control" id="busquedaPrecio" onclick="limparBuscadores()" placeholder="Busqueda por precio">
+                @*<i class="fa fa-search" id="lupita"></i>*@
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="col-md-12" id="contenedorVehiculos">
+    @foreach (var vehiculo in ViewBag.ListadoVehiculos)
+    {
+        <div id="card-@vehiculo.ID_VEHICULO" class="col-lg-4 col-md-6 col-sm-1 con suv mpv d-flex ContenedoresVehiculos">
+            <div class="card" style="border-radius:12px;">
+                <div class="card-content">
+                    <div class="col-lg-12 col-md-10 col-sm-8 col-xs-7">
+                        <div class="single-popular-car" style="margin-bottom:4%;">
+                            <div class="p-car-thumbnails">
+
+                                <center>
+                                    <img src="@vehiculo.IMAGEN_PRINCIPAL" alt="JSOFT" class="img-responsive cardVehiculo" />
+                                </center>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-car-content">
+                        <div class="row">
+
+                            <h4 style="margin-bottom:1%;">
+                                @if (vehiculo.MARCA == "" && vehiculo.NOMBRE_MODELO == "")
+                                {
+                                    <br>
+                                    <p>@vehiculo.SUCURSAL</p>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("FormularioDetalleVehiculo","MantenedorVehiculo")?ID=@vehiculo.ID_VEHICULO" class="Marca">@vehiculo.MARCA @vehiculo.NOMBRE_MODELO</a>
+                                    <p>@vehiculo.SUCURSAL</p>
+                                }
+                            </h4>
+                            <hr />
+                            <div class="col-md-9">
+                                <p>Precio: <b style="font-size:14px;" class="Precio" id="txtPrecio-@vehiculo.ID_VEHICULO">$@vehiculo.PRECIO_VENTA.ToString("#,##0")</b></p>
+                                <p>Patente:  <b style="font-size:14px; font-weight:bold" class="Patente" id="txtPatente-@vehiculo.ID_VEHICULO">@vehiculo.PATENTE.ToUpper()</b></p>
+                                <input id="txtSucursal" value="@vehiculo.ID_SUCURSAL" hidden />
+                            </div>
+                            <div class="col-md-3">
+                                @if (vehiculo.ID_TIPO_CONSIGNACION == 4)
+                                {
+                                    <i style="margin-top:10%; font-size:2.1em;" class="fas fa-car-side"></i>
+                                }
+                                else if (vehiculo.ID_TIPO_CONSIGNACION == 5)
+                                {
+                                    <i style="margin-top:10%; font-size:2.1em;" class="fas fa-handshake"></i>
+                                }
+                                else
+                                {<i style="font-size:2.1em; color:black" Class="material-icons iconoCardVehiculo">info</i>}
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- Single Popular Car End -->
+        </div>
+
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $('#busquedaPrecio').autoNumeric('init', { vMin: '0', vMax: '9999999999', aSep: '.', aDec: ',', aSign: '', mDec: '0' });
+
+    });
+
+
+
+    //Metodo encargado de buscar vehiculos por sucursal
+
+    function limparBuscadores() {
+        if ($('#CmbSucursal').val() == "0") {
+            $('.ContenedoresVehiculos').fadeIn('fast');
+            $('#busquedaPatente').val("");
+            $('#busquedaMarca').val("");
+            $('#busquedaPrecio').val("");
+        } else {
+            $('#busquedaPatente').val("");
+            $('#busquedaMarca').val("");
+            $('#busquedaPrecio').val("");
+            mostrarVehiculosSucursalActual();
+        }
+
+    }
+
+
+    $('#CmbSucursal').change(function () {
+
+        limparBuscadores();
+
+        let idSucursalSeleccionada = $('#CmbSucursal').val();
+
+        let contenedoresVehiculos = $('.ContenedoresVehiculos');
+
+        $(contenedoresVehiculos).each(function () {
+
+            //tomo el contenedor
+            let contenedorActual = $(this);
+
+            $(contenedorActual).each(function (index, item) {
+                let idSucursal = $(item).find('#txtSucursal');
+
+                let sucursalDelVehiculo = $(idSucursal).val();
+                if (idSucursalSeleccionada != 0) {
+
+                    if (sucursalDelVehiculo != idSucursalSeleccionada) {
+
+                        $(item).hide();
+
+                    } else {
+
+                        $(item).show();
+
+                    }
+
+                } else {
+
+                    $(item).show();
+
+                }
+
+            });
+
+        });
+
+    });
+
+    ////////////////////////////////////////////filtro por buscador
+    //toma el inputs de busqueda
+    var busquedaPatente = $('#busquedaPatente');
+    var busquedaMarca = $('#busquedaMarca');
+    var busquedaPrecio = $('#busquedaPrecio');
+    //Toma el contenedor de vehiculos
+    var contenedoresVehiculos = $('.ContenedoresVehiculos');
+    //por cada vehiculo se iterara(por cada vehiculo encontrado dara una vuelta)
+    $(contenedoresVehiculos).each(function () {
+
+        //tomo el contenedor
+        var contenedor = $(this);
+
+
+
+        //tomo todos los filtros de busqueda de patente
+        var filtroPatente = contenedor.find('.Patente');
+
+        var TextoPatente = $(filtroPatente[0]).html();
+
+
+        $(busquedaPatente).keyup(function () {
+
+            this.value = this.value.toLowerCase();
+
+            let idSucursalSeleccionada = $('#CmbSucursal').val();
+            let txtSucursalVehiculo = $(contenedor).find('#txtSucursal');
+            let IDSucursal = $(txtSucursalVehiculo).val();
+
+
+            if ($(busquedaPatente).val() != '') {
+                var txt = TextoPatente.toLowerCase();
+                var bus = $(busquedaPatente).val().toLowerCase();
+
+                if (txt.indexOf(bus) > -1) {
+
+                    if (idSucursalSeleccionada != "0") {
+
+                        if (idSucursalSeleccionada == IDSucursal) {
+                            $(contenedor).fadeIn('fast');
+                        }
+
+                    } else {
+
+                        $(contenedor).fadeIn('fast');
+                    }
+
+                } else {
+                    if (idSucursalSeleccionada != "0") {
+
+                        $(contenedor).fadeOut('fast');
+                    } else {
+
+                        $(contenedor).fadeOut('fast');
+                    }
+
+                }
+            } else {
+                if (idSucursalSeleccionada != "0") {
+                    if (idSucursalSeleccionada == IDSucursal) {
+
+                        $(contenedor).fadeIn('fast');
+                    }
+                } else {
+
+                    $(contenedor).fadeIn('fast');
+                }
+
+            }
+        });
+
+
+        //tomo todos los filtros de busqueda de Marca
+        var filtroMarca = contenedor.find('.Marca');
+
+        var TextoMarca = $(filtroMarca[0]).html();
+        $(busquedaMarca).keyup(function () {
+
+            this.value = this.value.toLowerCase();
+
+            let idSucursalSeleccionada = $('#CmbSucursal').val();
+            let txtSucursalVehiculo = $(contenedor).find('#txtSucursal');
+            let IDSucursal = $(txtSucursalVehiculo).val();
+
+
+            if ($(busquedaMarca).val() != '') {
+                var txt = TextoMarca.toLowerCase();
+                var bus = $(busquedaMarca).val().toLowerCase();
+                if (txt.indexOf(bus) > -1) {
+                    if (idSucursalSeleccionada != "0") {
+
+                        if (idSucursalSeleccionada == IDSucursal) {
+                            $(contenedor).fadeIn('fast');
+                        }
+
+                    } else {
+
+                        $(contenedor).fadeIn('fast');
+                    }
+                } else {
+                    if (idSucursalSeleccionada != "0") {
+
+                        $(contenedor).fadeOut('fast');
+                    } else {
+
+                        $(contenedor).fadeOut('fast');
+                    }
+                }
+            } else {
+                if (idSucursalSeleccionada != "0") {
+                    if (idSucursalSeleccionada == IDSucursal) {
+
+                        $(contenedor).fadeIn('fast');
+                    }
+                } else {
+                    $(contenedor).fadeIn('fast');
+                }
+            }
+        });
+
+
+        //tomo todos los filtros de busqueda de Precio
+        var filtroPrecio = contenedor.find('.Precio');
+
+        var TextoPrecio = $(filtroPrecio[0]).html();
+        TextoPrecio = TextoPrecio.replace('$', '');
+        $(busquedaPrecio).keyup(function () {
+
+            this.value = this.value.toLowerCase();
+
+            let idSucursalSeleccionada = $('#CmbSucursal').val();
+            let txtSucursalVehiculo = $(contenedor).find('#txtSucursal');
+            let IDSucursal = $(txtSucursalVehiculo).val();
+
+
+            if ($(busquedaPrecio).val() != '') {
+                var txt = TextoPrecio.toLowerCase();
+                var bus = $(busquedaPrecio).val().split(",").join(".");;
+
+                if (txt.indexOf(bus) > -1) {
+                    if (idSucursalSeleccionada != "0") {
+
+                        if (idSucursalSeleccionada == IDSucursal) {
+                            $(contenedor).fadeIn('fast');
+                        }
+
+                    } else {
+
+                        $(contenedor).fadeIn('fast');
+                    }
+                } else {
+                    if (idSucursalSeleccionada != "0") {
+
+                        $(contenedor).fadeOut('fast');
+                    } else {
+
+                        $(contenedor).fadeOut('fast');
+                    }
+                }
+            } else {
+                if (idSucursalSeleccionada != "0") {
+                    if (idSucursalSeleccionada == IDSucursal) {
+
+                        $(contenedor).fadeIn('fast');
+                    }
+                } else {
+                    $(contenedor).fadeIn('fast');
+                }
+            }
+        });
+
+    });
+
+    function mostrarVehiculosSucursalActual() {
+        let contenedoresVehiculos = $('.ContenedoresVehiculos');
+        let idSucursalSeleccionada = $('#CmbSucursal').val();
+        $(contenedoresVehiculos).each(function () {
+
+            let contenedor = $(this);
+
+            let txtSucursalVehiculo = $(contenedor).find('#txtSucursal');
+            let IDSucursal = $(txtSucursalVehiculo).val();
+
+            if (idSucursalSeleccionada == IDSucursal) {
+                $(contenedor).fadeIn('fast');
+            }
+        });
+
+
+    }
+
+    //Termina buscador de vehiculos
+
+
+    //Funcion encargado de buscar por nombres
+    function buscarVehiculo() {
+
+        let palabras = $('#Txtbusqueda').val();
+
+
+
+        $('.name').each(function (index, elemt) {
+
+
+            var txt = $(elemt).html().toLocaleLowerCase();
+            var bus = que.toLowerCase().replace('amp;', '&');
+
+            if (bus === '' || bus === String.empty) {
+                $('.lineas').show();
+                return false;
+            } else {
+                if (txt.indexOf(bus) > -1) {
+                    $(elemt).parent().show();
+                } else {
+                    $(elemt).parent().hide();
+                }
+            }
+        });
+
+    }
+
+
+
+
+</script>
+

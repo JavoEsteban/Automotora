@@ -1,0 +1,560 @@
+﻿
+@{
+    ViewBag.Title = "TipoCombustibleIndex";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+<h5 class="tituloPagina">Mantenedor Tipos Combustibles  | Sucursal <b>@ViewBag.SUCURSAL</b></h5>
+
+
+<form id="RegisterValidation" action="" method="">
+    <div class="card">
+        <div class="card-header card-header-icon" data-background-color="orange">
+            <i class="material-icons">
+                local_gas_station
+            </i>
+        </div>
+        <div class="card-content">
+            <h4 class="card-title">Módulo Mantenedor Tipos de Combustibles </h4>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row" id="seccionDatos">
+                    <div class="col-sm-12">
+                        <div class="col-md-3">
+                            <input id="ID_TIPO_COMBUSTIBLE" type="hidden" value="">
+                            <label class="control-label">TIPO COMBUSTIBLE</label>
+                            <input id="TxtDescripcion" type="text" maxlength="15" class="form-control text-uppercase" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">VIGENCIA</label>
+                            <select class="form-control" data-style="btn btn-default" data-size="7" id="CmbVigencia">
+                                <option value="1">Vigente</option>
+                                <option value="0">No Vigente</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-6">
+                            <input id="txtID_Marca" class="hidden" />
+                            <button type="button" class="btn btn-rose btn-fill" id="Btn_Guardar">GUARDAR</button>
+                            <button type="button" class="btn btn-success btn-fill" id="Btn_Modificar" disabled="disabled">MODIFICAR</button>
+                            <button type="button" class="btn btn-danger" onclick="javascript: Nuevo();">NUEVA </button>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <div class="card-header" data-background-color="orange">
+                                    <h4 class="card-title">Tipo de Combustibles Ingresados </h4>
+                                    <p class="category">Seleccione el Tipo de Combustible que desea Editar</p>
+                                    <a href="javascript:TablaToExcel();"><img src="https://img.icons8.com/metro/25/000000/download.png"> Exportar Excel</a>
+                                </div>
+                                <div class="card-content table-responsive ">
+                                    <table id="TablaDatos" class="table table-striped small table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Descripción</th>
+                                                <th>Vigencia</th>
+                                                <th>Editar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="listarTipoCombustible"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input id="TxtID" type="text" class="hidden" />
+</form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script>
+
+    $(document).ready(function () {
+
+        listarTipoCombustible();
+
+    });
+
+
+    function listarTipoCombustible() {
+
+        $.ajax({
+            type: "POST",
+            url: "/TipoCombustible/ObtieneListadoCombustibles",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaMarcas = jQuery.parseJSON(data.Descripcion)
+                    console.log(listaMarcas);
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarTipoCombustible").html("");
+
+
+                        $.each(listaMarcas, function (index, item) {
+                            var vigencia = item.VIGENCIA;
+
+                            if (vigencia == 1) {
+                                vigencia = "Vigente";
+                            } else {
+                                vigencia = "No Vigente";
+
+                            }
+                            let strDescripcion = "'" + item.DESCRIPCION.toString() + "'";
+
+                            let strHtml = '';
+
+                            strHtml += '<tr>';
+                            strHtml += '<td>' + item.DESCRIPCION + '</td>';
+                            strHtml += '<td>' + vigencia + '</td>';
+                            strHtml += '<td> <a href="#" onclick="obtenerCombustiblePorID(' + item.ID_TIPO_COMBUSTIBLE+')"><img src="https://img.icons8.com/ultraviolet/25/000000/pencil.png"></a></td>';
+                            strHtml += '</tr">';
+
+                            $("#listarTipoCombustible").append(strHtml);
+
+                        });
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+
+                        swal({
+
+                            title: 'Automotriz Larraín',
+                            text: 'Error al obtener listado de combustibles' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+
+                        title: 'Automotriz Larraín',
+                        text: 'Error al listar Combustibles ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+
+                swal({
+
+                    title: 'Automotriz Larraín',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+
+    function limpiarDatos() {
+
+        $("#ID_TIPO_COMBUSTIBLE").val(0);
+        $("#CmbVigencia").val(1);
+        $("#TxtDescripcion").val("");
+
+    }
+
+    function subiraFormulario() {
+
+        let elemento = document.getElementById('seccionDatos');
+
+        elemento.scrollIntoView();
+    }
+
+    function obtenerCombustiblePorID(id_Combustible) {
+
+        gfProceso();
+        let tipoCombustible = {
+
+            ID_TIPO_COMBUSTIBLE: id_Combustible
+        }
+
+        $.ajax({
+
+            type: "POST",
+            url: "/TipoCombustible/ObtieneCombustiblePorId",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: tipoCombustible,
+            success: function (response) {
+                gfProceso();
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+                    let detalle = jQuery.parseJSON(data.Descripcion)
+
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $('#ID_TIPO_COMBUSTIBLE').val(detalle.ID_TIPO_COMBUSTIBLE);
+                        $('#TxtDescripcion').val(detalle.DESCRIPCION);
+
+                        $('#CmbVigencia').val(detalle.VIGENCIA);
+
+
+                        $("#Btn_Modificar").removeAttr("disabled");
+                        $("#Btn_Guardar").attr("disabled", true);
+                        subiraFormulario();
+
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+
+                        swal({
+
+                            title: 'Automotriz Larraín',
+                            text: 'Error al obtener los datos del Tipo de Combustible' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+                    gfProceso();
+
+                    swal({
+
+                        title: 'Automotriz Larraín',
+                        text: 'Error al obtener el Tipo de Combustible ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                gfProceso();
+
+                swal({
+
+                    title: 'Automotriz Larraín',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+
+                return false;
+            }
+        });
+    }
+
+    //////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    function validar() {
+
+        let vigencia = $("#CmbVigencia").val();
+        let descripcion = $("#TxtDescripcion").val();
+
+
+        if (descripcion == "" || descripcion == null) {
+
+            return false;
+        } else {
+
+            return true
+        }
+
+    }
+    $('#Btn_Guardar').click(function (e) {
+
+        let valido = false;
+        valido = validar();
+
+        if (valido == false) {
+
+            swal({
+
+                title: 'Larrain automotriz',
+                text: "Debe rellenar todos los campos",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+        gfProceso();
+        // Estructura de la Clase para Guardar Información
+        let tipoCombustible = {
+
+            DESCRIPCION: $('#TxtDescripcion').val().toUpperCase(),
+            VIGENCIA: $('#CmbVigencia').val()
+        }
+
+
+        $.ajax({
+            type: "POST",
+            url: "/TipoCombustible/AgregarCombustible",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: tipoCombustible,
+            success: function (response) {
+                gfProceso();
+                // FUNCION PARA VALIDAR AJAX Y RESPUESTA..
+                var data;
+                var detalle;
+                try {  // AQUI SE CONTROLA EL ERROR DE JAVASCRIPT
+
+
+                    data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+
+                        swal({
+                            title: 'Automotriz Larraín',
+                            text: "Se agregó el Tipo de Combustible correctamente",
+                            type: 'success',
+                            confirmButtonColor: '#4caf50',
+                            //cancelButtonColor: '#d33',
+                            confirmButtonText: 'OK',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                            onClose: function () {
+                                listarTipoCombustible();
+                                limpiarDatos();
+
+                            }
+
+                        });
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+
+                        swal({
+                            title: 'Automotriz Larraín',
+                            text: 'Error al agregar el tipo de Combustible' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    gfProceso();
+
+                    swal({
+
+                        title: 'Automotriz Larraín',
+                        text: 'Error al agregar el tipo de Combustible ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                gfProceso();
+
+                swal({
+
+                    title: 'Automotriz Larraín',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+
+
+                return false;
+            }
+        });
+
+
+
+    });
+
+
+    $('#Btn_Modificar').click(function (e) {
+
+        let valido = false;
+        valido = validar();
+
+        if (valido == false) {
+
+            swal({
+
+                title: 'Larrain automotriz',
+                text: "Debe rellenar todos los campos",
+                type: 'error',
+                customClass: 'swalAjustado',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info'
+            });
+            return false;
+        }
+        gfProceso();
+        // Estructura de la Clase para Guardar Información
+        let tipoCombustible = {
+
+            ID_TIPO_COMBUSTIBLE: $('#ID_TIPO_COMBUSTIBLE').val(),
+            DESCRIPCION: $('#TxtDescripcion').val().toUpperCase(),
+            VIGENCIA: $('#CmbVigencia').val()
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/TipoCombustible/Editar_tipoCombustible",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: tipoCombustible,
+
+            success: function (response) {
+                gfProceso();
+                var Data = response;
+
+
+                if (Data.Respuesta == "OK") {
+                    let nombreMinus = tipoCombustible.DESCRIPCION.toLowerCase();
+                    let nombreCapitalizado = MaysPrimera(nombreMinus);
+
+                    swal({
+
+                        title: 'Automotriz Larraín',
+                        text: 'Se han hactualizado correctamente los datos del Tipo de Combustible' + nombreCapitalizado+'',
+                        type: 'success',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'Continuar',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        onClose: function () {
+                            listarTipoCombustible();
+                            limpiarDatos();
+                            $("#Btn_Guardar").removeAttr("disabled");
+                            $("#Btn_Modificar").attr("disabled", true);
+
+                        }
+                    });
+
+                }
+                else {
+
+                    swal({
+
+                        title: 'Automotriz Larraín',
+                        text: 'ERROR al Modificar el Tipo de Combustible ' + Data.Detalle_Error,
+                        type: 'warning',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    })
+                }
+            },
+
+            error: function (xhr, textStatus, errorThrown) {
+
+                gfProceso();
+                swal({
+
+                    title: 'Automotriz Larraín',
+                    text: 'ERROR al Modificar el Tipo de Combustible seleccionado' + textStatus,
+                    type: 'warning',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                })
+            }
+        });
+    });
+
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+    function TablaToExcel() {
+
+        $("#TablaDatos").table2excel({
+            //exclude: ".noExl",
+            name: "Tipo de Combustible",
+            filename: "Tipo de Combustible",
+            fileext: ".xls",
+            exclude_img: true,
+            exclude_links: true,
+            exclude_inputs: true
+        });
+
+    }
+
+
+</script>
+
+

@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "PruebasDeRendimiento";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+
+<h2>PruebasDeRendimiento</h2>
+<img id="imagenPrincipal" width="270" height="240"/>
+<img id="imagenComprimida" width="270" height="240"/>
+
+<script>
+    $.ajax({
+            type: "POST",
+            url: "/Dashboard/imagenPrincipal",
+            success: function (response) {
+                
+                   
+                $('#imagenPrincipal').attr("src",'data:image/jpeg;base64,'+response);
+               
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+    });
+
+     $.ajax({
+            type: "POST",
+            url: "/Dashboard/imagenReducida",
+            success: function (response) {
+                
+                   
+                $('#imagenComprimida').attr("src",'data:image/jpeg;base64,'+response);
+               
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+
+</script>

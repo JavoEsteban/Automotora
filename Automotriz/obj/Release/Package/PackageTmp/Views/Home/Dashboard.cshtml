@@ -1,0 +1,537 @@
+﻿
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+}
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>*@
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<style>
+
+    #container {
+        height: 400px;
+        min-width: 310px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+</style>
+<script>
+
+    $(document).ready(function () {
+
+
+        var array = "FEBRERO,MARZO,ABRIL,MAYO,JUNIO";
+        var divisiones = array.split(",");
+
+        var arrayMeses = "ABRIL,MAYO,JUNIO";
+        var mesesRutas = arrayMeses.split(",");
+        var dataVentasRutas = 'LOCAL - PMO:{0,0,0}*MAIPú:{5659400,13074100,2012550}*CERRILLOS:{0,1540000,0}'.split('*');
+
+        var seriesVentasRutas = [];
+
+        for (i = 0; i < dataVentasRutas.length; i++) {
+
+            var sdata = dataVentasRutas[i].split(':')[1].replace("{", "").replace("}", "").split(',');
+
+            var sdataFinal = []
+
+            for (j = 0; j < sdata.length; j++) {
+                sdataFinal.push(parseInt(sdata[j]));
+            }
+
+            seriesVentasRutas.push({
+                name: dataVentasRutas[i].split(':')[0],
+                data: sdataFinal
+            });
+        }
+
+        var arrayMesesClientes = "MAYO,JUNIO";
+        var mesesClientes = arrayMesesClientes.split(",");
+        var dataVentasClientes = 'CPT WELBOATS S.A.:{700000,0}*INNOVEX SPA:{6900900,0}*AUSTRALIS MAR S.A.:{7864600,24950}*EMBALAJES EDEN LIMITADA:{8740000,0}*YAGAN CHILE SPA:{1299000,0}*TRABAJOS MARITIMOS OXXEAN S.A.:{2100000,0}*QUO CHILE S.A.:{700000,0}*pepep:{4581400,0}*YUGEN PHOTO:{4326330,14600}*HACKMONKEYS:{4714600,1973000}'.split('*');
+
+        var seriesVentasClientes = [];
+
+        for (i = 0; i < dataVentasClientes.length; i++) {
+
+            var sdata = dataVentasClientes[i].split(':')[1].replace("{", "").replace("}", "").split(',');
+
+            var sdataFinal = []
+
+            for (j = 0; j < sdata.length; j++) {
+                sdataFinal.push(parseInt(sdata[j]));
+            }
+
+            seriesVentasClientes.push({
+                name: dataVentasClientes[i].split(':')[0].replace("&#209;", "Ñ").replace("&#209;", "Ñ").replace("&#209;", "Ñ"),
+                data: sdataFinal
+            });
+        }
+
+
+        Highcharts.chart('container3', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Clientes con más ventas últimos 2 meses'
+            },
+            subtitle: {
+                text: 'TOP 10'
+            },
+            xAxis: {
+                categories: mesesClientes,
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Total Ventas Larrain'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: seriesVentasClientes
+        });
+
+
+
+        Highcharts.chart('container2', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Ventas por Sucursal y Mes'
+            },
+            subtitle: {
+                text: 'Larrain'
+            },
+            xAxis: {
+                categories: mesesRutas
+            },
+            yAxis: {
+                title: {
+                    text: 'Total Ventas Larrain'
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: seriesVentasRutas
+        });
+
+        Highcharts.chart('container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Total Ventas por Mes'
+            },
+            xAxis: {
+                categories: divisiones
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Total Ventas Larrain'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }
+            },
+            tooltip: {
+                headerFormat: '<b>{point.x}</b><br/>',
+                pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: false,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            series:
+                [{
+                    name: 'Total Ventas',
+                    data: [12261900, 285033346, 15460200, 31508430, 2012550]
+                }]
+        });
+    });
+
+    function listarVehiculos(nombreSucursal) {
+
+        let sucursal = {
+            NOMBRE_SUCURSAL: nombreSucursal
+        }
+        $.ajax({
+            type: "POST",
+            url: "/Home/ConsultarStock",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: sucursal,
+
+            success: function (respuesta) {
+                console.log(respuesta);
+                let data = jQuery.parseJSON(JSON.stringify(respuesta));
+                //console.log(data);
+                let listaVehiculo = jQuery.parseJSON(data.Descripcion);
+                //console.log(listaVehiculo);
+
+
+                $.each(listaVehiculo, function (index, item) {
+                    var strHtml = '<b>' + item.STOCK + '</b>';
+
+                    $("#cerrillos").append(strHtml);
+
+
+                });
+
+
+
+            }
+
+        });
+    }
+</script>
+<div class="container-fluid bis">
+    <div class="cars">
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <div id="cardDashboard" class="card" onclick="scrollToDiv('totalStock');">
+                <div class="card-header card-header-icon" data-background-color="orange">
+                    <div class="card-icon">
+                        <img style="width: 50px;" src="~/assets/img/auto.svg" alt="icon-box" />
+
+                    </div>
+                </div>
+                <div class="card-content text-right" style="padding-bottom:0px">
+                    <h5 class="card-title" style="font-size:24px;"><b>@ViewBag.STOCK_TOTAL</b></h5>
+                    <p class="card-category" style="line-height: 18px; margin-top:18px; font-weight:500; color:dimgray; text-align:center; font-size: 15px;">Total Stock Vehiculos </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <div id="cardDashboard" class="card" onclick="scrollToDiv('stockMaipu');">
+                <div class="card-header card-header-icon" data-background-color="rose">
+                    <div class="card-icon">
+                        <img style="width: 50px;" src="~/assets/img/auto.svg" alt="icon-box" />
+                    </div>
+                </div>
+                <div class="card-content text-right" style="padding-bottom:0px">
+                    <h5 class="card-title" style="font-size:24px;"><b>@ViewBag.STOCK_MAIPU</b></h5>
+                    <a href="/Home/ReportesVehiculoSucursal?idSucursal=@ViewBag.ID_MAIPU"><p class="card-category" style="line-height: 18px; margin-top:18px; font-weight:500; color:dimgray; text-align:center; font-size: 15px;">Vehiculos Stock Maipú</p></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <div id="cardDashboard" class="card" onclick="scrollToDiv('stockCerrillos');">
+                <div class="card-header card-header-icon" data-background-color="green">
+                    <div class="card-icon">
+                        <img style="width: 50px;" src="~/assets/img/auto.svg" alt="icon-box" />
+                    </div>
+                </div>
+                <div class="card-content text-right" style="padding-bottom:0px">
+                    <h5 class="card-title" style="font-size:24px;"><b>@ViewBag.STOCK_CERRILLOS</b></h5>
+                    <p class="card-category" style="line-height: 18px; margin-top:18px; font-weight:500; color:dimgray; text-align:center; font-size: 15px;">Vehiculos Stock Cerrillos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <div id="cardDashboard" class="card" onclick="scrollToDiv('stockConsignacion');">
+                <div class="card-header card-header-icon" data-background-color="red">
+                    <div class="card-icon">
+                        <img style="width: 50px;" src="~/assets/img/auto.svg" alt="icon-box" />
+                    </div>
+                </div>
+                <div class="card-content text-right" style="padding-bottom:0px">
+                    <h5 class="card-title" style="font-size:24px;"><b>@ViewBag.STOCK_CONSIGNADOS</b></h5>
+                    <p class="card-category" style="line-height: 18px; margin-top:18px; font-weight:500; color:dimgray; text-align:center; font-size: 15px;">Vehículos en Consignación
+            </div>
+        </div>
+    </div>
+    <!--cierre de row de tarjetas de autos-->
+</div>
+<!---cierre de conatiner-->
+
+<div id="sliderRegular" class="slider" style="display:none"></div>
+<div id="sliderDouble" class="slider slider-info" style="display:none"></div>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header card-header-icon" data-background-color="orange">
+            <img src="https://img.icons8.com/ios/50/000000/details-popup.png">
+        </div>
+        <div class="card-content">
+            <h4 class="card-title">Dashboard Gerente General</h4>
+        </div>
+        <div class="tarjeta">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-content">
+                        <div id="container" style="height: 400px"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-content">
+                        <div id="container2" style="height: 400px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-content">
+                    <div id="container3">
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="mantencion">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header" data-background-color="purple">
+                            <h4 class="card-title">Autos en mantención</h4>
+                            <p class="category"></p>
+                        </div>
+                        <div class="card-content">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th>Patente</th>
+                                            <th>Mantención</th>
+                                            <th>Dias en mantencion</th>
+                                            <th class="text-right">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-center">1</td>
+                                            <td>GRPY63</td>
+                                            <td>Problemas Técnicos</td>
+                                            <td>12</td>
+                                            <td class="td-actions text-right">
+                                                <button type="button" rel="tooltip" class="btn btn-mudo">
+                                                    <img src="~/assets/img/btn_agregar.png" />
+
+                                                </button>
+                                                <button type="button" rel="tooltip" class="btn btn-success">
+                                                    <img src="https://img.icons8.com/ios/25/000000/edit.png">
+                                                </button>
+                                                <button type="button" rel="tooltip" class="btn btn-danger">
+                                                    <img src="https://img.icons8.com/ios/25/000000/close-window.png">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center">2</td>
+                                            <td>GRPY95</td>
+                                            <td>Permiso Circulación</td>
+                                            <td>21</td>
+                                            <td class="td-actions text-right">
+                                                <button type="button" rel="tooltip" class="btn btn-info btn-round">
+                                                    <img src="https://img.icons8.com/ios/25/000000/user-male-circle-filled.png">
+                                                </button>
+                                                <button type="button" rel="tooltip" class="btn btn-success btn-round">
+                                                    <img src="https://img.icons8.com/ios/25/000000/edit.png">
+                                                </button>
+                                                <button type="button" rel="tooltip" class="btn btn-danger btn-round">
+                                                    <img src="https://img.icons8.com/ios/25/000000/close-window.png">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center">3</td>
+                                            <td>GRPY83</td>
+                                            <td>Revisión Técnica</td>
+                                            <td>33</td>
+                                            <td class="td-actions text-right">
+                                                <button type="button" rel="tooltip" class="btn btn-info btn-simple">
+                                                    <img src="https://img.icons8.com/ios/25/000000/user-male-circle-filled.png">
+                                                </button>
+                                                <button type="button" rel="tooltip" class="btn btn-success btn-simple">
+                                                    <img src="https://img.icons8.com/ios/25/000000/edit.png">
+                                                </button>
+                                                <button type="button" rel="tooltip" class="btn btn-danger btn-simple">
+                                                    <img src="https://img.icons8.com/ios/25/000000/close-window.png">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--mejores vendedores-->
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="card card-stats">
+                        <div class="card-header" data-background-color="red">
+                            <img src="https://img.icons8.com/ios/25/000000/file.png">
+                        </div>
+                        <div class="card-content">
+                            <p class="category">Vendedores</p>
+                            <h3 class="card-title">Mejores vendedores del mes</h3>
+                        </div>
+                        <div class="card-footer">
+                            <div class="stats">
+                                <a href="#">Ver detalle</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="card card-stats">
+                        <div class="card-header" data-background-color="orange">
+                            <img src="https://img.icons8.com/pastel-glyph/25/000000/file.png">
+                        </div>
+                        <div class="card-content">
+                            <p class="category">Vehiculos</p>
+                            <h3 class="card-title">Marcas mas vendidas</h3>
+                        </div>
+                        <div class="card-footer">
+                            <div class="stats">
+                                <a href="#">Ver detalle</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- inicio -->
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header" style="height: 48px;">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">close</i></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+
+
+                <div class="modal-body">
+
+
+                    <div class="col-md-12">
+                        <div class="card">
+                            <form method="get" class="form-horizontal">
+
+                                <div class="card-header card-header-icon" data-background-color="orange">
+                                    <i class="material-icons">contacts</i>
+                                </div>
+                                <div class="card-content">
+                                    <h4 class="card-title">Búsqueda de Clientes  </h4>
+
+
+                                </div>
+
+                                <div class="row">
+                                    <!-- inicio fila -->
+
+                                    <div class="col-sm-12">
+
+
+                                        <div class="col-md-3">
+
+
+
+                                            <label class="control-label">TIPO CLIENTE</label>
+
+                                            <select class="selectpicker" data-style="btn btn-default" data-size="7" id="CmbTipoCliente"></select>
+
+
+                                        </div>
+
+                                        <div class="col-md-5">
+
+                                            <label class="control-label">CLIENTE / RAZON SOCIAL</label>
+
+                                            <select class="selectpicker" data-style="btn btn-default" data-size="7" id="CmbClientes"></select>
+                                        </div>
+
+                                        <div class="col-md-4">
+
+
+
+
+                                            <br>
+                                            <button type="button" class="btn btn-success" onclick="SeleccionCliente();">Seleccionar</button>
+
+                                            <button type="button" class="btn btn-danger">Agregar</button>
+
+                                        </div>
+
+
+                                    </div> <!-- fin fila -->
+
+                                </div>
+                            </form>
+                        </div> <!-- fin Cuadro -->
+
+
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="myModal2" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style="height: 48px;">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">close</i></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <p>Some text in the modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+

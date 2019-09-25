@@ -1,0 +1,470 @@
+﻿
+@{
+
+    ViewBag.Title = "Login";
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>automotriz</title>
+
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <!--  Material Dashboard CSS    -->
+    <link href="~/assets/css/material-dashboard.css" rel="stylesheet" />
+    <!--  CSS for Demo Purpose, don't include it in your project     -->
+    <link href="~/assets/css/demo.css" rel="stylesheet" />
+    <link href="~/assets/css/style.css" rel="stylesheet" />
+    <link href="~/assets/css/responsive.css" rel="stylesheet" />
+
+    <!--     Fonts and icons     -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
+
+
+
+    <!--   Core JS Files   -->
+
+    <script src="~/assets/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <script src="~/assets/js/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="~/assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="~/assets/js/material.min.js" type="text/javascript"></script>
+    <script src="~/assets/js/perfect-scrollbar.jquery.min.js" type="text/javascript"></script>
+    <!-- Forms Validations Plugin -->
+    <script src="~/assets/js/jquery.validate.min.js"></script>
+    <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
+    <script src="~/assets/js/moment.min.js"></script>
+    <!--  Charts Plugin -->
+    <script src="~/assets/js/chartist.min.js"></script>
+    <!--  Plugin for the Wizard -->
+    <script src="~/assets/js/jquery.bootstrap-wizard.js"></script>
+    <!--  Notifications Plugin    -->
+    <script src="~/assets/js/bootstrap-notify.js"></script>
+    <!-- DateTimePicker Plugin -->
+    <script src="~/assets/js/bootstrap-datetimepicker.js"></script>
+    <!-- Vector Map plugin -->
+    <script src="~/assets/js/jquery-jvectormap.js"></script>
+    <!-- Sliders Plugin -->
+    <script src="~/assets/js/nouislider.min.js"></script>
+    <!--  Google Maps Plugin    -->
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <!-- Select Plugin -->
+    <script src="~/assets/js/jquery.select-bootstrap.js"></script>
+    <!--  DataTables.net Plugin    -->
+    <script src="~/assets/js/jquery.datatables.js"></script>
+    <!-- Sweet Alert 2 plugin -->
+    <script src="~/assets/js/sweetalert2.js"></script>
+    <!--	Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
+    <script src="~/assets/js/jasny-bootstrap.min.js"></script>
+    <!--  Full Calendar Plugin    -->
+    <script src="~/assets/js/fullcalendar.min.js"></script>
+    <!-- TagsInput Plugin -->
+    <script src="~/assets/js/jquery.tagsinput.js"></script>
+    <!-- Material Dashboard javascript methods -->
+    <script src="~/assets/js/material-dashboard.js"></script>
+    <!-- Material Dashboard DEMO methods, don't include it in your project! -->
+    <script src="~/assets/js/demo.js"></script>
+
+    <script src="~/assets/js/jquery.Rut.js" type="text/javascript"></script>
+    <script src="~/assets/js/autoNumeric.js" type="text/javascript"></script>
+
+
+
+
+
+
+    <style>
+        .cCargando {
+            width: 100%;
+            height: 100%;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            position: fixed;
+            background-color: #ffffff;
+            opacity: 0.7;
+            filter: alpha(opacity=70); /* Internet Explorer 8*/
+            z-index: 9999;
+            transition: width 2s;
+            -moz-transition: width 2s; /* Firefox 4 */
+            -webkit-transition: width 2s; /* Safari and Chrome */
+            -o-transition: width 2s; /* Opera */
+            cursor: progress;
+        }
+
+        .cCargandoImg {
+            cursor: progress;
+            position: absolute;
+            top: 32%;
+            right: 45%;
+            left: 35%;
+            filter: alpha(opacity=70); /* Internet Explorer 8*/
+            opacity: 0.7;
+            margin: auto;
+            width: 350px;
+            height: 150px;
+            padding: 10px;
+            background-color: #ffffff;
+            /*border: 1px solid #000;*/
+            color: #808080;
+        }
+
+        .carta {
+            background-color: #D5D5D5;
+            border-radius: 25px;
+            height: 400px;
+            align-items: center;
+        }
+
+        body {
+            background-image: url('../../assets/img/bg-login.jpg');
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            overflow-y: hidden;
+        }
+
+        .logo {
+            width: 180px;
+            height: 70px;
+        }
+
+        .btn {
+            background-color: #299BE8;
+            border-radius: 37px;
+            -moz-border-radius: 37px;
+            -webkit-border-radius: 37px;
+            border: 3px solid #299BE8;
+        }
+
+        .hackmonkeys {
+            width: 75px;
+            opacity: 0.5;
+        }
+
+
+
+
+        input[type="text"]:focus {
+            border-color: dodgerBlue !important;
+            box-shadow: 0 0 8px 0 dodgerBlue !important;
+        }
+
+        .inputWithIcon input[type="text"] {
+            padding-left: 40px !important;
+        }
+
+        .inputWithIcon input[type="password"] {
+            padding-left: 40px !important;
+        }
+
+        .inputWithIcon {
+            position: relative !important;
+        }
+
+            .inputWithIcon i {
+                position: absolute !important;
+                left: 0 !important;
+                top: 3px !important;
+                padding: 32px 8px !important;
+                color: black !important;
+                transition: 0.3s !important;
+                z-index: 2 !important;
+            }
+
+            .inputWithIcon input[type="text"]:focus + i {
+                color: dodgerBlue !important;
+            }
+
+            .inputWithIcon.inputIconBg i {
+                background-color: #aaa !important;
+                color: black !important;
+                padding: 20px 4px !important;
+                border-radius: 4px 0 0 4px !important;
+            }
+
+            .inputWithIcon.inputIconBg input[type="text"]:focus + i {
+                color: #fff !important;
+                background-color: dodgerBlue !important;
+            }
+
+        .swalAjustado {
+            display: block;
+            width: 320px !important;
+            margin-top: 250px !important;
+            padding: 20px !important;
+            border-radius: 25px !important;
+            min-height: 334px !important;
+            opacity: 0.8;
+        }
+    </style>
+
+    <script>
+        function gfProceso() {
+            if (document.getElementById("divProceso").style.visibility == "visible")
+                document.getElementById("divProceso").style.visibility = "hidden";
+            else
+                document.getElementById("divProceso").style.visibility = "visible";
+        }
+
+                        /**/</script>
+
+    @*<script>
+             function gfProceso() {
+                 if (document.getElementById("divProceso").style.visibility == "visible")
+                     document.getElementById("divProceso").style.visibility = "hidden";
+                 else
+                     document.getElementById("divProceso").style.visibility = "visible";
+             }
+
+
+        </script>*@
+
+
+</head>
+<body>
+
+    <div id="divProceso" class="cCargando" style="visibility: hidden;">
+        <div id="divProcesoMsg" class="cCargandoImg">
+
+
+            <img src="~/assets/img/cargando.gif" />
+
+
+
+        </div>
+    </div>
+    <div class="wrapper wrapper-full-page">
+        <div class="full-page login-page" filter-color="gray">
+            <!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
+            <div class="content">
+                <div class="container ">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
+
+                            <div class="card card-login mx-auto card-hidden carta mt-5 text-center">
+                                <div class="input-group">
+                                    <h4 class="card-title card-title mx-auto pt-3 logo" style="margin-left:75px"><img class="mx-auto mt-3 img-responsive " src="@Url.Content("~/assets/img/logo_larrain.png")"></h4>
+                                </div>
+                                <div class="card-content">
+
+
+                                    <div class="input-group inputWithIcon" style="margin-left:10%;">
+
+                                        <div class="form-group label-floating">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">face</i>
+                                            </span>
+                                            <label class="">Usuario</label>
+                                            <input id="txtRut" name="strUsuario" type="text" class="form-control">
+                                        </div>
+
+
+                                    </div>
+                                    <div class="input-group inputWithIcon" style="margin-left:6%;">
+
+                                        <div class="form-group label-floating">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons" style="margin-left:4%;">lock_outline</i>
+                                            </span>
+                                            <label class="">Contraseña</label>
+                                            <input id="txtPassword" name="strPassword" type="password" class="form-control" style="width:92%">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="footer text-center">
+                                    <button id="btnLogin" class="boton btn btn-primary mt-2" onclick="login()">Ingresar</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="footer pt-5">
+                <div class="container">
+
+                    <div class="copyright pull-right">
+                        <p>
+
+                            <a href="https://www.hackmonkeys.cl" target="_blank">
+
+
+                                <img class="hackmonkeys" src="~/assets/img/Logo Hack oficial.png" />
+
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!--   Core JS Files   -->
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#txtRut').Rut();
+        demo.checkFullPageBackgroundImage();
+
+        setTimeout(function () {
+            // after 1000 ms we add the class animated to the login/register card
+            $('.card').removeClass('card-hidden');
+        }, 400);
+
+
+    });
+
+function login() {
+    try {
+        //Comienza a mostrar carga
+        gfProceso();
+        //Se crean variables y se toman valores de los txt
+        let rutUsuario = $('#txtRut').val();
+        let passwordUsuario = $('#txtPassword').val();
+
+        //--------------------------------Validacion de Campos
+
+        //Validacion de usuario (RUT)
+        if (rutUsuario == "" || rutUsuario == null) {
+            swal({
+                title: 'Larrain automotriz',
+                text: 'Debe Ingresar Usuario',
+                type: 'error',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+            });
+            gfProceso();
+            return false;
+        }
+
+        //Validacion de Password (Contraseña)
+        if (passwordUsuario == "" || passwordUsuario == null) {
+            swal({
+                title: 'Larrain automotriz',
+                text: 'Debe ingresar Contraseña',
+                type: 'error',
+                confirmButtonColor: '#299BE8',
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-info',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+            });
+            gfProceso();
+            return false;
+        }
+
+
+
+        //Creacion de Objeto usuario con usuario y contraseña
+        let usuario = {
+            RUT: rutUsuario,
+            PASSWORD: passwordUsuario
+
+        }
+
+        //se envia ajax con usuario para validar las variables para el Login
+        $.ajax({
+            type: "POST",
+            url: "/Login/ValidaUsuario",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data: usuario,
+
+            success: function (respuesta) {
+                //Se obtiene la data
+                let data = jQuery.parseJSON(JSON.stringify(respuesta));
+              
+                //si la respuesta correcta se mostrara mensaje satisfactorio y sera redirigido
+                //caso contrario mostrara mensaje de error
+                if (data.Respuesta == "OK") {
+                      let detalle = jQuery.parseJSON(data.Descripcion);
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Usuario y contraseña correctos',
+                        type: 'success',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        onClose: function () {
+                            gfProceso();
+
+                            if (detalle.ROL == "ADMINISTRADOR" || detalle.ROL == "JEFE DE VENTAS" ||detalle.ROL == "GERENCIA") {
+                                location.href = "@Url.Action("Administrador", "Dashboard")";
+                            }
+                            if (detalle.ROL == "GESTION" || detalle.ROL == "CONSIGNADOR" ) {
+                                location.href = "@Url.Action("ListadoVehiculos_RolLectura", "MantenedorVehiculo")";
+                            }
+                            if (detalle.ROL == "VENDEDOR") {
+                                location.href = '@Url.Action("DashboardVendedor", "Dashboard")?idUsuario='+detalle.ID_USUARIOS;
+
+                            }
+
+                        }
+                    });
+
+                    gfProceso();
+
+                }
+
+                else {
+
+
+                    swal({
+                        title: 'Larrain automotriz',
+                        text: respuesta.Descripcion,
+                        type: 'error',
+                        confirmButtonColor: '#299BE8',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    gfProceso();
+                }
+            }
+
+
+
+        });
+    } catch (Exception) {
+        //Si ocurre una excepcion se mostrara mensaje de error y se mostrara el error
+        gfProceso();
+
+        swal({
+            title: 'Larrain automotriz',
+            text: 'Ocurrio un error no cotrolado, porfavor comuniquese con Automotriz Larrain. Error: '+Exception,
+            type: 'error',
+            confirmButtonColor: '#299BE8',
+            confirmButtonText: 'OK',
+            confirmButtonClass: 'btn btn-info',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+        });
+    }
+
+}
+
+    </script>
+
+
+</body>
+
+
+
+</html>
+
+
+

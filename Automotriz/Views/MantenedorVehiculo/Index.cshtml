@@ -1,0 +1,1379 @@
+﻿@using Automotriz.Models;
+@{
+
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout_general.cshtml";
+   
+
+}
+
+
+
+<div class="card">
+    <!-- inicio tarjeta -->
+
+    <div class="card-header card-header-icon" data-background-color="orange">
+        <img src="https://img.icons8.com/ios/25/000000/truck.png">
+    </div>
+    <div class="card-content">
+        <h4 class="card-title">Datos de Equipos </h4>
+
+
+        <p class="description">
+            Este módulo permite Agregar/Editar/Eliminar Vehiculos
+        </p>
+
+    </div>
+
+    <div class="row" >
+        <div class="col-md-12">
+            <div id="formulario" class="col-sm-12">
+                <div class="row">
+                    <div class="card" style="margin-left:1% !important;">
+                        <input id="ID_VEHICULO" type="hidden" value="">
+                        <div class="card-header card-header-icon" data-background-color="orange">
+                            <img src="https://img.icons8.com/ios-glyphs/40/fff/cab-back-view.png" />
+                        </div>
+                        <div class="card-content">
+                            <div class="col-md-2">
+
+                                <label class="control-label">PPU</label>
+                                <input type="text" class="form-control text-uppercase " id="patente" />
+                            </div>
+
+                            <div class="col-md-2">
+
+
+                                <label class="control-label">Marca</label>
+                                <select type="text" class="selectpicker" id="cmbMarca">
+                                    <option value="">Marca</option>
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-2">
+
+                                <label class="control-label">Modelo</label>
+
+                                <select type="text" class="selectpicker" id="cmbModelo">
+                                    <option value="">Modelo</option>
+
+
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+
+                                <label class="control-label">Version</label>
+                                <input type="text" class="form-control text-uppercase" id="version" />
+                            </div>
+
+                            <div class="col-md-2">
+
+                                <label class="control-label">Tipo de Vehiculo</label>
+
+                                <select class="selectpicker" data-style="btn btn-default" data-size="7" id="cmbTipoVehiculo">
+                                    <option value="">Tipo Vehiculo</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card" style="margin-left:1% !important;">
+                        <div class="card-header card-header-icon" data-background-color="orange">
+
+                            <img src="https://img.icons8.com/wired/40/fff/engine.png">
+                        </div>
+                        <div class="card-content">
+                            <div class="row">
+                            <div class="col-md-2">
+
+                                <label class="control-label">Cilindrada</label>
+
+                                <input type="text" class="form-control text-right" id="cilindrada" />
+                            </div>
+
+                            <div class="col-md-2">
+
+                                <label class="control-label">Año</label>
+
+                                <input type="text" class="form-control text-right" id="anio" />
+                            </div>
+
+
+                            <div class="col-md-2">
+                                <label class="control-label">COLOR</label>
+
+                                <select class="selectpicker" data-style="btn btn-default" data-size="7" id="cmbColor">
+                                    <option value="">COLOR</option>
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-2">
+
+                                <label class="control-label">Kilometraje</label>
+
+                                <input type="number" min="0" class="form-control text-right" id="kilometraje" />
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="control-label">Combustible</label>
+
+                                <select class="selectpicker" data-style="btn btn-default" data-size="7" id="cmbCombustible">
+                                    <option value="">Combustible</option>
+
+
+                                </select>
+
+
+                            </div>
+                        </div>
+                            <div class="row" style="margin-left:8% !important;">
+                                <div class="col-md-3">
+
+                                    <label class="control-label">Transmisión</label>
+
+                                    <select class="selectpicker" data-style="btn btn-default" data-size="7" id="cmbTipoTransmision">
+                                        <option value="">Transmisión</option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-3">
+
+                                    <label class="control-label">Traccion</label>
+                                    <select type="text" class="selectpicker" id="cmbTipoTraccion">
+                                        <option value="">Traccion</option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-2">
+
+                                    <label class="control-label">Motor</label>
+                                    <input type="text" class="form-control text-right" id="motor" />
+
+                                </div>
+
+                                <div class="col-md-2">
+
+                                    <label class="control-label">Chasis</label>
+                                    <input type="text" class="form-control text-right" id="chasis" />
+
+                                </div>
+
+                                <div class="col-md-2">
+
+                                    <label class="control-label">Dueños</label>
+
+                                    <input type="number" min="0" class="form-control text-right" id="duenios" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+                <div class="row">
+                    <div class="card" style="margin-left:1% !important;">
+                        <div class="card-header card-header-icon" data-background-color="orange">
+
+                            <img src="https://img.icons8.com/dotty/40/fff/details-popup.png">
+                        </div>
+                        <div class="card-content">
+                            <div class="row">
+                            <div class="col-md-2">
+                                <label class="control-label">Sucursal</label>
+
+                                <select class="selectpicker" data-style="btn btn-default" data-size="7" id="cmbSucursal">
+                                    <option value=""> SUCURSAL</option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-2">
+
+                                <label class="control-label">Tipo de ingreso</label>
+                                <select type="text" class="selectpicker" id="cmbConsignacion">
+                                    <option value="">Tipo Ingreso</option>
+
+                                </select>
+
+
+                            </div>
+
+                            <div class="col-md-2">
+
+                                <label class="control-label">PRECIO de COMPRA</label>
+                                <input type="text" class="form-control text-right" id="precioCompra" />
+
+                            </div>
+                            <div class="col-md-2">
+
+                                <label class="control-label">PRECIO De VENTA</label>
+                                <input type="text" class="form-control text-uppercase " id="precioVenta" />
+                            </div>
+
+                            <div class="col-md-2">
+
+                                <label class="control-label">PRECIO MINIMO de VENTA</label>
+                                <input type="text" class="form-control text-right" id="precioMinimoVenta" />
+
+                            </div>
+                        </div>
+
+                            <div class="row" style="margin-left:8% !important;">
+                                <div class="col-md-2">
+
+                                    <label class="control-label">PRECIO de CONSIGNACION</label>
+                                    <input type="text" class="form-control text-uppercase" id="precioConsigna" />
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label class="control-label">Disponibilidad</label>
+
+                                    <select class="selectpicker" data-style="btn btn-default" data-size="7" id="cmbDisponibilidad">
+                                        <option value=""> DISPONIBILIDAD</option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label class="control-label">Estado Vehiculo</label>
+
+                                    <select class="selectpicker" data-style="btn btn-default" data-size="7" id="cmbEstado">
+                                        <option value=""> ESTADO</option>
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-3">
+
+                                    <label class="control-label">Fecha de ingreso</label>
+                                    <input type="text" id="fechaIngreso"></p>
+
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">USUARIO</label>
+
+                                    <select class="selectpicker" data-style="btn btn-default" data-size="7" id="cmbUsuario">
+                                        <option value="">USUARIO</option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                <div class="row">
+                    <div class="card" style="margin-left:1% !important;">
+                        
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <input id="txtID_EquipoTransporte" class="hidden" />
+                        <button type="button" class="btn btn-rose btn-fill" id="Guardar" onclick="guardarVehiculo()">GUARDAR</button>
+                        <button type="button" class="btn btn-success btn-fill" id="Modificar" onclick="editarVehiculo()">MODIFICAR</button>
+                        <button type="button" class="btn btn-danger" onclick="javascript: Nuevo();" disabled="disabled">NUEVA </button>
+
+                    </div>
+                    <div class="col-md-3">
+
+
+                    <div class="col-sm-12">
+                        <label class="control-label">Imagen Vehiculo</label>
+                        @*<input type="file" name="archivo" id="archivo" class="fileinput-preview" onchange="visualizaImagen(this)">*@
+                        <input type="file" id="fileCargadorImagenes" class="fileinput-preview" accept="image/x-png,image/gif,image/jpeg" multiple onchange="mostrarImagenes()">
+
+                    </div>
+                    <div class="col-md-12" id="contendorImagenes">
+
+                    </div>
+
+                </div>
+
+
+                </div>
+                
+
+            </div>
+                
+                <div class="row">
+                    <!-- inicio fila -->
+                    <div class="col-sm-12">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <div class="card-header" data-background-color="orange">
+                                    <h4 class="card-title">Listado De Vehiculos</h4>
+                                    <p class="category">Seleccione Vehiculo para Editar / Eliminar </p>
+                                </div>
+                                <div class="card-content">
+                                    <table id="TablaVehiculos" class="table table-hover small">
+                                        <thead>
+                                            <tr>
+                                                <th>ID VEHICULO</th>
+                                                <th>MODELO</th>
+                                                <th>PATENTE</th>
+                                                <th>Precio de compra</th>
+                                                <th>Editar</th>
+                                                <th>Eliminar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="bodyTablaVehiculo">
+
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div> <!-- cuadro table -->
+                    </div>
+                </div> <!-- fin fila -->
+            </div>
+    </div> <!-- fin Cuadro -->
+</div> <!-- fin tarjeta tarjeta -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+            listarVehiculos();
+            listarColores();
+            cargaListadoMarcas();
+            listarTipoCombustible();
+            listarTipoTraccion();
+            listarTransmision();
+            listarTipoConsignacion();
+            listarDisponibilidad();
+            listarSucursales();
+            listarEstados();
+            listarUsuarios();
+            listarTipoVehiculo();
+
+    });
+
+    //EVENTOS ON CHANGE-------------------------------
+
+    $("#cmbMarca").change(function ()
+    {
+        listarModelos();
+    });
+
+
+    //ONCHANGE ---------------------------------------
+
+    function cargaListadoMarcas()
+    {
+        $.ajax({
+            type: "POST",
+            url: "/Marca/ObtieneListadoMarcas",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response)
+            {
+                try
+                {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaMarcas = jQuery.parseJSON(data.Descripcion);
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarVehiculos").html("");
+                        
+                        $.each(listaMarcas, function (index, item)
+                        {
+                            let opt = '<option value="' + item.ID_MARCA + '">' + item.DESCRIPCION + '</option>';
+                             $("#cmbMarca").append(opt);
+                        });
+
+                        $("#cmbMarca").selectpicker('refresh');
+                  
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de marcas' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar las marcas ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+
+    function listarTipoCombustible()
+    {
+        $.ajax({
+            type: "POST",
+            url: "/TipoCombustible/ObtieneListadoCombustibles",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response)
+            {
+                try
+                {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listTipoCombustible = jQuery.parseJSON(data.Descripcion);
+                    
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarTipoCombustible").html("");
+
+
+                        $.each(listTipoCombustible, function (index, item) {
+                           let opt = '<option value="' + item.ID_TIPO_COMBUSTIBLE + '">' + item.DESCRIPCION + '</option>';
+                        $("#cmbCombustible").append(opt);
+
+
+                        });
+                        $("#cmbCombustible").selectpicker('refresh');
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de combustibles' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar Combustibles ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+
+    function listarTipoTraccion()
+    {
+        $.ajax({
+            type: "POST",
+            url: "/TipoTraccion/ObtieneListadoTraccion",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response)
+            {
+                try
+                {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listTipoTraccion = jQuery.parseJSON(data.Descripcion)
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarTipoTraccion").html("");
+
+
+                        $.each(listTipoTraccion, function (index, item) {
+                            var opt = '<option value="' + item.ID_TIPOTRACCION + '">' + item.DESCRIPCION + '</option>';
+                        $("#cmbTipoTraccion").append(opt);
+
+                        });
+
+                        $("#cmbTipoTraccion").selectpicker('refresh');
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Tracciones' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar Tracciones ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+
+
+    function listarTransmision()
+    {
+        $.ajax({
+            type: "POST",
+            url: "/TipoTransmision/ObtieneListadoTransmision",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response)
+            {
+                try
+                {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listTransmision = jQuery.parseJSON(data.Descripcion);
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarTransmision").html("");
+
+
+                        $.each(listTransmision, function (index, item) {
+                            var opt = '<option value="' + item.ID_TIPO_TRANSMICION + '">' + item.DESCRIPCION + '</option>';
+                        $("#cmbTipoTransmision").append(opt);
+
+                        });
+
+                        $("#cmbTipoTransmision").selectpicker('refresh');
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Transmisiones' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar las Transmisiones ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+
+    function listarTipoConsignacion()
+    {
+        $.ajax({
+            type: "POST",
+            url: "/TipoConsigna/ObtieneListadoTipoConsigna",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response)
+            {
+                try
+                {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaConsigna = jQuery.parseJSON(data.Descripcion)
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarTipoConsignacion").html("");
+
+
+                        $.each(listaConsigna, function (index, item) {
+                            var opt = '<option value="' + item.ID_TIPO_CONSIGNACION + '">' + item.DESCRIPCION + '</option>';
+                        $("#cmbConsignacion").append(opt);
+
+                        });
+
+                        $("#cmbConsignacion").selectpicker('refresh');
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Ingresos' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar Ingresos ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+
+     function listarDisponibilidad()
+    {
+        $.ajax({
+            type: "POST",
+            url: "/Disponibilidad/ObtieneListaDisponibilidad",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response)
+            {
+                try
+                {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaDisponibilidad = jQuery.parseJSON(data.Descripcion)
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarDisponibilidad").html("");
+
+
+                        $.each(listaDisponibilidad, function (index, item) {
+                            var opt = '<option value="' + item.ID_DISPONIBILIDAD + '">' + item.DESCRIPCION + '</option>';
+                        $("#cmbDisponibilidad").append(opt);
+
+                        });
+
+                        $("#cmbDisponibilidad").selectpicker('refresh');
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Disponibilidad' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar Disponibilidades ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+
+    function listarSucursales() {
+
+        $.ajax({
+            type: "POST",
+            url: "/Sucursal/ObtieneListaSucursales",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                try {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listSucursales = jQuery.parseJSON(data.Descripcion);
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarSucursales").html("");
+
+                        $.each(listSucursales, function (index, item) {
+                            let opt = '<option value="' + item.ID_SUCURSAL + '">' + item.NOMBRE_SUCURSAL + '</option>';
+
+                        $("#cmbSucursal").append(opt);
+
+
+                        });
+
+                        $("#cmbSucursal").selectpicker('refresh');
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Usuarios' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar los Usuarios ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+
+                return false;
+            }
+        });
+    }
+     function listarEstados()
+    {
+        $.ajax({
+            type: "POST",
+            url: "/EstadoVehiculo/ObtieneListaEstado",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response)
+            {
+                try
+                {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaEstados = jQuery.parseJSON(data.Descripcion)
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarEstados").html("");
+
+
+                        $.each(listaEstados, function (index, item) {
+                            var opt = '<option value="' + item.ID_ESTADO + '">' + item.DESCRIPCION + '</option>';
+                        $("#cmbEstado").append(opt);
+
+                        });
+                        $("#cmbEstado").selectpicker('refresh');
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Estados' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar los Estados ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+
+    function listarColores()
+    {
+        $.ajax({
+            type: "POST",
+            url: "/Color/ObtieneListadoColores",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response)
+            {
+                try
+                {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaColor = jQuery.parseJSON(data.Descripcion)
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarcolor").html("");
+
+
+                        $.each(listaColor, function (index, item) {
+                            var opt = '<option value="' + item.ID_COLOR + '">' + item.DESCRIPCION + '</option>';
+                        $("#cmbColor").append(opt);
+
+                        });
+                        $("#cmbColor").selectpicker('refresh');
+
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Colores' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar Colores ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+
+    function listarUsuarios()
+    {
+
+        $.ajax({
+            type: "POST",
+            url: "/Usuarios/ObtieneListaUsuarios",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response)
+            {
+                try
+                {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaUsuarios = jQuery.parseJSON(data.Descripcion);
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarUsuarios").html("");
+                        $.each(listaUsuarios, function (index, item) {
+                             var opt = '<option value="' + item.ID_USUARIOS + '">' + item.NOMBRE_USUARIO + '</option>';
+                        $("#cmbUsuario").append(opt);
+
+
+                        });
+                        $("#cmbUsuario").selectpicker('refresh');
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Usuarios' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar los Usuarios ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info',
+                        allowEscapeKey: false,
+                            allowOutsideClick: false,
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info',
+                    allowEscapeKey: false,
+                            allowOutsideClick: false,
+                });
+
+                return false;
+            }
+        });
+    }
+
+    function listarModelos()
+    {
+        gfProceso();
+
+        Modelo = {
+            ID_MARCA: $('#cmbMarca').val()
+        }
+        
+        $.ajax({
+            type: "POST",
+            url: "/ModeloVehiculo/ObtieneListaModeloPorMarca",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            data:Modelo,
+            success: function (response)
+            {
+                try
+                {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaModelos = jQuery.parseJSON(data.Descripcion)
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarVehiculos").html("");
+
+                        $.each(listaModelos, function (index, item)
+                        {
+                            var opt = '<option value="' + item.ID_MODELO + '">' + item.NOMBRE_MODELO + '</option>';
+                            $("#cmbModelo").append(opt);
+
+                        });
+
+                        $("#cmbModelo").selectpicker('refresh');
+
+
+                        gfProceso();
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de modelos' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info'
+                        });
+
+                        gfProceso();
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar los modelos ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+                    gfProceso();
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                gfProceso();
+                return false;
+            }
+        });
+    }
+
+    function listarTipoVehiculo()
+    {
+        $.ajax({
+            type: "POST",
+            url: "/TipoVehiculo/ObtieneListadoTipoVehiculo",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response)
+            {
+                try
+                {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listaTipoVehiculos = jQuery.parseJSON(data.Descripcion)
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarTipoVehiculos").html("");
+
+
+                        $.each(listaTipoVehiculos, function (index, item) {
+                            var opt = '<option value="' + item.ID_TIPO_VEHICULO + '">' + item.DESCRIPCION + '</option>';
+                        $("#cmbTipoVehiculo").append(opt);
+
+                        });
+                        $("#cmbTipoVehiculo").selectpicker('refresh');
+
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Tipos de Vehiculos' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar Tipos de Vehiculos ' + data.Detalle_Error + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+
+                return false;
+            }
+        });
+    }
+
+
+    function listarVehiculos()
+    {
+        gfProceso();
+
+        $.ajax({
+            type: "POST",
+            url: "/MantenedorVehiculo/ObtieneListadoVehiculos",
+            content: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response)
+            {
+                try
+                {
+                    var data = jQuery.parseJSON(JSON.stringify(response));  // AQUI SE REVISA LA RESPUESTA DEL SERVICIO
+                    let listVehiculos = jQuery.parseJSON(data.Descripcion);
+
+                    if (data.Respuesta == "OK") // AQUI MANEJA SI EL SERVICIO RETORNO OK O CONTROLES DE ERROR
+                    {
+                        $("#listarVehiculos").html("");
+                        
+                        let strHtml = '';
+                        console.log(listVehiculos);
+
+                        $.each(listVehiculos, function (index, item) {
+                            
+                            
+                             strHtml += '<tr>';
+                             strHtml += '<td>' + item.FECHA_INGRESO + '</td>';
+                             strHtml += '<td>' + item.PATENTE + '</td>';
+                             strHtml += '<td>' + item.MARCA + '</td>';
+                             strHtml += '<td>' + item.NOMBRE_MODELO + '</td>';
+                             strHtml += '<td>' + item.VERSION + '</td>';
+                             strHtml += '<td>' + item.ANO + '</td>';
+                             strHtml += '<td>' + item.NOMBRE_TRANSMISION + '</td>';
+                             strHtml += '<td>' + item.COMBUSTIBLE + '</td>';
+                             strHtml += '<td>' + item.KILOMETRAJE + '</td>';
+                             strHtml += '<td>' + item.COLOR + '</td>';
+                             strHtml += '<td>' + item.TIPO_VEHICULO + '</td>';
+                             strHtml += '<td>' + item.CANTIDAD_DUENIOS + '</td>';
+                             strHtml += '<td>' + item.TIPO_INGRESO + '</td>';
+                             strHtml += '<td>' + item.PRECIO_COMPRA + '</td>';
+                             strHtml += '<td>' + item.PRECIO_VENTA + '</td>';
+                             strHtml += '<td>' + item.SUCURSAL + '</td>';
+                             strHtml += '<td>' + item.ESTADO + '</td>';
+                             strHtml += '<td> <a href="#" onclick="obtenerDatosMarca('+item.ID_VEHICULO+')"><img src="https://img.icons8.com/ultraviolet/25/000000/pencil.png"></a></td>';
+                             strHtml += '<td> <a href="#" onclick="Eliminar('+item.ID_VEHICULO+')"><img src="https://img.icons8.com/ultraviolet/25/000000/delete-sign.png"></a></td>'
+                             strHtml += '</tr">';
+
+                           
+                        });
+
+                        $("#bodyTablaVehiculo").html(strHtml);
+                        gfProceso();
+                  
+                    }  // IF LA RESPUESTA DEL SERVICIO ES NOK ERROR CONTROLADO......
+                    else {
+                        swal({
+                            title: 'Automotriz Larrain',
+                            text: 'Error al obtener listado de Vehiculos' + data.Detalle_Error + '',
+                            type: 'error',
+                            confirmButtonColor: '#FE6A00',
+                            confirmButtonText: 'OK',
+                            confirmButtonClass: 'btn btn-info',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false
+                        });
+                        gfProceso();
+
+                        return false;
+                    }
+
+                } catch (err) { // ACCIÓN DEL ERROR DE JAVASCRIPT
+
+                    swal({
+                        title: 'Automotriz Larrain',
+                        text: 'Error al listar los Vehiculos ' + err.toString() + '',
+                        type: 'error',
+                        confirmButtonColor: '#FE6A00',
+                        confirmButtonText: 'OK',
+                        confirmButtonClass: 'btn btn-info'
+                    });
+                    gfProceso();
+
+                    return false;
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) { // ACCIÓN DEL ERROR DEL SERVICIO AJAX.
+                swal({
+                    title: 'Automotriz Larrain',
+                    text: 'Error de Conexión' + textStatus + '',
+                    type: 'error',
+                    confirmButtonColor: '#FE6A00',
+                    confirmButtonText: 'OK',
+                    confirmButtonClass: 'btn btn-info'
+                });
+                gfProceso();
+
+                return false;
+            }
+        });
+        }
+
+       
+
+  
+
+</script>
